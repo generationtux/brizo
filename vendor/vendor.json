@@ -1,0 +1,17 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "context",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "yuwRx/ucNqNyreGrPZlvDRsjaXQ=",
+			"path": "github.com/go-zoo/bone",
+			"revision": "34232a072007f7a1d1e7b5a286cc559ed6a29964",
+			"revisionTime": "2016-10-29T22:00:03Z"
+		}
+	],
+	"rootPath": "github.com/generationtux/brizo"
+}
