@@ -2,6 +2,7 @@
 
 [![wercker status](https://app.wercker.com/status/71f5e5d09990c22f394a998bef86d9af/s/master "wercker status")](https://app.wercker.com/project/byKey/71f5e5d09990c22f394a998bef86d9af)
 [![codecov](https://codecov.io/gh/generationtux/brizo/branch/master/graph/badge.svg)](https://codecov.io/gh/generationtux/brizo)
+[![Code Climate](https://codeclimate.com/github/generationtux/brizo/badges/gpa.svg)](https://codeclimate.com/github/generationtux/brizo)
 
 PAAS that runs on top of [Kubernetes](http://kubernetes.io/).
 
