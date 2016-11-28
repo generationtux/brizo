@@ -15,7 +15,7 @@ your machine and run
 $ docker-compose up -d
 ```
 
-This will start a database listening on `localhost:33061` with the username `root` and password `secret`. It will also setup a database named `brizo`.
+This will start a database listening on `localhost:33062` with the username `root` and password `secret`. It will also setup a database named `brizo`.
 
 #### Autoreload
 

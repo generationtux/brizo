@@ -25,5 +25,5 @@ func getDBAddress() string {
 		port = "3306"
 	}
 
-	return fmt.Sprintf("%s:%s@%s:%s/%s?charset=utf8&parseTime=True&loc=Local", user, pass, host, port, db)
+	return fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, pass, host, port, db)
 }
