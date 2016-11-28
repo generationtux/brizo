@@ -13,7 +13,7 @@ func Connect() (*gorm.DB, error) {
 	return gorm.Open("mysql", getDBAddress())
 }
 
-// getDBAddress will put together they mysql connection string
+// getDBAddress will put together the mysql connection string
 func getDBAddress() string {
 	user := os.Getenv("BRIZO_DB_USER")
 	pass := os.Getenv("BRIZO_DB_PASSWORD")
