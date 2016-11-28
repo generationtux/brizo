@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/cloudykit/jet"
+	"github.com/CloudyKit/jet"
 	"github.com/generationtux/brizo/database"
 )
 
