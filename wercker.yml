@@ -1,0 +1,14 @@
+box: golang
+ci:
+  steps:
+    - golint:
+        exclude: vendor/**/*
+    - script:
+        name: go build
+        script: |
+          go build
+    - script:
+        name: go test
+        script: |
+          go test $(go list ./... | grep -v /vendor/)
+
