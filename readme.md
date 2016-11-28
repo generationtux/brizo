@@ -19,18 +19,17 @@ This will start a database listening on `localhost:33061` with the username `roo
 
 #### Autoreload
 
-You can use [Gin](https://github.com/codegangsta/gin) to serve and autoreload the service during development.
+You can use [Fresh](https://github.com/pilu/fresh) to serve and autoreload the service during development.
 
-Install Gin
+Install Fresh
 ```sh
-$ go get github.com/codegangsta/gin
+$ go get github.com/pilu/fresh
 ```
 
 Then run the app
 ```sh
-$ gin -a 8080
+$ fresh
 ```
-*8080 is the port this app is configured to listen on. If you've customized this you should use the appropriate port*
 
 #### Dependency management
 
