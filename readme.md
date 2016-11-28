@@ -1,5 +1,7 @@
 # Brizo
 
+[![wercker status](https://app.wercker.com/status/71f5e5d09990c22f394a998bef86d9af/s/master "wercker status")](https://app.wercker.com/project/byKey/71f5e5d09990c22f394a998bef86d9af)
+
 PAAS that runs on top of Kubernetes.
 
 ## Development
