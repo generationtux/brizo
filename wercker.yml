@@ -20,6 +20,8 @@ ci:
                   rm profile.out
               fi
           done
+
+          cat coverage.txt
     - script:
         name: upload coverage
         script: |
