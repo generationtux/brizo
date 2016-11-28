@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/generationtux/brizo/app"
 	"github.com/joho/godotenv"
 )
 
@@ -13,7 +14,7 @@ func main() {
 	// .env file for local configuration during development (see .env.example)
 	godotenv.Load()
 
-	router := configureRoutes()
+	router := app.ConfigureRoutes()
 	address := getAddress()
 
 	log.Printf("Brizo is starting on %s\n", address)
