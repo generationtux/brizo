@@ -23,8 +23,7 @@ func uiHandler(rw http.ResponseWriter, request *http.Request) {
 
 // healthzHandler for health check requests
 func healthzHandler(rw http.ResponseWriter, request *http.Request) {
-	db, err := database.Connect()
-	defer db.Close()
+	err := database.Health()
 
 	if err != nil {
 		log.Println(err)
