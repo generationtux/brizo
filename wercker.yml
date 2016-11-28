@@ -1,6 +1,7 @@
 box: golang
 ci:
   steps:
+    - setup-go-workspace
     - golint:
         exclude: vendor/**/*
     - script:
