@@ -7,11 +7,23 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "qW8bjirR34x4roMJK2eF4KN/3v8=",
+			"path": "github.com/CloudyKit/fastprinter",
+			"revision": "ee06c58b09065598339804adaf79c31ff25ecf7a",
+			"revisionTime": "2016-04-26T11:39:14Z"
+		},
+		{
+			"checksumSHA1": "XsHNZOGgasTLhze7ZVbkmSsbWDM=",
+			"path": "github.com/CloudyKit/jet",
+			"revision": "b7ee120ad079dcbb8254072307653beaba7e534f",
+			"revisionTime": "2016-10-01T11:30:26Z"
+		},
+		{
 			"checksumSHA1": "yuwRx/ucNqNyreGrPZlvDRsjaXQ=",
 			"path": "github.com/go-zoo/bone",
 			"revision": "34232a072007f7a1d1e7b5a286cc559ed6a29964",
 			"revisionTime": "2016-10-29T22:00:03Z"
 		}
 	],
-	"rootPath": "github.com/generationtux/brizo"
+	"rootPath": "devel"
 }

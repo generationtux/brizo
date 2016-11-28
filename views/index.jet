@@ -1,0 +1,5 @@
+{{ extends "layouts/application.jet" }}
+
+{{ block documentBody() }}
+<h1>Brizo</h1>
+{{ end }}
