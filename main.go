@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-    "log"
+	"log"
 	"net/http"
 	"os"
 
-    "github.com/go-zoo/bone"
-    "github.com/CloudyKit/jet"
+	"github.com/CloudyKit/jet"
+	"github.com/go-zoo/bone"
 )
 
 var views = jet.NewHTMLSet("./views")
@@ -24,15 +24,13 @@ func main() {
 }
 
 func uiHandler(rw http.ResponseWriter, request *http.Request) {
-    view, err := views.GetTemplate("index.jet")
+	view, err := views.GetTemplate("index.jet")
 
-    if err != nil {
-        log.Println("Unexpected template err:", err.Error())
-    }
+	if err != nil {
+		log.Println("Unexpected template err:", err.Error())
+	}
 
-    view.Execute(rw, nil, nil)
-
-	//rw.Write([]byte("Brizo UI"))
+	view.Execute(rw, nil, nil)
 }
 
 func getAddress() string {
