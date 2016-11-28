@@ -2,10 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-zoo/bone"
+	"log"
 	"net/http"
 	"os"
+
+	"github.com/CloudyKit/jet"
+	"github.com/go-zoo/bone"
 )
+
+var views = jet.NewHTMLSet("./views")
 
 func main() {
 	router := bone.New()
@@ -19,7 +24,13 @@ func main() {
 }
 
 func uiHandler(rw http.ResponseWriter, request *http.Request) {
-	rw.Write([]byte("Brizo UI"))
+	view, err := views.GetTemplate("index.jet")
+
+	if err != nil {
+		log.Println("Unexpected template err:", err.Error())
+	}
+
+	view.Execute(rw, nil, nil)
 }
 
 func getAddress() string {
