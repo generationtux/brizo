@@ -8,12 +8,14 @@ import (
 func ConfigureRoutes() *bone.Mux {
 	router := bone.New()
 
+	router.GetFunc("/", rootHandler)
+
 	// Javascript UI
-	router.HandleFunc("/app", uiHandler)
-	router.HandleFunc("/app/*", uiHandler)
+	router.GetFunc("/app", uiHandler)
+	router.GetFunc("/app/*", uiHandler)
 
 	// Healthz endpoint
-	router.HandleFunc("/healthz", healthzHandler)
+	router.GetFunc("/healthz", healthzHandler)
 
 	return router
 }
