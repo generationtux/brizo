@@ -27,3 +27,11 @@ func getDBAddress() string {
 
 	return fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, pass, host, port, db)
 }
+
+// Health will check make sure the database is reachable or return an error
+func Health() error {
+	db, e := Connect()
+	defer db.Close()
+
+	return e
+}
