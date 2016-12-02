@@ -1,3 +1,6 @@
 /tmp
 .env
 coverage.txt
+node_modules
+npm-debug.log
+ui/dist

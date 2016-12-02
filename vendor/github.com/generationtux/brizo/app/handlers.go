@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"log"
@@ -8,11 +8,16 @@ import (
 	"github.com/generationtux/brizo/database"
 )
 
-var views = jet.NewHTMLSet("./ui")
+var views = jet.NewHTMLSet("./views")
+
+// rootHandler redirects to Javascript app
+func rootHandler(rw http.ResponseWriter, request *http.Request) {
+	http.Redirect(rw, request, "/app", 301)
+}
 
 // uiHandler for requests to Javascript app
 func uiHandler(rw http.ResponseWriter, request *http.Request) {
-	view, err := views.GetTemplate("dist/index.html")
+	view, err := views.GetTemplate("index.jet")
 
 	if err != nil {
 		log.Println("Unexpected template err:", err.Error())
@@ -23,8 +28,7 @@ func uiHandler(rw http.ResponseWriter, request *http.Request) {
 
 // healthzHandler for health check requests
 func healthzHandler(rw http.ResponseWriter, request *http.Request) {
-	db, err := database.Connect()
-	defer db.Close()
+	err := database.Health()
 
 	if err != nil {
 		log.Println(err)

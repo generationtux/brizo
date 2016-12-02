@@ -9,8 +9,7 @@ func configureRoutes() *bone.Mux {
 	router := bone.New()
 
 	// Javascript UI
-	router.HandleFunc("/app", uiHandler)
-	router.HandleFunc("/app/*", uiHandler)
+	router.HandleFunc("/ui", uiHandler)
 
 	// Healthz endpoint
 	router.HandleFunc("/healthz", healthzHandler)
