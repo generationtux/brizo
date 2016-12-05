@@ -2,10 +2,12 @@
 
 ### Database
 
-Brizo uses MySQL to store data. You can configure the connection using the following environment variables
+Brizo uses MySQL to store data. You can configure the connection details by passing the following flags to the `run` command, or setting environment variables.
 
-- `BRIZO_DB_USER`
-- `BRIZO_DB_PASSWORD`
-- `BRIZO_DB_HOST`
-- `BRIZO_DB_PORT`
-- `BRIZO_DB_NAME`
+| Flag               | Env                    | Default   |
+| ------------------ | ---------------------- | --------- |
+| `--mysql-host`     | `BRIZO_MYSQL_HOST`     | localhost |
+| `--mysql-port`     | `BRIZO_MYSQL_PORT`     | 3306      |
+| `--mysql-user`     | `BRIZO_MYSQL_USER`     | root      |
+| `--mysql-password` | `BRIZO_MYSQL_PASSWORD` |           |
+| `--mysql-database` | `BRIZO_MYSQL_DATABASE` | brizo     |
