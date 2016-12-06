@@ -1,9 +1,9 @@
 package auth
 
 import (
+	"database/sql/driver"
 	"testing"
 
-	"database/sql/driver"
 	"github.com/erikstmartin/go-testdb"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
