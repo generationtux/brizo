@@ -7,7 +7,10 @@ import (
 // User represents a Brizo user
 type User struct {
 	database.Model
-	Username string `gorm:"not null;unique_index"`
-	Name     string
-	Email    string
+	Username       string `gorm:"not null;unique_index"`
+	Name           string
+	Email          string
+	Email          string
+	GithubUsername string
+	GithubToken    string
 }
