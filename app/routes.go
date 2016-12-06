@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/generationtux/brizo/auth"
 	"github.com/go-zoo/bone"
 )
 
@@ -16,6 +17,10 @@ func ConfigureRoutes() *bone.Mux {
 
 	// Healthz endpoint
 	router.GetFunc("/healthz", healthzHandler)
+
+	router.GetFunc("/login", auth.AuthMainHandler)
+	router.GetFunc("/o/auth/login/github", auth.AuthGithubHandler)
+	router.GetFunc("/o/auth/callback/github", auth.AuthGithubCallbackHandler)
 
 	return router
 }
