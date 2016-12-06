@@ -2,3 +2,5 @@
 /tmp
 .env
 coverage.txt
+node_modules
+dist
