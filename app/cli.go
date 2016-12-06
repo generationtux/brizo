@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/generationtux/brizo/config"
+	"github.com/generationtux/brizo/kube"
 	"github.com/urfave/cli"
 )
 
@@ -63,7 +64,7 @@ func getAddress() string {
 
 // runFlags returns the configuration flags for the run command
 func runFlags() []cli.Flag {
-	return []cli.Flag{
+	dataFlags := []cli.Flag{
 		cli.StringFlag{
 			Name:        "mysql-host",
 			Usage:       "mysql host address",
@@ -99,4 +100,7 @@ func runFlags() []cli.Flag {
 			EnvVar:      "BRIZO_MYSQL_DATABASE",
 		},
 	}
+	kubeFlags := kube.CLIFlags()
+
+	return append(dataFlags, kubeFlags...)
 }
