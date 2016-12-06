@@ -29,6 +29,12 @@
 			"revisionTime": "2016-10-29T20:57:26Z"
 		},
 		{
+			"checksumSHA1": "0xIBiVOmW6JxXyxOZsBTtHF1Jxw=",
+			"path": "github.com/erikstmartin/go-testdb",
+			"revision": "8d10e4a1bae52cd8b81ffdec3445890d6dccab3d",
+			"revisionTime": "2016-02-19T21:45:06Z"
+		},
+		{
 			"checksumSHA1": "3VxOGKjCTa9YsDR+2Ie+VDlEN9I=",
 			"path": "github.com/go-sql-driver/mysql",
 			"revision": "abfd04d323c28c5c5683c2beb877fae36491d5a8",
@@ -109,6 +115,12 @@
 			"path": "github.com/urfave/cli",
 			"revision": "0bdeddeeb0f650497d603c4ad7b20cfe685682f6",
 			"revisionTime": "2016-11-22T04:36:10Z"
+		},
+		{
+			"checksumSHA1": "MeXzn+OFdrU9/TGeMVz0GsRX+dM=",
+			"path": "gopkg.in/DATA-DOG/go-sqlmock.v1",
+			"revision": "d4cd2ca2ad1cc2130bba385aab072218f131f636",
+			"revisionTime": "2016-11-02T12:49:59Z"
 		}
 	],
 	"rootPath": "github.com/generationtux/brizo"
