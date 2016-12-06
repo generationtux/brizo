@@ -10,7 +10,6 @@ type User struct {
 	Username       string `gorm:"not null;unique_index"`
 	Name           string
 	Email          string
-	Email          string
 	GithubUsername string
 	GithubToken    string
 }

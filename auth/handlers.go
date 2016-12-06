@@ -63,20 +63,19 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	// fmt.Printf("Logged in as GitHub user: %s\n", *user.Login)
-	// fmt.Printf("access token set to '%s'\n", token.AccessToken)
-	createNewGithubUser(user)
+	createNewGithubUser(user, token.AccessToken)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
-func createNewGithubUser(githubUser *github.User) {
+func createNewGithubUser(githubUser *github.User, token string) {
 	user := User{
-		Username: *githubUser.Login,
-		Name:     *githubUser.Name,
-		Email:    *githubUser.Email,
+		Username:       *githubUser.Login,
+		Name:           *githubUser.Name,
+		Email:          *githubUser.Email,
+		GithubUsername: *githubUser.Login,
+		GithubToken:    token,
 	}
-	db, e := database.Connect()
+	db, _ := database.Connect()
 	defer db.Close()
-	fmt.Printf("%v\n%v\n", db, e)
 	db.Create(&user)
 }
