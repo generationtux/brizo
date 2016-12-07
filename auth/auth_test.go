@@ -1,12 +1,21 @@
 package auth
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/generationtux/brizo/config"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 )
+
+func TestAuthStateStringGeneration(t *testing.T) {
+	stateString := GetOAuthStateString()
+	matches, _ := regexp.Match("[a-zA-Z0-9]", []byte(stateString))
+
+	assert.Len(t, stateString, 64)
+	assert.True(t, true, matches)
+}
 
 func TestHydratesConfig(t *testing.T) {
 	config.App.OAuthGithubClientId = "exampleId"
