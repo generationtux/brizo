@@ -8,8 +8,7 @@ import (
 type User struct {
 	database.Model
 	Username       string `gorm:"not null;unique_index"`
-	FirstName      string
-	LastName       string
+	Name           string
 	Email          string
 	GithubUsername string
 	GithubToken    string

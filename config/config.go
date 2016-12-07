@@ -2,11 +2,13 @@ package config
 
 // configuration data structure for configuration
 type configuration struct {
-	MysqlHost     string
-	MysqlPort     string
-	MysqlUser     string
-	MysqlPassword string
-	MysqlDatabase string
+	MysqlHost               string
+	MysqlPort               string
+	MysqlUser               string
+	MysqlPassword           string
+	MysqlDatabase           string
+	OAuthGithubClientId     string
+	OAuthGithubClientSecret string
 }
 
 // App holds the apps configuration
