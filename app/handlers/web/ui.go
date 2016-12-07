@@ -10,12 +10,12 @@ import (
 
 var views = jet.NewHTMLSet("./ui")
 
-// rootHandler redirects to Javascript app
+// RootHandler redirects to Javascript app
 func RootHandler(rw http.ResponseWriter, request *http.Request) {
 	http.Redirect(rw, request, "/app", 301)
 }
 
-// uiHandler for requests to Javascript app
+// UiHandler for requests to Javascript app
 func UiHandler(rw http.ResponseWriter, request *http.Request) {
 	view, err := views.GetTemplate("index.html")
 
@@ -26,7 +26,7 @@ func UiHandler(rw http.ResponseWriter, request *http.Request) {
 	view.Execute(rw, nil, nil)
 }
 
-// healthzHandler for health check requests
+// HealthzHandler for health check requests
 func HealthzHandler(rw http.ResponseWriter, request *http.Request) {
 	err := database.Health()
 

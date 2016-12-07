@@ -25,19 +25,21 @@ var (
 	oauthStateString = auth.GetOAuthStateString()
 )
 
-// @todo needs to be removed in place of web route link
+// AuthMainHandler for basic login page
 func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(htmlIndex))
 }
 
+// AuthGithubHandler for requesting oauth access from Github
 func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
 	url := oauthConf.AuthCodeURL(oauthStateString, oauth2.AccessTypeOnline)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+// AuthGithubHandler for handling oauth access response from Github
 func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
 	state := r.FormValue("state")

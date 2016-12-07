@@ -23,7 +23,6 @@ func ConfigureRoutes() *bone.Mux {
 	// Healthz endpoint
 	router.GetFunc("/healthz", web.HealthzHandler)
 
-	// @todo "/login" will be removed following addition of ui links
 	router.GetFunc("/login", api.AuthMainHandler)
 	router.GetFunc("/o/auth/login/github", api.AuthGithubHandler)
 	router.GetFunc("/o/auth/callback/github", api.AuthGithubCallbackHandler)
