@@ -1,6 +1,8 @@
 package app
 
 import (
+	"net/http"
+
 	"github.com/generationtux/brizo/auth"
 	"github.com/go-zoo/bone"
 )
@@ -13,7 +15,9 @@ func ConfigureRoutes() *bone.Mux {
 
 	// Javascript UI
 	router.GetFunc("/app", uiHandler)
-	router.GetFunc("/app/*", uiHandler)
+
+	// Static Files
+	router.Get("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("ui/dist/"))))
 
 	// Healthz endpoint
 	router.GetFunc("/healthz", healthzHandler)

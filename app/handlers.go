@@ -8,7 +8,7 @@ import (
 	"github.com/generationtux/brizo/database"
 )
 
-var views = jet.NewHTMLSet("./views")
+var views = jet.NewHTMLSet("./ui")
 
 // rootHandler redirects to Javascript app
 func rootHandler(rw http.ResponseWriter, request *http.Request) {
@@ -17,7 +17,7 @@ func rootHandler(rw http.ResponseWriter, request *http.Request) {
 
 // uiHandler for requests to Javascript app
 func uiHandler(rw http.ResponseWriter, request *http.Request) {
-	view, err := views.GetTemplate("index.jet")
+	view, err := views.GetTemplate("index.html")
 
 	if err != nil {
 		log.Println("Unexpected template err:", err.Error())
