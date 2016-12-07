@@ -10,11 +10,11 @@ func ConfigureRoutes() *bone.Mux {
 
 	router.GetFunc("/", rootHandler)
 
-    // Javascript UI
+	// Javascript UI
 	router.GetFunc("/app", uiHandler)
 
-    // Static Files
-    router.Get("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("ui/dist/"))))
+	// Static Files
+	router.Get("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("ui/dist/"))))
 
 	// Healthz endpoint
 	router.GetFunc("/healthz", healthzHandler)
