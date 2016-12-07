@@ -3,7 +3,8 @@ package app
 import (
 	"net/http"
 
-	"github.com/generationtux/brizo/auth"
+	"github.com/generationtux/brizo/app/handlers/api"
+	"github.com/generationtux/brizo/app/handlers/web"
 	"github.com/go-zoo/bone"
 )
 
@@ -11,20 +12,21 @@ import (
 func ConfigureRoutes() *bone.Mux {
 	router := bone.New()
 
-	router.GetFunc("/", rootHandler)
+	router.GetFunc("/", web.RootHandler)
 
 	// Javascript UI
-	router.GetFunc("/app", uiHandler)
+	router.GetFunc("/app", web.UiHandler)
 
 	// Static Files
 	router.Get("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("ui/dist/"))))
 
 	// Healthz endpoint
-	router.GetFunc("/healthz", healthzHandler)
+	router.GetFunc("/healthz", web.HealthzHandler)
 
-	router.GetFunc("/login", auth.AuthMainHandler)
-	router.GetFunc("/o/auth/login/github", auth.AuthGithubHandler)
-	router.GetFunc("/o/auth/callback/github", auth.AuthGithubCallbackHandler)
+	// @todo "/login" will be removed following addition of ui links
+	router.GetFunc("/login", api.AuthMainHandler)
+	router.GetFunc("/o/auth/login/github", api.AuthGithubHandler)
+	router.GetFunc("/o/auth/callback/github", api.AuthGithubCallbackHandler)
 
 	return router
 }

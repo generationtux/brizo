@@ -1,4 +1,4 @@
-package app
+package web
 
 import (
 	"log"
@@ -11,12 +11,12 @@ import (
 var views = jet.NewHTMLSet("./ui")
 
 // rootHandler redirects to Javascript app
-func rootHandler(rw http.ResponseWriter, request *http.Request) {
+func RootHandler(rw http.ResponseWriter, request *http.Request) {
 	http.Redirect(rw, request, "/app", 301)
 }
 
 // uiHandler for requests to Javascript app
-func uiHandler(rw http.ResponseWriter, request *http.Request) {
+func UiHandler(rw http.ResponseWriter, request *http.Request) {
 	view, err := views.GetTemplate("index.html")
 
 	if err != nil {
@@ -27,7 +27,7 @@ func uiHandler(rw http.ResponseWriter, request *http.Request) {
 }
 
 // healthzHandler for health check requests
-func healthzHandler(rw http.ResponseWriter, request *http.Request) {
+func HealthzHandler(rw http.ResponseWriter, request *http.Request) {
 	err := database.Health()
 
 	if err != nil {

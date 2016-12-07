@@ -1,24 +1,13 @@
-package auth
+package api
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/generationtux/brizo/database"
-	"github.com/google/go-github/github"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/generationtux/brizo/auth"
+	githuboauth "github.com/google/go-github/github"
 	"golang.org/x/oauth2"
-	githuboauth "golang.org/x/oauth2/github"
-)
-
-var (
-	oauthConf = &oauth2.Config{
-		ClientID:     "",
-		ClientSecret: "",
-		Scopes:       []string{"user", "user:email", "repo"},
-		Endpoint:     githuboauth.Endpoint,
-	}
-	oauthStateString = generateRandomString(64)
+	"golang.org/x/oauth2/github"
 )
 
 const htmlIndex = `<html><body>
@@ -26,6 +15,17 @@ Log in with <a href="/o/auth/login/github">GitHub</a>
 </body></html>
 `
 
+var (
+	oauthConf = &oauth2.Config{
+		ClientID:     "",
+		ClientSecret: "",
+		Scopes:       []string{"user", "user:email", "repo"},
+		Endpoint:     github.Endpoint,
+	}
+	oauthStateString = auth.GetOAuthStateString()
+)
+
+// @todo needs to be removed in place of web route link
 func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -33,16 +33,16 @@ func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
-	hydrateOAuthConfig(oauthConf)
+	auth.HydrateOAuthConfig(oauthConf)
 	url := oauthConf.AuthCodeURL(oauthStateString, oauth2.AccessTypeOnline)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	hydrateOAuthConfig(oauthConf)
+	auth.HydrateOAuthConfig(oauthConf)
 	state := r.FormValue("state")
 	if state != oauthStateString {
-		fmt.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
+		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -50,32 +50,19 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 	token, err := oauthConf.Exchange(oauth2.NoContext, code)
 	if err != nil {
-		fmt.Printf("oauthConf.Exchange() failed with '%s'\n", err)
+		log.Printf("oauthConf.Exchange() failed with '%s'\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	oauthClient := oauthConf.Client(oauth2.NoContext, token)
-	client := github.NewClient(oauthClient)
+	client := githuboauth.NewClient(oauthClient)
 	user, _, err := client.Users.Get("")
 	if err != nil {
-		fmt.Printf("client.Users.Get() faled with '%s'\n", err)
+		log.Printf("client.Users.Get() faled with '%s'\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	createNewGithubUser(user, token.AccessToken)
+	auth.CreateNewGithubUser(user, token.AccessToken)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-}
-
-func createNewGithubUser(githubUser *github.User, token string) {
-	user := User{
-		Username:       *githubUser.Login,
-		Name:           *githubUser.Name,
-		Email:          *githubUser.Email,
-		GithubUsername: *githubUser.Login,
-		GithubToken:    token,
-	}
-	db, _ := database.Connect()
-	defer db.Close()
-	db.Create(&user)
 }
