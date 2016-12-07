@@ -1,9 +1,9 @@
 package app
 
 import (
-    "net/http"
+	"net/http"
 
-    "github.com/generationtux/brizo/auth"
+	"github.com/generationtux/brizo/auth"
 	"github.com/go-zoo/bone"
 )
 
