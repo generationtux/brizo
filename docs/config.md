@@ -9,8 +9,9 @@ If you need to run Brizo outside of the cluster and configure access externally 
 
 | Flag               | Env                    |           |
 | ------------------ | ---------------------- | --------- |
-| `--k8s-config`     | `BRIZO_K8S_CONFIG`     | *path to kubeconfig file* |
-| `--k8s-context`    | `BRIZO_K8S_CONTEXT`    | *optional context name to use |
+| `--k8s-external`   | `BRIZO_K8S_EXTERNAL`   | *optional connect to external cluster, defaults false* |
+| `--k8s-config`     | `BRIZO_K8S_CONFIG`     | *optional path to kubeconfig file: if not present, will look for ./kubeconfig or ~/.kube/config (--k8s-external must be used)* |
+| `--k8s-context`    | `BRIZO_K8S_CONTEXT`    | *optional context name to use (--k8s-external must be used)* |
 
 ### Database
 

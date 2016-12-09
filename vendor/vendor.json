@@ -297,6 +297,20 @@
 			"revisionTime": "2016-11-03T14:18:12Z"
 		},
 		{
+			"path": "github.com/mitchelh/go-homdir",
+			"revision": ""
+		},
+		{
+			"path": "github.com/mitchelh/go-homedir",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "V/quM7+em2ByJbWBLOsEwnY3j/Q=",
+			"path": "github.com/mitchellh/go-homedir",
+			"revision": "b8bc1bf767474819792c23f32d8286a45736f1c6",
+			"revisionTime": "2016-12-03T19:45:07Z"
+		},
+		{
 			"checksumSHA1": "N5RwWgt0CCgyVin0kYbipyoy6O8=",
 			"path": "github.com/pborman/uuid",
 			"revision": "5007efa264d92316c43112bc573e754bc889b7b1",

@@ -22,6 +22,11 @@ $ docker-compose up -d
 
 This will start a database listening on `localhost:33062` with the username `root` and password `secret`. It will also setup a database named `brizo`.
 
+#### Local Kubernetes
+
+You must have a Kubernetes cluster available for development. You can setup a quick test cluster locally using [Minikube](https://github.com/kubernetes/minikube). The default
+environment in `.env.example` is configured to connect to a minikube cluster.
+
 #### Autoreload
 
 You can use [Fresh](https://github.com/pilu/fresh) to serve and autoreload the service during development.

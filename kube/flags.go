@@ -8,6 +8,11 @@ import (
 // CLIFlags builds the config flags for kubernetes
 func CLIFlags() []cli.Flag {
 	return []cli.Flag{
+		cli.BoolFlag{
+			Name:        "k8s-external",
+			Destination: &config.Kubernetes.External,
+			EnvVar:      "BRIZO_K8S_EXTERNAL",
+		},
 		cli.StringFlag{
 			Name:        "k8s-config",
 			Usage:       "path to kubeconfig file for access to external cluster (not needed if running brizo inside a k8s cluster)",

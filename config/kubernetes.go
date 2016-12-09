@@ -1,6 +1,7 @@
 package config
 
 type kubeConfig struct {
+	External   bool
 	ConfigFile string
 	Context    string
 }
