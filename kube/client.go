@@ -1,6 +1,8 @@
 package kube
 
 import (
+	"errors"
+
 	"github.com/generationtux/brizo/config"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -20,8 +22,8 @@ func Client() (*kubernetes.Clientset, error) {
 func internalClient() (*kubernetes.Clientset, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		client, _ := kubernetes.NewForConfig(config)
-		return client, err
+		var client *kubernetes.Clientset
+		return client, errors.New("Unable to connect to Kubernetes using in-cluster config.")
 	}
 
 	return kubernetes.NewForConfig(config)
@@ -34,8 +36,8 @@ func externalClient() (*kubernetes.Clientset, error) {
 	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(rules, overrides).ClientConfig()
 
 	if err != nil {
-		client, _ := kubernetes.NewForConfig(config)
-		return client, err
+		var client *kubernetes.Clientset
+		return client, errors.New("Unable to connect to Kubernetes using external cluster config.")
 	}
 
 	return kubernetes.NewForConfig(config)

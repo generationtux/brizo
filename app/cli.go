@@ -39,7 +39,7 @@ func runApp(c *cli.Context) error {
 	log.Printf("==> Initializing app..")
 	e := initializeApp()
 	if e != nil {
-		log.Fatalln("= error during initilization")
+		log.Println("== error during initilization")
 		return e
 	}
 
