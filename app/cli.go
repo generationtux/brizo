@@ -99,6 +99,18 @@ func runFlags() []cli.Flag {
 			Destination: &config.App.MysqlDatabase,
 			EnvVar:      "BRIZO_MYSQL_DATABASE",
 		},
+		cli.StringFlag{
+			Name:        "oauth-github-client-id",
+			Usage:       "oauth client id of the github application",
+			Destination: &config.App.OAuthGithubClientId,
+			EnvVar:      "OAUTH_GITHUB_CLIENT_ID",
+		},
+		cli.StringFlag{
+			Name:        "oauth-github-client-secret",
+			Usage:       "oauth client secret of the github application",
+			Destination: &config.App.OAuthGithubClientSecret,
+			EnvVar:      "OAUTH_GITHUB_CLIENT_SECRET",
+		},
 	}
 	kubeFlags := kube.CLIFlags()
 
