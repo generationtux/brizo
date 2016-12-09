@@ -2,7 +2,6 @@ package auth
 
 import (
 	"github.com/generationtux/brizo/config"
-	"github.com/generationtux/brizo/database"
 	githuboauth "github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
@@ -21,9 +20,7 @@ func CreateNewGithubUser(githubUser *githuboauth.User, token string) {
 		GithubUsername: *githubUser.Login,
 		GithubToken:    token,
 	}
-	db, _ := database.Connect()
-	defer db.Close()
-	db.Create(&user)
+	CreateUser(&user)
 }
 
 // HydrateOAuthConfig is used to set the ClientID & ClientSecret at runtime so

@@ -15,7 +15,7 @@ func TestIsFirstUserReturnsTrueWhenNoUsers(t *testing.T) {
 		return testdb.RowsFromCSVString([]string{}, ""), nil
 	})
 
-	assert.Equal(t, true, isFirstUser(db))
+	assert.Equal(t, true, IsFirstUser(db))
 }
 
 func TestIsFirstUserReturnsFalseWhenUsersExist(t *testing.T) {
@@ -25,7 +25,7 @@ func TestIsFirstUserReturnsFalseWhenUsersExist(t *testing.T) {
 		return testdb.RowsFromCSVString(columns, "foobar"), nil
 	})
 
-	assert.Equal(t, false, isFirstUser(db))
+	assert.Equal(t, false, IsFirstUser(db))
 }
 
 func TestGithubUserIsNotAllowed(t *testing.T) {
@@ -37,7 +37,7 @@ func TestGithubUserIsNotAllowed(t *testing.T) {
 		return testdb.RowsFromCSVString([]string{}, ""), nil
 	})
 
-	assert.Equal(t, false, githubUserAllowed(db, "foobar"))
+	assert.Equal(t, false, GithubUserAllowed(db, "foobar"))
 	assert.Equal(t, "SELECT * FROM \"users\"  WHERE (github_username = ?)", sentQuery)
 }
 
@@ -51,6 +51,6 @@ func TestGithubUserIsAllowed(t *testing.T) {
 		return testdb.RowsFromCSVString(columns, "foobar"), nil
 	})
 
-	assert.Equal(t, true, githubUserAllowed(db, "foobar"))
+	assert.Equal(t, true, GithubUserAllowed(db, "foobar"))
 	assert.Equal(t, "SELECT * FROM \"users\"  WHERE (github_username = ?)", sentQuery)
 }

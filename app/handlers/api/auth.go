@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/generationtux/brizo/auth"
+	"github.com/generationtux/brizo/database"
 	githuboauth "github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )
 
-const htmlIndex = `<html><body>
+const htmlIndex = `<!doctype html><html><body>
 Log in with <a href="/o/auth/login/github">GitHub</a>
 </body></html>
 `
@@ -30,6 +31,24 @@ func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(htmlIndex))
+}
+
+func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
+	username := r.FormValue("username")
+	user := auth.User{
+		Username:       username,
+		GithubUsername: username,
+	}
+	success, err := auth.CreateUser(&user)
+
+	if success == false {
+		log.Printf("%s when trying to create user\n", err)
+		// @todo correctly redirect w/ bad request shown
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+	} else {
+		// @todo correctly redirect w/ created shown
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 }
 
 // AuthGithubHandler for requesting oauth access from Github
@@ -61,10 +80,30 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	client := githuboauth.NewClient(oauthClient)
 	user, _, err := client.Users.Get("")
 	if err != nil {
-		log.Printf("client.Users.Get() faled with '%s'\n", err)
+		log.Printf("client.Users.Get() failed with '%s'\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	auth.CreateNewGithubUser(user, token.AccessToken)
+	db, _ := database.Connect()
+	defer db.Close()
+	if auth.IsFirstUser(db) {
+		auth.CreateNewGithubUser(user, token.AccessToken)
+	} else if auth.GithubUserAllowed(db, *user.Login) {
+		brizoUser := auth.User{
+			Username:       *user.Login,
+			Name:           *user.Name,
+			Email:          *user.Email,
+			GithubUsername: *user.Login,
+			GithubToken:    token.AccessToken,
+		}
+		success, err := auth.UpdateUser(&brizoUser)
+		if success == false {
+			log.Printf("failed to update user '%s' because '%s'\n", *user.Login, err)
+			// @todo update to correct status code
+			http.Redirect(w, r, "/", http.StatusInternalServerError)
+			return
+		}
+		// @todo maybe add the correct status code here too
+	}
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
