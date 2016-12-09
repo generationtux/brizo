@@ -18,7 +18,7 @@ func TestAuthStateStringGeneration(t *testing.T) {
 }
 
 func TestHydratesConfig(t *testing.T) {
-	config.App.OAuthGithubClientId = "exampleId"
+	config.App.OAuthGithubClientID = "exampleId"
 	config.App.OAuthGithubClientSecret = "exampleSecret"
 	oauthConf := oauth2.Config{}
 

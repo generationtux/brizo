@@ -29,6 +29,6 @@ func CreateNewGithubUser(githubUser *githuboauth.User, token string) {
 // HydrateOAuthConfig is used to set the ClientID & ClientSecret at runtime so
 // that we can load them via the cli config values
 func HydrateOAuthConfig(oauthConf *oauth2.Config) {
-	oauthConf.ClientID = config.App.OAuthGithubClientId
+	oauthConf.ClientID = config.App.OAuthGithubClientID
 	oauthConf.ClientSecret = config.App.OAuthGithubClientSecret
 }
