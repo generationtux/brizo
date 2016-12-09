@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/generationtux/brizo/auth"
+	"github.com/generationtux/brizo/database"
 	githuboauth "github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
@@ -65,6 +66,15 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	auth.CreateNewGithubUser(user, token.AccessToken)
+
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	auth.CreateNewGithubUser(db, user, token.AccessToken)
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
