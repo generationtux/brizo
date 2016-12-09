@@ -7,6 +7,7 @@ import (
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
 	githuboauth "github.com/google/go-github/github"
+	"github.com/mholt/binding"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )
@@ -34,13 +35,16 @@ func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
-	username := r.FormValue("username")
+	createUserForm := new(auth.CreateUserForm)
+	errs := binding.Bind(r, createUserForm)
+	if errs.Handle(w) {
+		return
+	}
 	user := auth.User{
-		Username:       username,
-		GithubUsername: username,
+		Username:       createUserForm.Username,
+		GithubUsername: createUserForm.Username,
 	}
 	success, err := auth.CreateUser(&user)
-
 	if success == false {
 		log.Printf("%s when trying to create user\n", err)
 		// @todo correctly redirect w/ bad request shown
@@ -61,15 +65,17 @@ func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 // AuthGithubHandler for handling oauth access response from Github
 func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
-	state := r.FormValue("state")
-	if state != oauthStateString {
-		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
+	oAuthCallbackForm := new(auth.OAuthCallbackForm)
+	errs := binding.Bind(r, oAuthCallbackForm)
+	if errs.Handle(w) {
+		return
+	}
+	if oAuthCallbackForm.State != oauthStateString {
+		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, oAuthCallbackForm.State)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-
-	code := r.FormValue("code")
-	token, err := oauthConf.Exchange(oauth2.NoContext, code)
+	token, err := oauthConf.Exchange(oauth2.NoContext, oAuthCallbackForm.Code)
 	if err != nil {
 		log.Printf("oauthConf.Exchange() failed with '%s'\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

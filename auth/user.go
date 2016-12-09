@@ -14,7 +14,8 @@ type User struct {
 	GithubToken    string
 }
 
-// CreateUser creates a Brizo specific user
+// CreateUser creates a Brizo specific user without forcing any validation on
+// the input
 func CreateUser(user *User) (bool, error) {
 	db, _ := database.Connect()
 	defer db.Close()
@@ -23,6 +24,7 @@ func CreateUser(user *User) (bool, error) {
 	return result.RowsAffected == 1, result.Error
 }
 
+// UpdateUser updates an existing Brizo user based on his/her username
 func UpdateUser(user *User) (bool, error) {
 	db, _ := database.Connect()
 	defer db.Close()
