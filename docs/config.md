@@ -2,8 +2,7 @@
 
 ### Kubernetes
 
-The easiest way to run Brizo is inside a pod running inside a Kubernetes cluster. Doing so will allow Brizo to use the the default service account to authenticate
-with Kubernetes and no other configuration is needed.
+The easiest way to run Brizo is inside a pod running inside a Kubernetes cluster. Doing so will allow Brizo to use the the default service account to authenticate with Kubernetes and no other configuration is needed.
 
 If you need to run Brizo outside of the cluster and configure access externally you may use a `kubeconfig` file.
 

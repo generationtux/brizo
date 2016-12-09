@@ -102,7 +102,7 @@ func runFlags() []cli.Flag {
 		cli.StringFlag{
 			Name:        "oauth-github-client-id",
 			Usage:       "oauth client id of the github application",
-			Destination: &config.App.OAuthGithubClientId,
+			Destination: &config.App.OAuthGithubClientID,
 			EnvVar:      "OAUTH_GITHUB_CLIENT_ID",
 		},
 		cli.StringFlag{
