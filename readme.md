@@ -27,6 +27,10 @@ This will start a database listening on `localhost:33062` with the username `roo
 You must have a Kubernetes cluster available for development. You can setup a quick test cluster locally using [Minikube](https://github.com/kubernetes/minikube). The default
 environment in `.env.example` is configured to connect to a minikube cluster.
 
+#### UI
+
+The JS UI is isolated to the `ui` directory. See the [UI Readme](https://github.com/generationtux/brizo/tree/master/ui) for development info.
+
 #### Autoreload
 
 You can use [Fresh](https://github.com/pilu/fresh) to serve and autoreload the service during development.

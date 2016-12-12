@@ -15,8 +15,8 @@ func RootHandler(rw http.ResponseWriter, request *http.Request) {
 	http.Redirect(rw, request, "/app", 301)
 }
 
-// UiHandler for requests to Javascript app
-func UiHandler(rw http.ResponseWriter, request *http.Request) {
+// UIHandler for requests to Javascript app
+func UIHandler(rw http.ResponseWriter, request *http.Request) {
 	view, err := views.GetTemplate("index.html")
 
 	if err != nil {

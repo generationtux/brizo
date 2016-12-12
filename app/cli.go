@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/generationtux/brizo/app/routes"
 	"github.com/generationtux/brizo/config"
 	"github.com/generationtux/brizo/kube"
 	"github.com/urfave/cli"
@@ -44,7 +45,7 @@ func runApp(c *cli.Context) error {
 	}
 
 	log.Printf("==> App is ready")
-	router := ConfigureRoutes()
+	router := routes.BuildRouter()
 	address := getAddress()
 
 	log.Printf("==> Brizo is starting on %s\n", address)
