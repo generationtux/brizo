@@ -10,7 +10,7 @@ import (
 // BuildRouter configures the application router
 func BuildRouter() *bone.Mux {
 	r := mainRoutes()
-	r.SubRoute("/api", apiRoutes())
+	r.SubRoute("/api/v1", apiRoutes())
 
 	return r
 }
