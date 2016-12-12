@@ -11,7 +11,7 @@ import { LoginComponent }       from './login/login.component';
 import { MastheadComponent }    from './masthead/masthead.component';
 
 const routes: Routes = [
-    { path: 'dashboard', component: DashboardComponent },
+    { path: '', component: DashboardComponent },
     { path: 'login',     component: LoginComponent }
 ];
 
@@ -19,7 +19,7 @@ const routes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes),
         HttpModule,
     ],
     declarations: [

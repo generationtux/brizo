@@ -24,10 +24,16 @@ func mainRoutes() *bone.Mux {
 
 	// Javascript UI
 	router.GetFunc("/app", web.UIHandler)
+	router.GetFunc("/app/*", web.UIHandler)
 	router.Get("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("ui/dist/"))))
 
 	// Healthz endpoint
 	router.GetFunc("/healthz", web.HealthzHandler)
+
+	// OAuth endpoints
+	router.GetFunc("/login", web.AuthMainHandler)
+	router.GetFunc("/o/auth/login/github", web.AuthGithubHandler)
+	router.GetFunc("/o/auth/callback/github", web.AuthGithubCallbackHandler)
 
 	return router
 }
