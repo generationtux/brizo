@@ -2,6 +2,7 @@ import { NgModule }             from '@angular/core';
 import { BrowserModule }        from '@angular/platform-browser';
 import { FormsModule }          from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpModule }           from '@angular/http';
 
 // App is our top level component
 import { AppComponent }         from './app.component';
@@ -18,7 +19,8 @@ const routes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
-        RouterModule.forRoot(routes, { useHash: true })
+        RouterModule.forRoot(routes, { useHash: true }),
+        HttpModule,
     ],
     declarations: [
         AppComponent,

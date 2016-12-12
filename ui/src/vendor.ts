@@ -1,3 +1,15 @@
+// Angular
+import '@angular/platform-browser';
+import '@angular/platform-browser-dynamic';
+import '@angular/core';
+import '@angular/common';
+import '@angular/http';
+import '@angular/router';
+
+// RxJS
+import 'rxjs';
+
+// Polyfills
 import 'core-js/es6/symbol';
 import 'core-js/es6/object';
 import 'core-js/es6/function';
@@ -15,6 +27,5 @@ import 'core-js/es6/weak-map';
 import 'core-js/es6/weak-set';
 import 'core-js/es6/typed';
 import 'core-js/es6/reflect';
-
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
