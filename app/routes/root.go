@@ -24,7 +24,7 @@ func mainRoutes() *bone.Mux {
 
 	// Javascript UI
 	router.GetFunc("/app", web.UIHandler)
-	router.Get("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("ui/dist/"))))
+	router.Get("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("ui/dist/"))))
 
 	// Healthz endpoint
 	router.GetFunc("/healthz", web.HealthzHandler)

@@ -1,8 +1,13 @@
 package web
 
 import (
+	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
+	"runtime"
 
 	"github.com/CloudyKit/jet"
 	"github.com/generationtux/brizo/database"
@@ -18,12 +23,47 @@ func RootHandler(rw http.ResponseWriter, request *http.Request) {
 // UIHandler for requests to Javascript app
 func UIHandler(rw http.ResponseWriter, request *http.Request) {
 	view, err := views.GetTemplate("index.html")
-
 	if err != nil {
 		log.Println("Unexpected template err:", err.Error())
 	}
 
-	view.Execute(rw, nil, nil)
+	assets, err := getUIAssets()
+	if err != nil {
+		log.Println("Unable to get UI assets: ", err)
+	}
+
+	vars := make(jet.VarMap)
+	vars.Set("assets", assets)
+	view.Execute(rw, vars, nil)
+}
+
+// data structure for UI assets.json file
+type uiAssets struct {
+	App       map[string]string
+	Vendor    map[string]string
+	Polyfills map[string]string
+}
+
+// getUIAssets retrieves the current version of UI asset paths
+func getUIAssets() (uiAssets, error) {
+	_, file, _, ok := runtime.Caller(0)
+	if !ok {
+		return uiAssets{}, errors.New("Unable to find current file path.")
+	}
+
+	var assets uiAssets
+	assetPath := path.Join(path.Dir(file), "../../../ui/dist/assets.json")
+	assetContents, err := ioutil.ReadFile(assetPath)
+	if err != nil {
+		return uiAssets{}, err
+	}
+
+	err = json.Unmarshal(assetContents, &assets)
+	if err != nil {
+		return uiAssets{}, err
+	}
+
+	return assets, nil
 }
 
 // HealthzHandler for health check requests
