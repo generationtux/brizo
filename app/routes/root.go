@@ -31,9 +31,12 @@ func mainRoutes() *bone.Mux {
 	router.GetFunc("/healthz", web.HealthzHandler)
 
 	// OAuth endpoints
-	router.GetFunc("/login", web.AuthMainHandler)
 	router.GetFunc("/o/auth/login/github", web.AuthGithubHandler)
 	router.GetFunc("/o/auth/callback/github", web.AuthGithubCallbackHandler)
+
+	// @todo move to JS UI
+	router.GetFunc("/users", web.AuthAddNewUser)
+	router.GetFunc("/login", web.AuthMainHandler)
 
 	return router
 }

@@ -8,5 +8,8 @@ import (
 func apiRoutes() *bone.Mux {
 	router := bone.New()
 
+	// users
+	router.PostFunc("/users", api.AuthCreateUser)
+
 	return router
 }
