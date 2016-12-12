@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import '../assets/css/materialize.min.css';
 
 @Component({
