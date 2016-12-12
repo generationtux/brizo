@@ -5,11 +5,17 @@ import (
 
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 )
 
 // initializeApp will validate configuration and migrate the database if necessary
 func initializeApp() error {
-	e := database.Health()
+	_, e := kube.Client()
+	if e != nil {
+		return e
+	}
+
+	e = database.Health()
 	if e != nil {
 		return e
 	}

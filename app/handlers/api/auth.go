@@ -40,11 +40,18 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	if errs.Handle(w) {
 		return
 	}
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
 	user := auth.User{
 		Username:       createUserForm.Username,
 		GithubUsername: createUserForm.Username,
 	}
-	success, err := auth.CreateUser(&user)
+	success, err := auth.CreateUser(db, &user)
 	if success == false {
 		log.Printf("%s when trying to create user\n", err)
 		// @todo correctly redirect w/ bad request shown
@@ -90,11 +97,20 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	db, _ := database.Connect()
+	db, err := database.Connect()
 	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
 	if auth.IsFirstUser(db) {
-		auth.CreateNewGithubUser(user, token.AccessToken)
+		auth.CreateNewGithubUser(db, user, token.AccessToken)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	} else if auth.GithubUserAllowed(db, *user.Login) {
+		// @todo check that non-required attributes exist
 		brizoUser := auth.User{
 			Username:       *user.Login,
 			Name:           *user.Name,
@@ -102,14 +118,16 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			GithubUsername: *user.Login,
 			GithubToken:    token.AccessToken,
 		}
-		success, err := auth.UpdateUser(&brizoUser)
+		success, err := auth.UpdateUser(db, &brizoUser)
 		if success == false {
 			log.Printf("failed to update user '%s' because '%s'\n", *user.Login, err)
 			// @todo update to correct status code
 			http.Redirect(w, r, "/", http.StatusInternalServerError)
 			return
 		}
-		// @todo maybe add the correct status code here too
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	}
+	// @todo user is not allowed
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

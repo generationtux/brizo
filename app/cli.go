@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/generationtux/brizo/config"
+	"github.com/generationtux/brizo/kube"
 	"github.com/urfave/cli"
 )
 
@@ -38,7 +39,7 @@ func runApp(c *cli.Context) error {
 	log.Printf("==> Initializing app..")
 	e := initializeApp()
 	if e != nil {
-		log.Fatalln("= error during initilization")
+		log.Println("== error during initilization")
 		return e
 	}
 
@@ -63,7 +64,7 @@ func getAddress() string {
 
 // runFlags returns the configuration flags for the run command
 func runFlags() []cli.Flag {
-	return []cli.Flag{
+	dataFlags := []cli.Flag{
 		cli.StringFlag{
 			Name:        "mysql-host",
 			Usage:       "mysql host address",
@@ -101,7 +102,7 @@ func runFlags() []cli.Flag {
 		cli.StringFlag{
 			Name:        "oauth-github-client-id",
 			Usage:       "oauth client id of the github application",
-			Destination: &config.App.OAuthGithubClientId,
+			Destination: &config.App.OAuthGithubClientID,
 			EnvVar:      "OAUTH_GITHUB_CLIENT_ID",
 		},
 		cli.StringFlag{
@@ -111,4 +112,7 @@ func runFlags() []cli.Flag {
 			EnvVar:      "OAUTH_GITHUB_CLIENT_SECRET",
 		},
 	}
+	kubeFlags := kube.CLIFlags()
+
+	return append(dataFlags, kubeFlags...)
 }
