@@ -44,7 +44,7 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
 		return
 	}
 	user := auth.User{
@@ -55,10 +55,9 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	if success == false {
 		log.Printf("%s when trying to create user\n", err)
 		// @todo correctly redirect w/ bad request shown
-		http.Redirect(w, r, "/", http.StatusBadRequest)
+		http.Error(w, "there was an error when attemping to create a new user", http.StatusBadRequest)
 	} else {
-		// @todo correctly redirect w/ created shown
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		w.WriteHeader(http.StatusCreated)
 	}
 }
 
@@ -79,13 +78,13 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if oAuthCallbackForm.State != oauthStateString {
 		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, oAuthCallbackForm.State)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Error(w, "invalid oauth state", http.StatusBadRequest)
 		return
 	}
 	token, err := oauthConf.Exchange(oauth2.NoContext, oAuthCallbackForm.Code)
 	if err != nil {
 		log.Printf("oauthConf.Exchange() failed with '%s'\n", err)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Error(w, "there was an error when establishing an oauth exchange", http.StatusBadRequest)
 		return
 	}
 
@@ -94,14 +93,14 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	user, _, err := client.Users.Get("")
 	if err != nil {
 		log.Printf("client.Users.Get() failed with '%s'\n", err)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Error(w, "there was an error while attempting to get user details", http.StatusBadGateway)
 		return
 	}
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Error(w, "there was an error while connecting to the database", http.StatusInternalServerError)
 		return
 	}
 
@@ -122,12 +121,13 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		if success == false {
 			log.Printf("failed to update user '%s' because '%s'\n", *user.Login, err)
 			// @todo update to correct status code
-			http.Redirect(w, r, "/", http.StatusInternalServerError)
+			http.Error(w, "there was an error when updating the user", http.StatusInternalServerError)
 			return
 		}
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	// @todo user is not allowed
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	log.Printf("'%s' attempted to authenticate without an account\n", *user.Login)
+	http.Error(w, "user has not been created prior to authentication", http.StatusForbidden)
 }
