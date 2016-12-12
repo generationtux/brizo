@@ -40,7 +40,7 @@ func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-// AuthGithubHandler for handling oauth access response from Github
+// AuthGithubCallbackHandler for handling oauth access response from Github
 func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
 	state := r.FormValue("state")
