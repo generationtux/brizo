@@ -24,8 +24,6 @@ func ConfigureRoutes() *bone.Mux {
 	router.GetFunc("/healthz", web.HealthzHandler)
 
 	router.GetFunc("/login", api.AuthMainHandler)
-	router.GetFunc("/users", web.AuthAddNewUser)
-	router.PostFunc("/api/v1/users", api.AuthCreateUser)
 	router.GetFunc("/o/auth/login/github", api.AuthGithubHandler)
 	router.GetFunc("/o/auth/callback/github", api.AuthGithubCallbackHandler)
 

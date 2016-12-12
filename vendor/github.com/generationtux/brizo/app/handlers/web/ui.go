@@ -4,9 +4,11 @@ import (
 	"log"
 	"net/http"
 	"time"
+    "fmt"
 
 	"github.com/CloudyKit/jet"
 	jwt "github.com/dgrijalva/jwt-go"
+    _ "github.com/auth0/go-jwt-middleware"
 	"github.com/generationtux/brizo/database"
 )
 
@@ -48,8 +50,7 @@ func HealthzHandler(rw http.ResponseWriter, request *http.Request) {
 // JWT Handler for authentication middleware
 func GetTokenHandler(rw http.ResponseWriter, request *http.Request) {
 	// Expires the token and cookie in 1 hour
-	expireToken := time.Now().Add(time.Hour * 1).Unix()
-	expireCookie := time.Now().Add(time.Hour * 1)
+	expireToken := time.Now().Add(time.Hour * 3).Unix()
 
 	// create claims
 	claims := &jwt.StandardClaims{
@@ -62,15 +63,22 @@ func GetTokenHandler(rw http.ResponseWriter, request *http.Request) {
 
 	signedToken, _ := token.SignedString(mySigningKey)
 
-	cookie := http.Cookie{
-		Name:     "id_token",
-		Value:    signedToken,
-		Expires:  expireCookie,
-		HttpOnly: true,
-	}
-
-	http.SetCookie(rw, &cookie)
+    rw.Header().Set("Content-Type", "application/json")
+	rw.Header().Set("Authorization", fmt.Sprintf("Bearer %v", signedToken))
 
 	// Redirect the user to his profile
-	http.Redirect(rw, request, "/app", http.StatusTemporaryRedirect)
+	//http.Redirect(rw, request, "/app", http.StatusTemporaryRedirect)
 }
+
+/*
+var jwtMiddlewareHandler = jwtMiddleware.New(jwtMiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+        decoded, err := base64.URLEncoding.DecodeString(os.Getenv("AUTH0_CLIENT_SECRET"))
+        if err != nil {
+            return nil, err
+        }
+        return decoded, nil
+	},
+	SigningMethod: jwt.SigningMethodHS256,
+})
+*/

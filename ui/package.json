@@ -4,6 +4,7 @@
   "description": "PaaS on top of Kubernetes",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
     "start": "webpack-dev-server --inline --progress --content-base ./ --host 0.0.0.0 --port 8888"
   },
   "keywords": [],
@@ -14,9 +15,11 @@
     "@angular/compiler": "^2.2.4",
     "@angular/core": "^2.2.4",
     "@angular/forms": "^2.2.4",
+    "@angular/http": "^2.3.0",
     "@angular/platform-browser": "^2.2.4",
     "@angular/platform-browser-dynamic": "^2.2.4",
     "@angular/router": "^3.2.4",
+    "angular2-jwt": "^0.1.26",
     "core-js": "^2.4.1",
     "es6-shim": "^0.35.2",
     "reflect-metadata": "^0.1.8",
@@ -29,6 +32,7 @@
     "@types/core-js": "^0.9.35",
     "@types/node": "0.0.2",
     "angular2-template-loader": "^0.6.0",
+    "core-js": "^2.4.1",
     "css-loader": "^0.26.1",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",

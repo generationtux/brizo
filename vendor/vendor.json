@@ -116,6 +116,12 @@
 			"revisionTime": "2016-07-26T15:08:25Z"
 		},
 		{
+			"checksumSHA1": "7G7ADsNRwBcyfkJyTrX1oW4I0Rs=",
+			"path": "github.com/auth0/go-jwt-middleware",
+			"revision": "f3f7de3b9e394e3af3b88e1b9457f6f71d1ae0ac",
+			"revisionTime": "2016-04-21T21:57:38Z"
+		},
+		{
 			"checksumSHA1": "EW7pCyyPlX6ClWTC2yOxagQbtRA=",
 			"path": "github.com/blang/semver",
 			"revision": "3a37c301dda64cbe17f16f661b4c976803c0e2d2",
@@ -176,6 +182,12 @@
 			"revisionTime": "2016-10-29T20:57:26Z"
 		},
 		{
+			"checksumSHA1": "2Fy1Y6Z3lRRX1891WF/+HT4XS2I=",
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "9ed569b5d1ac936e6494082958d63a6aa4fff99a",
+			"revisionTime": "2016-11-01T19:39:35Z"
+		},
+		{
 			"checksumSHA1": "f1wARLDzsF/JoyN01yoxXEwFIp8=",
 			"path": "github.com/docker/distribution/digest",
 			"revision": "67095fbce3e4b079c3db62d08836548854a4b7ad",
@@ -210,6 +222,48 @@
 			"path": "github.com/erikstmartin/go-testdb",
 			"revision": "8d10e4a1bae52cd8b81ffdec3445890d6dccab3d",
 			"revisionTime": "2016-02-19T21:45:06Z"
+		},
+		{
+			"checksumSHA1": "3QPfIA67FaSam0VxhFpZpfAaMNk=",
+			"path": "github.com/generationtux/brizo/app",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "/Z7aaLCitvfwypD0xbb5WIzOQEQ=",
+			"path": "github.com/generationtux/brizo/app/handlers/api",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "oQeZ201F9ezPVBgsvgt50zJwN4A=",
+			"path": "github.com/generationtux/brizo/app/handlers/web",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "RqH0aGcUnALS2QmcVAfLq82r8Y0=",
+			"path": "github.com/generationtux/brizo/auth",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "9eaoyavxZI+sMMnmieYQw5idkyw=",
+			"path": "github.com/generationtux/brizo/config",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "lkoh03ss70OBWT9jUpCrsjkPZ10=",
+			"path": "github.com/generationtux/brizo/database",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
+		},
+		{
+			"checksumSHA1": "fqP5dJmSVQEIFrpiWJVSbP/PDqc=",
+			"path": "github.com/generationtux/brizo/kube",
+			"revision": "d0c733437bbab639a4cde48c0e2cd002d705b976",
+			"revisionTime": "2016-12-09T21:20:15Z"
 		},
 		{
 			"checksumSHA1": "vMT+piher66IruU9TZNbL/6dYJ8=",
@@ -288,6 +342,12 @@
 			"path": "github.com/googleapis/gax-go",
 			"revision": "da06d194a00e19ce00d9011a13931c3f6f6887c7",
 			"revisionTime": "2016-11-07T00:24:06Z"
+		},
+		{
+			"checksumSHA1": "g/V4qrXjUGG9B+e3hB+4NAYJ5Gs=",
+			"path": "github.com/gorilla/context",
+			"revision": "08b5f424b9271eedf6f9f0ce86cb9396ed337a42",
+			"revisionTime": "2016-08-17T18:46:32Z"
 		},
 		{
 			"checksumSHA1": "lJDwzzEBuS9sjxVOSsq7+rvw+cA=",
@@ -1393,5 +1453,5 @@
 >>>>>>> master
 		}
 	],
-	"rootPath": "github.com/generationtux/brizo"
+	"rootPath": "brizo"
 }

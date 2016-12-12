@@ -106,7 +106,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	if auth.IsFirstUser(db) {
 		auth.CreateNewGithubUser(db, user, token.AccessToken)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/get-token", http.StatusTemporaryRedirect)
 		return
 	} else if auth.GithubUserAllowed(db, *user.Login) {
 		// @todo check that non-required attributes exist
