@@ -413,6 +413,12 @@
 			"revisionTime": "2016-11-17T07:43:51Z"
 		},
 		{
+			"checksumSHA1": "LhHZzvLTAynmCgmaTQdrwKuXx04=",
+			"path": "github.com/tv42/mockhttp",
+			"revision": "c323b80d6f5fd24d602d021f544a36f66e0c9fb6",
+			"revisionTime": "2014-10-29T22:12:23Z"
+		},
+		{
 			"checksumSHA1": "+ajZXCpD7wIHE4F9jD8/tO+shBo=",
 			"path": "github.com/ugorji/go/codec",
 			"revision": "9c7f9b7a2bc3a520f7c7b30b34b7f85f47fe27b6",
