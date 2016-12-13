@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <head>
-    <base href="/">
-    <title>Brizo</title>
-    <link href="/dist/assets/css/materialize.min.css" rel="stylesheet" />
+  <base href="/app">
+  <title>Brizo</title>
+  <link href="{{ assets.App["css"] }}" rel="stylesheet" />
 </head>
 <body>
-    <app>Loading Brizo...</app>
-    <script type="text/javascript" src="/dist/polyfills.js"></script>
-    <script type="text/javascript" src="/dist/vendor.js"></script>
-    <script type="text/javascript" src="/dist/app.js"></script>
+  <app>Loading Brizo...</app>
+  <script type="text/javascript" src="{{ assets.Polyfills["js"] }}"></script>
+  <script type="text/javascript" src="{{ assets.Vendor["js"] }}"></script>
+  <script type="text/javascript" src="{{ assets.App["js"] }}"></script>
 </body>
 </html>
