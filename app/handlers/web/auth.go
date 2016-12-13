@@ -7,6 +7,7 @@ import (
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
 	githuboauth "github.com/google/go-github/github"
+	"github.com/mholt/binding"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 )
