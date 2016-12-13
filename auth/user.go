@@ -1,8 +1,11 @@
 package auth
 
 import (
+    "os"
+
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
+    jwt "github.com/dgrijalva/jwt-go"
 )
 
 // User represents a Brizo user
@@ -28,4 +31,16 @@ func UpdateUser(db *gorm.DB, user *User) (bool, error) {
 	result := db.Model(user).Where("username = ?", user.Username).UpdateColumns(user)
 
 	return result.RowsAffected == 1, result.Error
+}
+
+func CreateToken(user *User) (string, error) {
+    token := jew.New()
+}
+
+func tokenSigningMethod(method string) {
+    /*
+    HS256
+    HS384
+    HS512
+     */
 }
