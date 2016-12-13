@@ -54,7 +54,7 @@ func GithubUserAllowed(db *gorm.DB, username string) bool {
 }
 
 // create JWT Token
-func CreateToken(user *User) string {
+func CreateToken(user User) string {
 	token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
 		"username": user.Username,
 		"name":     user.Name,
