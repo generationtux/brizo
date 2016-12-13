@@ -46,7 +46,7 @@ func CreateToken(user *User) (string, error) {
 	return tokenString, err
 }
 
-func tokenSigningMethod(method string) string {
+func tokenSigningMethod(method string) jwt.SigningMethod {
 	switch method {
 	case "HS256":
 		return jwt.SigningMethodHS256
