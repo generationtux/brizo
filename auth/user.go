@@ -5,7 +5,7 @@ import (
 
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
-    jwt "github.com/dgrijalva/jwt-go"
+    "github.com/dgrijalva/jwt-go"
 )
 
 // User represents a Brizo user
@@ -33,14 +33,30 @@ func UpdateUser(db *gorm.DB, user *User) (bool, error) {
 	return result.RowsAffected == 1, result.Error
 }
 
+// create JWT Token
 func CreateToken(user *User) (string, error) {
-    token := jew.New()
+    token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
+        "username":         user.Username,
+        "name":             user.Name,
+        "email":            user.Email,
+        "githubusername":   user.GithubUsername,
+        "githubtoken":      user.GithubToken,
+    })
+
+    tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
+
+    return tokenString, err
 }
 
 func tokenSigningMethod(method string) {
-    /*
-    HS256
-    HS384
-    HS512
-     */
+    switch method {
+        case "HS256":
+            return jwt.SigningMethodHS256
+        case "HS384"
+            return jwt.SigningMethodHS384
+        case "HS512"
+            return jwt.SigningMethodHS512
+        default:
+            return nil
+    }
 }
