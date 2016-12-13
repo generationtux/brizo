@@ -36,11 +36,9 @@ func UpdateUser(db *gorm.DB, user *User) (bool, error) {
 // create JWT Token
 func CreateToken(user *User) (string, error) {
 	token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
-		"username":       user.Username,
-		"name":           user.Name,
-		"email":          user.Email,
-		"githubusername": user.GithubUsername,
-		"githubtoken":    user.GithubToken,
+		"username": user.Username,
+		"name":     user.Name,
+		"email":    user.Email,
 	})
 
 	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
@@ -48,7 +46,7 @@ func CreateToken(user *User) (string, error) {
 	return tokenString, err
 }
 
-func tokenSigningMethod(method string) {
+func tokenSigningMethod(method string) string {
 	switch method {
 	case "HS256":
 		return jwt.SigningMethodHS256
