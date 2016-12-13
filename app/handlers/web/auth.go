@@ -93,8 +93,8 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if auth.IsFirstUser(db) {
-		user := auth.CreateNewGithubUser(db, user, token.AccessToken)
-		token, err := auth.CreateToken(user)
+		newUser := auth.CreateNewGithubUser(db, user, token.AccessToken)
+		token, err := auth.CreateToken(newUser)
 
 		if err != nil {
 			http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
