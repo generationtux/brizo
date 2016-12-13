@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/generationtux/brizo/app"
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
 )
