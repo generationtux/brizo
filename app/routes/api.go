@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/generationtux/brizo/app/handlers/api"
 	"github.com/go-zoo/bone"
 )
 
