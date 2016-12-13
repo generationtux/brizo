@@ -4,22 +4,10 @@ import (
 	"net/http"
 
 	"github.com/generationtux/brizo/app/handlers/web"
+	"github.com/generationtux/brizo/auth"
 	"github.com/go-zoo/bone"
 	"github.com/urfave/negroni"
 )
-
-// BuildRouter configures the application router
-func BuildRouter() *negroni.Negroni {
-	r := mainRoutes()
-	r.SubRoute("/api/v1", apiRoutes())
-
-	n := negroni.New()
-	n.Use(negroni.NewLogger())
-	n.Use(negroni.NewRecovery())
-	n.UseHandler(r)
-
-	return n
-}
 
 // mainRoutes registers the routes for the user interface
 func mainRoutes() *bone.Mux {
@@ -45,4 +33,22 @@ func mainRoutes() *bone.Mux {
 	router.GetFunc("/login", web.AuthMainHandler)
 
 	return router
+}
+
+// BuildRouter configures the application router
+func BuildRouter() *negroni.Negroni {
+	r := mainRoutes()
+
+	api := apiRoutes()
+	r.SubRoute("/api/v1", negroni.New(
+		negroni.HandlerFunc(auth.APIMiddleware),
+		negroni.Wrap(api),
+	))
+
+	n := negroni.New()
+	n.Use(negroni.NewLogger())
+	n.Use(negroni.NewRecovery())
+	n.UseHandler(r)
+
+	return n
 }
