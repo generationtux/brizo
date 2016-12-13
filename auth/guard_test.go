@@ -21,7 +21,7 @@ func TestAPIMiddlewareNoHeader(t *testing.T) {
 }
 
 // header must be Authorization: Bearer xxx
-func TestAPIMiddlewareInalidHeader(t *testing.T) {
+func TestAPIMiddlewareInvalidHeader(t *testing.T) {
 	rw := new(responseWriterMock)
 	request, _ := http.NewRequest("GET", "/api/v1/foo", nil)
 	request.Header.Set("Authorization", "NotSupported token123")
