@@ -425,6 +425,12 @@
 			"revisionTime": "2016-11-22T04:36:10Z"
 		},
 		{
+			"checksumSHA1": "7R0jpoYpFzg26FUSiTss+OVP4XE=",
+			"path": "github.com/urfave/negroni",
+			"revision": "cd9734011043904139c24dbad9a71b21f1586f36",
+			"revisionTime": "2016-11-27T19:24:14Z"
+		},
+		{
 			"checksumSHA1": "9C4Av3ypK5pi173F76ogJT/d8x4=",
 			"path": "golang.org/x/crypto/ssh/terminal",
 			"revision": "8a549a1948fc5271eb24f36dcb0d3b47dec75a16",

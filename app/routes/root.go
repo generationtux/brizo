@@ -5,14 +5,20 @@ import (
 
 	"github.com/generationtux/brizo/app/handlers/web"
 	"github.com/go-zoo/bone"
+	"github.com/urfave/negroni"
 )
 
 // BuildRouter configures the application router
-func BuildRouter() *bone.Mux {
+func BuildRouter() *negroni.Negroni {
 	r := mainRoutes()
 	r.SubRoute("/api/v1", apiRoutes())
 
-	return r
+	n := negroni.New()
+	n.Use(negroni.NewLogger())
+	n.Use(negroni.NewRecovery())
+	n.UseHandler(r)
+
+	return n
 }
 
 // mainRoutes registers the routes for the user interface
