@@ -43,7 +43,11 @@ func CreateToken(user *User) (string, error) {
 
 	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
 
-	return tokenString, err
+    if err != nil {
+        return "", err
+    }
+
+	return tokenString, nil
 }
 
 func tokenSigningMethod(method string) jwt.SigningMethod {
