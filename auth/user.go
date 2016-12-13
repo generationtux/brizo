@@ -1,11 +1,11 @@
 package auth
 
 import (
-    "os"
+	"os"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
-    "github.com/dgrijalva/jwt-go"
 )
 
 // User represents a Brizo user
@@ -35,28 +35,28 @@ func UpdateUser(db *gorm.DB, user *User) (bool, error) {
 
 // create JWT Token
 func CreateToken(user *User) (string, error) {
-    token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
-        "username":         user.Username,
-        "name":             user.Name,
-        "email":            user.Email,
-        "githubusername":   user.GithubUsername,
-        "githubtoken":      user.GithubToken,
-    })
+	token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
+		"username":       user.Username,
+		"name":           user.Name,
+		"email":          user.Email,
+		"githubusername": user.GithubUsername,
+		"githubtoken":    user.GithubToken,
+	})
 
-    tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
+	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
 
-    return tokenString, err
+	return tokenString, err
 }
 
 func tokenSigningMethod(method string) {
-    switch method {
-        case "HS256":
-            return jwt.SigningMethodHS256
-        case "HS384"
-            return jwt.SigningMethodHS384
-        case "HS512"
-            return jwt.SigningMethodHS512
-        default:
-            return nil
-    }
+	switch method {
+	case "HS256":
+		return jwt.SigningMethodHS256
+	case "HS384":
+		return jwt.SigningMethodHS384
+	case "HS512":
+		return jwt.SigningMethodHS512
+	default:
+		return nil
+	}
 }
