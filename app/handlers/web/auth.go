@@ -94,11 +94,11 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	if auth.IsFirstUser(db) {
 		user := auth.CreateNewGithubUser(db, user, token.AccessToken)
-		token,err := auth.CreateToken(user)
+		token, err := auth.CreateToken(user)
 
-        if err != nil {
-            http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
-        }
+		if err != nil {
+			http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
+		}
 
 		http.Redirect(w, r, "/app/auth?token="+token, http.StatusTemporaryRedirect)
 		return
@@ -118,11 +118,11 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "there was an error when updating the user", http.StatusInternalServerError)
 			return
 		}
-		token,err := auth.CreateToken(&brizoUser)
+		token, err := auth.CreateToken(&brizoUser)
 
-        if err != nil {
-            http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
-        }
+		if err != nil {
+			http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
+		}
 
 		http.Redirect(w, r, "/app/auth?token="+token, http.StatusTemporaryRedirect)
 		return
