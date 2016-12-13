@@ -16,7 +16,7 @@ func GetOAuthStateString() (oauthStateString string) {
 }
 
 // CreateNewGithubUser takes oauth response values and creates a new Brizo user
-func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, token string) error {
+func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, token string) (User, error) {
 	user := User{
 		Username:       *githubUser.Login,
 		Name:           *githubUser.Name,
@@ -25,7 +25,9 @@ func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, token string
 		GithubToken:    token,
 	}
 
-	return db.Create(&user).Error
+	err := db.Create(&user).Error
+
+	return user, err
 }
 
 // HydrateOAuthConfig is used to set the ClientID & ClientSecret at runtime so
@@ -52,20 +54,16 @@ func GithubUserAllowed(db *gorm.DB, username string) bool {
 }
 
 // create JWT Token
-func CreateToken(user *User) (string, error) {
+func CreateToken(user *User) string {
 	token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
 		"username": user.Username,
 		"name":     user.Name,
 		"email":    user.Email,
 	})
 
-	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
+	tokenString, _ := token.SignedString(os.Getenv("JWT_SECRET"))
 
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
+	return tokenString
 }
 
 func tokenSigningMethod(method string) jwt.SigningMethod {
