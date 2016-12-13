@@ -6,6 +6,7 @@ import (
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
 	"github.com/generationtux/brizo/kube"
+	"github.com/generationtux/brizo/resources"
 )
 
 // initializeApp will validate configuration and migrate the database if necessary
@@ -35,5 +36,6 @@ func runMigrations() error {
 	log.Println("==> Running database migrations...")
 	return db.AutoMigrate(
 		&auth.User{},
+		&resources.Application{},
 	).Error
 }
