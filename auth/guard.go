@@ -1,9 +1,13 @@
 package auth
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 // APIMiddleware authenticates API requests
@@ -22,7 +26,8 @@ func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.Hand
 		return
 	}
 
-	if !validateJWTToken(authHeader) {
+	jwtToken := extractJWTFromHeader(authHeader)
+	if !ValidateJWTToken(jwtToken) {
 		rw.WriteHeader(401)
 		rw.Write([]byte("not authorized"))
 		return
@@ -41,7 +46,44 @@ func validateAuthHeader(header string) bool {
 	return matched
 }
 
-// validateJWTToken @todo in progress from Lark
-func validateJWTToken(token string) bool {
-	return true
+// ValidateJWTToken determines if the provided token is valid
+func ValidateJWTToken(token string) bool {
+	t, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
+		}
+		return []byte(jwtSecret()), nil
+	})
+
+	if err != nil {
+		log.Println(err.Error()+":", token)
+		return false
+	}
+
+	return t.Valid
+}
+
+// jwtSecret get the configured JWT secret
+func jwtSecret() string {
+	return os.Getenv("JWT_SECRET")
+}
+
+// jwtSigningMethod get the configured JWT signing method
+func jwtSigningMethod() jwt.SigningMethod {
+	switch os.Getenv("JWT_ALGO") {
+	case "HS256":
+		return jwt.SigningMethodHS256
+	case "HS384":
+		return jwt.SigningMethodHS384
+	case "HS512":
+		return jwt.SigningMethodHS512
+	default:
+		return nil
+	}
+}
+
+// extractJWTFromHeader will parse the header string and return just the token
+// header should be formatted as Bearer [TOKEN]
+func extractJWTFromHeader(header string) string {
+	return header[7:]
 }

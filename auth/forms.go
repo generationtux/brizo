@@ -40,3 +40,15 @@ func (form *OAuthCallbackForm) FieldMap(req *http.Request) binding.FieldMap {
 		},
 	}
 }
+
+// ValidateJWTForm represents a json request to validate a token
+type ValidateJWTForm struct {
+	Token string
+}
+
+// FieldMap to map form values to a struct
+func (form *ValidateJWTForm) FieldMap(req *http.Request) binding.FieldMap {
+	return binding.FieldMap{
+		&form.Token: binding.Field{Form: "token", Required: true},
+	}
+}

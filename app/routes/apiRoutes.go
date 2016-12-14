@@ -5,8 +5,8 @@ import (
 	"github.com/go-zoo/bone"
 )
 
-// apiRoutes registers the routes prefixed with /api
-func apiRoutes() *bone.Mux {
+// authAPIRoutes registers the routes prefixed with /api/v1 and protected by an authentication middleware
+func authAPIRoutes() *bone.Mux {
 	router := bone.New()
 
 	// users
@@ -14,6 +14,16 @@ func apiRoutes() *bone.Mux {
 
 	// applications
 	router.GetFunc("/applications", api.Applications)
+
+	return router
+}
+
+// apiRoutes registers the routes prefixed with /api/v1 where authentication is NOT required
+func apiRoutes() *bone.Mux {
+	router := bone.New()
+
+	// JWT validation
+	router.PostFunc("/auth/validate", api.ValidateToken)
 
 	return router
 }
