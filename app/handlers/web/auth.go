@@ -98,7 +98,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		user, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
 
 		if err != nil {
-			log.Printf("failed to create user '%s' because '%s'\n", *user.Login, err)
+			log.Printf("failed to create user '%s' because '%s'\n", *user.Username, err)
 			http.Error(w, "there was an error when creating new user", http.StatusInternalServerError)
 			return
 		}
