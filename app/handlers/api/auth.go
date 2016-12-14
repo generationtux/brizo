@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
@@ -41,7 +40,7 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 // ValidateToken validates the provided JWT token
 func ValidateToken(rw http.ResponseWriter, request *http.Request) {
 	tokenRequest := new(auth.ValidateJWTForm)
-	errs := binding.Bind(request, &tokenRequest)
+	errs := binding.Bind(request, tokenRequest)
 	if errs.Handle(rw) {
 		return
 	}
