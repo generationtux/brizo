@@ -1,9 +1,13 @@
 package auth
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 // APIMiddleware authenticates API requests
@@ -22,7 +26,7 @@ func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.Hand
 		return
 	}
 
-	if !validateJWTToken(authHeader) {
+	if !ValidateJWTToken(authHeader) {
 		rw.WriteHeader(401)
 		rw.Write([]byte("not authorized"))
 		return
@@ -41,7 +45,23 @@ func validateAuthHeader(header string) bool {
 	return matched
 }
 
-// validateJWTToken @todo in progress from Lark
-func validateJWTToken(token string) bool {
-	return true
+// ValidateJWTToken determines if the provided token is valid
+func ValidateJWTToken(token string) bool {
+	t, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
+		}
+
+		return getJWTSecret(), nil
+	})
+
+	return t.Valid
+}
+
+func getJWTSecret() string {
+	return os.Getenv("JWT_SECRET")
+}
+
+func getJWTSigningMethod() string {
+	return os.Getenv("JWT_SIGNING")
 }

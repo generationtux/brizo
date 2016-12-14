@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -35,4 +36,21 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 	}
+}
+
+// ValidateToken validates the provided JWT token
+func ValidateToken(rw http.ResponseWriter, request *http.Request) {
+	tokenRequest := new(auth.ValidateJWTForm)
+	errs := binding.Bind(request, &tokenRequest)
+	if errs.Handle(rw) {
+		return
+	}
+
+	if !auth.ValidateJWTToken(tokenRequest.Token) {
+		rw.Write([]byte("invalid token"))
+		rw.WriteHeader(401)
+	}
+
+	rw.Write([]byte("ok"))
+	rw.WriteHeader(200)
 }

@@ -37,13 +37,19 @@ func mainRoutes() *bone.Mux {
 
 // BuildRouter configures the application router
 func BuildRouter() *negroni.Negroni {
+	// other routes
 	r := mainRoutes()
 
-	api := apiRoutes()
+	// protected API routes
+	authorizedAPI := authAPIRoutes()
 	r.SubRoute("/api/v1", negroni.New(
 		negroni.HandlerFunc(auth.APIMiddleware),
-		negroni.Wrap(api),
+		negroni.Wrap(authorizedAPI),
 	))
+
+	// unprotected API routes
+	openAPI := apiRoutes()
+	r.SubRoute("/api/v1", openAPI)
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
