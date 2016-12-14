@@ -14,6 +14,7 @@ func apiRoutes() *bone.Mux {
 
 	// applications
 	router.GetFunc("/applications", api.Applications)
+	router.GetFunc("/applications/:name", api.Application)
 
 	return router
 }

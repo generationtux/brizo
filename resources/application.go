@@ -37,7 +37,7 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 // GetApplication will get an existing Application by name
 func GetApplication(db *gorm.DB, name string) (*Application, error) {
 	app := new(Application)
-	if err := db.Where("name = ?").First(&app).Error; err != nil {
+	if err := db.Where("name = ?", name).First(&app).Error; err != nil {
 		return app, err
 	}
 
