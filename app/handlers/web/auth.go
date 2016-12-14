@@ -92,16 +92,18 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var jwtToken string
+	var jwtError error
 	if auth.IsFirstUser(db) {
 		user, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
 
 		if err != nil {
-			log.Printf("failed to create user '%s' because '%s'\n", user.Login, err)
+			log.Printf("failed to create user '%s' because '%s'\n", *user.Login, err)
 			http.Error(w, "there was an error when creating new user", http.StatusInternalServerError)
 			return
 		}
 
-		jwtToken, jwtError := auth.CreateToken(user)
+		jwtToken, jwtError = auth.CreateToken(user)
 	} else if auth.GithubUserAllowed(db, *user.Login) {
 		// @todo check that non-required attributes exist
 		brizoUser := auth.User{
@@ -126,7 +128,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		jwtToken, jwtError := auth.CreateToken(brizoUser)
+		jwtToken, jwtError = auth.CreateToken(brizoUser)
 	}
 
 	if jwtError != nil {
