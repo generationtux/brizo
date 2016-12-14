@@ -61,7 +61,7 @@ func TestAPIMiddlewareValidJWTToken(t *testing.T) {
 
 	APIMiddleware(rw, request, http.HandlerFunc(mockHTTPHandler))
 
-	//rw.AssertExpectations(t)
+	rw.AssertExpectations(t)
 }
 
 // mocks
