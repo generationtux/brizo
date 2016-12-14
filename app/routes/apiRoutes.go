@@ -12,5 +12,8 @@ func apiRoutes() *bone.Mux {
 	// users
 	router.PostFunc("/users", api.AuthCreateUser)
 
+	// applications
+	router.GetFunc("/applications", api.Applications)
+
 	return router
 }

@@ -6,10 +6,12 @@ import (
 	"github.com/mholt/binding"
 )
 
+// CreateUserForm represents a new user form
 type CreateUserForm struct {
 	Username string
 }
 
+// FieldMap is used to bind CreateUserForm to a request
 func (form *CreateUserForm) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{
 		&form.Username: binding.Field{
@@ -19,11 +21,13 @@ func (form *CreateUserForm) FieldMap(req *http.Request) binding.FieldMap {
 	}
 }
 
+// OAuthCallbackForm represents a Github OAuth callback
 type OAuthCallbackForm struct {
 	Code  string
 	State string
 }
 
+// FieldMap is used to bind OAuthCallbackForm to a request
 func (form *OAuthCallbackForm) FieldMap(req *http.Request) binding.FieldMap {
 	return binding.FieldMap{
 		&form.Code: binding.Field{

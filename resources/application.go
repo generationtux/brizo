@@ -12,6 +12,14 @@ type Application struct {
 	Pods []Pod  `gorm:"-"` // gorm will ignore, but we can populate
 }
 
+// AllApplications will return all of the Applications
+func AllApplications(db *gorm.DB) ([]Application, error) {
+	var apps []Application
+	result := db.Find(&apps)
+
+	return apps, result.Error
+}
+
 // CreateApplication will add a new Application to Brizo
 func CreateApplication(db *gorm.DB, app *Application) (bool, error) {
 	result := db.Create(&app)
