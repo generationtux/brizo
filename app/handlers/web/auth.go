@@ -92,18 +92,18 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    if auth.IsFirstUser(db) {
-        user,err := auth.CreateNewGithubUser(db, user, token.AccessToken)
+	if auth.IsFirstUser(db) {
+		user, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
 
-        if err != nil {
-            log.Printf("failed to create user '%s' because '%s'\n", user.Login, err)
-            http.Error(w, "there was an error when creating new user", http.StatusInternalServerError)
-            return
-        }
+		if err != nil {
+			log.Printf("failed to create user '%s' because '%s'\n", user.Login, err)
+			http.Error(w, "there was an error when creating new user", http.StatusInternalServerError)
+			return
+		}
 
-        jwtToken, jwtError := auth.CreateToken(user)
-    } else if auth.GithubUserAllowed(db, *user.Login) {
-        // @todo check that non-required attributes exist
+		jwtToken, jwtError := auth.CreateToken(user)
+	} else if auth.GithubUserAllowed(db, *user.Login) {
+		// @todo check that non-required attributes exist
 		brizoUser := auth.User{
 			Username:       *user.Login,
 			Name:           *user.Name,
@@ -112,7 +112,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			GithubToken:    token.AccessToken,
 		}
 
-        success, err := auth.UpdateUser(db, &brizoUser)
+		success, err := auth.UpdateUser(db, &brizoUser)
 
 		if success == false {
 			log.Printf("failed to update user '%s' because '%s'\n", *user.Login, err)
@@ -121,24 +121,24 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-        if err != nil {
+		if err != nil {
 			http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
-            return
+			return
 		}
 
 		jwtToken, jwtError := auth.CreateToken(brizoUser)
-    }
+	}
 
-    if jwtError != nil {
-        log.Printf("failed to create jwt token because '%s'\n", jwtError)
+	if jwtError != nil {
+		log.Printf("failed to create jwt token because '%s'\n", jwtError)
 
-        // @todo update to correct status code
-        http.Error(w, "there was an error creating jwt token", http.StatusInternalServerError)
-        return
-    } else {
-        http.Redirect(w, r, "/app/auth?token="+jwtToken, http.StatusTemporaryRedirect)
+		// @todo update to correct status code
+		http.Error(w, "there was an error creating jwt token", http.StatusInternalServerError)
 		return
-    }
+	} else {
+		http.Redirect(w, r, "/app/auth?token="+jwtToken, http.StatusTemporaryRedirect)
+		return
+	}
 
 	// @todo user is not allowed
 	log.Printf("'%s' attempted to authenticate without an account\n", *user.Login)
