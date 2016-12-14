@@ -1,9 +1,6 @@
 package auth
 
 import (
-	"os"
-
-	"github.com/dgrijalva/jwt-go"
 	"github.com/generationtux/brizo/config"
 	githuboauth "github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
@@ -51,30 +48,4 @@ func GithubUserAllowed(db *gorm.DB, username string) bool {
 	db.Where("github_username = ?", username).Find(&users)
 
 	return len(users) > 0
-}
-
-// create JWT Token
-func CreateToken(user User) (string, error) {
-	token := jwt.NewWithClaims(tokenSigningMethod(os.Getenv("JWT_ALGO")), jwt.MapClaims{
-		"username": user.Username,
-		"name":     user.Name,
-		"email":    user.Email,
-	})
-
-	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
-
-	return tokenString, err
-}
-
-func tokenSigningMethod(method string) jwt.SigningMethod {
-	switch method {
-	case "HS256":
-		return jwt.SigningMethodHS256
-	case "HS384":
-		return jwt.SigningMethodHS384
-	case "HS512":
-		return jwt.SigningMethodHS512
-	default:
-		return nil
-	}
 }

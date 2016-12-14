@@ -52,16 +52,31 @@ func ValidateJWTToken(token string) bool {
 			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
 
-		return getJWTSecret(), nil
+		return jwtSecret(), nil
 	})
+
+	if err != nil {
+		return false
+	}
 
 	return t.Valid
 }
 
-func getJWTSecret() string {
+// jwtSecret get the configured JWT secret
+func jwtSecret() string {
 	return os.Getenv("JWT_SECRET")
 }
 
-func getJWTSigningMethod() string {
-	return os.Getenv("JWT_SIGNING")
+// jwtSigningMethod get the configured JWT signing method
+func jwtSigningMethod() jwt.SigningMethod {
+	switch os.Getenv("JWT_ALGO") {
+	case "HS256":
+		return jwt.SigningMethodHS256
+	case "HS384":
+		return jwt.SigningMethodHS384
+	case "HS512":
+		return jwt.SigningMethodHS512
+	default:
+		return nil
+	}
 }
