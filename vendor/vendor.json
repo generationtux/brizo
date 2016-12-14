@@ -119,6 +119,24 @@
 			"revisionTime": "2016-10-29T20:57:26Z"
 		},
 		{
+			"checksumSHA1": "sg6dHZ2+vJ0WjnThctlREFpU3tc=",
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "9ed569b5d1ac936e6494082958d63a6aa4fff99a",
+			"revisionTime": "2016-11-01T19:39:35Z"
+		},
+		{
+			"checksumSHA1": "+KAZo59QwjAKMjL5pVvBe5y/xuQ=",
+			"path": "github.com/dgrijalva/jwt-go/request",
+			"revision": "9ed569b5d1ac936e6494082958d63a6aa4fff99a",
+			"revisionTime": "2016-11-01T19:39:35Z"
+		},
+		{
+			"checksumSHA1": "3MVpdOJeYMtVHozeas+cYniyLvA=",
+			"path": "github.com/dgrijalva/jwt-go/test",
+			"revision": "9ed569b5d1ac936e6494082958d63a6aa4fff99a",
+			"revisionTime": "2016-11-01T19:39:35Z"
+		},
+		{
 			"checksumSHA1": "f1wARLDzsF/JoyN01yoxXEwFIp8=",
 			"path": "github.com/docker/distribution/digest",
 			"revision": "67095fbce3e4b079c3db62d08836548854a4b7ad",
