@@ -26,7 +26,8 @@ func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.Hand
 		return
 	}
 
-	if !ValidateJWTToken(authHeader) {
+	jwtToken := extractJWTFromHeader(authHeader)
+	if !ValidateJWTToken(jwtToken) {
 		rw.WriteHeader(401)
 		rw.Write([]byte("not authorized"))
 		return
@@ -51,11 +52,11 @@ func ValidateJWTToken(token string) bool {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
-
-		return jwtSecret(), nil
+		return []byte(jwtSecret()), nil
 	})
 
 	if err != nil {
+		log.Println(err.Error()+":", token)
 		return false
 	}
 
@@ -79,4 +80,10 @@ func jwtSigningMethod() jwt.SigningMethod {
 	default:
 		return nil
 	}
+}
+
+// extractJWTFromHeader will parse the header string and return just the token
+// header should be formatted as Bearer [TOKEN]
+func extractJWTFromHeader(header string) string {
+	return header[7:]
 }

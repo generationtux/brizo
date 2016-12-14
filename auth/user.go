@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
@@ -33,13 +35,19 @@ func UpdateUser(db *gorm.DB, user *User) (bool, error) {
 
 // CreateJWTToken creates a JWT token for the provided user
 func CreateJWTToken(user User) (string, error) {
-	token := jwt.NewWithClaims(jwtSigningMethod(), jwt.MapClaims{
-		"username": user.Username,
+	claims := jwt.MapClaims{
+		"exp":      time.Now().Add(time.Hour * 24).UTC().Unix(),
+		"iat":      time.Now().UTC().Unix(),
+		"iss":      "brizo",
+		"sub":      user.Username,
 		"name":     user.Name,
 		"email":    user.Email,
-	})
+		"username": user.Username,
+	}
 
-	tokenString, err := token.SignedString(jwtSecret())
+	token := jwt.NewWithClaims(jwtSigningMethod(), claims)
+	secret := []byte(jwtSecret())
+	tokenString, err := token.SignedString(secret)
 
 	return tokenString, err
 }
