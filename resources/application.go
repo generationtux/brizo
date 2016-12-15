@@ -2,14 +2,15 @@ package resources
 
 import (
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/jinzhu/gorm"
 )
 
 // Application as defined by Brizo.
 type Application struct {
 	database.Model
-	Name string `gorm:"not null;unique_index"`
-	Pods []Pod  `gorm:"-"` // gorm will ignore, but we can populate
+	Name string     `gorm:"not null;unique_index"`
+	Pods []kube.Pod `gorm:"-"` // gorm will ignore, but we can populate
 }
 
 // AllApplications will return all of the Applications
@@ -35,11 +36,13 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 }
 
 // GetApplication will get an existing Application by name
-func GetApplication(db *gorm.DB, name string) (*Application, error) {
+func GetApplication(db *gorm.DB, name string, getPods kube.PodRetrieval) (*Application, error) {
 	app := new(Application)
 	if err := db.Where("name = ?").First(&app).Error; err != nil {
 		return app, err
 	}
+
+	app.Pods = getPods(app)
 
 	return app, nil
 }
