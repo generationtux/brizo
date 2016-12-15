@@ -14,7 +14,7 @@ func TestCanCreateAnApplication(t *testing.T) {
 	id := uuid.New()
 	app := Application{
 		Name: "foobar",
-		Uuid: id,
+		UUID: id,
 	}
 	db, _ := gorm.Open("testdb", "")
 	var query string
