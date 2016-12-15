@@ -10,9 +10,11 @@ import { DashboardComponent }   from './dashboard/dashboard.component';
 import { LoginComponent }       from './login/login.component';
 import { MastheadComponent }    from './masthead/masthead.component';
 import { AuthComponent }        from './auth/auth.component';
+import { AuthService }          from './auth/auth.service';
+import { AuthGuard }            from './auth/auth.guard';
 
 const routes: Routes = [
-    { path: '',       component: DashboardComponent },
+    { path: '',       component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'login',  component: LoginComponent },
     { path: 'auth',   component: AuthComponent }
 ];
@@ -24,9 +26,14 @@ const routes: Routes = [
         RouterModule.forRoot(routes),
         HttpModule,
     ],
+    providers: [
+
+      AuthService,
+      AuthGuard
+    ],
     declarations: [
-        AppComponent,
         AuthComponent,
+        AppComponent,
         DashboardComponent,
         LoginComponent,
         MastheadComponent

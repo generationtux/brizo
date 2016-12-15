@@ -21,6 +21,7 @@
     "node": ">=6.9 <7.0"
   },
   "dependencies": {
+    "angular2-jwt": "^0.1.26"
   },
   "devDependencies": {
     "@angular/common": "~2.3.0",
