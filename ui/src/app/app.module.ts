@@ -14,7 +14,7 @@ import { ApplicationComponent } from './resources/application.component';
 const routes: Routes = [
     { path: '',                   component: DashboardComponent },
     { path: 'login',              component: LoginComponent },
-    { path: 'applications/:name', component: ApplicationComponent },
+    { path: 'applications/:uuid', component: ApplicationComponent },
 ];
 
 @NgModule({

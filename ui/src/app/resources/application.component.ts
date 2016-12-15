@@ -14,11 +14,11 @@ export class ApplicationComponent {
   private application: Application
 
   constructor(private applicationService: ApplicationService, private route: ActivatedRoute) {
-    let name: string;
+    let uuid: string
     route.params.subscribe(
-      data => name = data['name']
+      data => uuid = data['uuid'],
     )
-    applicationService.getApplication(name).subscribe(
+    applicationService.getApplication(uuid).subscribe(
       data => this.application = data,
       err => console.error('There was an error: ' + err),
       () => console.log('application loaded'),
@@ -28,7 +28,8 @@ export class ApplicationComponent {
 
 export class Application {
     constructor(
-        public id: number,
+        public id:   number,
+        public uuid: string,
         public name: string,
         public pods: Array<Pod>
     ){}

@@ -18,8 +18,8 @@ export class ApplicationService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  getApplication(name: string): Observable<Application> {
-    return this.http.get(this.applicationsGetUrl + `${name}`)
+  getApplication(uuid: string): Observable<Application> {
+    return this.http.get(this.applicationsGetUrl + `${uuid}`)
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

@@ -42,8 +42,8 @@ func Application(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
 		return
 	}
-	name := bone.GetValue(r, "name")
-	app, err := resources.GetApplication(db, name)
+	id := bone.GetValue(r, "uuid")
+	app, err := resources.GetApplication(db, id)
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
