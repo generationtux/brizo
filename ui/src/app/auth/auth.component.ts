@@ -4,7 +4,7 @@ import { Subscription }           from "rxjs/Rx";
 
 @Component({
     selector: 'auth',
-    templateUrl: './auth.component.html'
+    template: ''
 })
 
 export class AuthComponent {
@@ -17,7 +17,7 @@ export class AuthComponent {
     );
 
     localStorage.setItem('id_token', this.token);
-    this.router.navigate(['./app']);
+    this.router.navigate(['./']);
   }
 
 }
