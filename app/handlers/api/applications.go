@@ -11,7 +11,7 @@ import (
 )
 
 // Applications provides a listing of all Applications
-func Applications(w http.ResponseWriter, r *http.Request) {
+func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -34,7 +34,7 @@ func Applications(w http.ResponseWriter, r *http.Request) {
 }
 
 // Application provides an Application
-func Application(w http.ResponseWriter, r *http.Request) {
+func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
