@@ -10,7 +10,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// APIMiddleware authenticates API requests
+// APIMiddleware authenticates API requests //
 func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.HandlerFunc) {
 	authHeader := request.Header.Get("Authorization")
 	if authHeader == "" {
