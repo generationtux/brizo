@@ -11,14 +11,15 @@ import (
 // Application as defined by Brizo.
 type Application struct {
 	database.Model
-	Uuid string `gorm:"not null;unique_index" sql:"type:varchar(36)"`
+	UUID string `gorm:"not null;unique_index" sql:"type:varchar(36)"`
 	Name string `gorm:"not null;unique_index"`
 	Pods []Pod  `gorm:"-"` // gorm will ignore, but we can populate
 }
 
+// BeforeCreate is a hook that runs before inserting a new record into the database
 func (a *Application) BeforeCreate() (err error) {
-	if a.Uuid == "" {
-		a.Uuid = uuid.New()
+	if a.UUID == "" {
+		a.UUID = uuid.New()
 	}
 	return
 }
@@ -46,14 +47,19 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 }
 
 // GetApplication will get an existing Application by name
-func GetApplication(db *gorm.DB, id string) (*Application, error) {
+func GetApplication(db *gorm.DB, id string, getPods PodRetrieval) (*Application, error) {
 	if _, valid := uuid.Parse(id).Version(); valid {
 		app := new(Application)
 		if err := db.Where("uuid = ?", id).First(&app).Error; err != nil {
 			return app, err
 		}
-		return app, nil
+
+		pods, err := getPods(app.UUID)
+		app.Pods = pods
+
+		return app, err
 	}
+
 	return new(Application), errors.New("invalid id uuid version or format")
 }
 

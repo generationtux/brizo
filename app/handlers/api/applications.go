@@ -10,7 +10,7 @@ import (
 	"github.com/go-zoo/bone"
 )
 
-// Applications provides a listing of all Applications
+// ApplicationIndex provides a listing of all Applications
 func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
@@ -33,7 +33,7 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(apps)
 }
 
-// Application provides an Application
+// ApplicationShow provides an Application
 func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
@@ -42,15 +42,14 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
 		return
 	}
+
 	id := bone.GetValue(r, "uuid")
-	app, err := resources.GetApplication(db, id)
+	app, err := resources.GetApplication(db, id, resources.GetApplicationPods)
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
 		return
 	}
-	if len(app.Pods) == 0 {
-		app.Pods = make([]resources.Pod, 0)
-	}
+
 	json.NewEncoder(w).Encode(app)
 }

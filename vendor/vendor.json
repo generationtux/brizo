@@ -3,22 +3,6 @@
 	"ignore": "",
 	"package": [
 		{
-			"path": "appengine",
-			"revision": ""
-		},
-		{
-			"path": "appengine/cloudsql",
-			"revision": ""
-		},
-		{
-			"path": "appengine_internal",
-			"revision": ""
-		},
-		{
-			"path": "appengine_internal/base",
-			"revision": ""
-		},
-		{
 			"checksumSHA1": "ZLRh6zW4/DnVsGpgtt+ZiIaEFKc=",
 			"path": "cloud.google.com/go/compute/metadata",
 			"revision": "c43de3e27e4bcd73216ba7dd4209c7eed33c6e90",
@@ -191,7 +175,7 @@
 			"revisionTime": "2016-11-05T16:21:50Z"
 		},
 		{
-			"checksumSHA1": "G69NZKUIXAXasWoICRtUiusqngY=",
+			"checksumSHA1": "aTRPO6WfBLPmsYTTDmOh2+dJuB4=",
 			"path": "github.com/go-openapi/spec",
 			"revision": "f7ae86df5bc115a2744343016c789a89f065a4bd",
 			"revisionTime": "2016-11-19T16:27:01Z"
@@ -437,7 +421,7 @@
 			"revisionTime": "2014-10-29T22:12:23Z"
 		},
 		{
-			"checksumSHA1": "+ajZXCpD7wIHE4F9jD8/tO+shBo=",
+			"checksumSHA1": "gowLbyV296PjZ5jq4oaiM8T55iY=",
 			"path": "github.com/ugorji/go/codec",
 			"revision": "9c7f9b7a2bc3a520f7c7b30b34b7f85f47fe27b6",
 			"revisionTime": "2016-11-30T06:17:42Z"
