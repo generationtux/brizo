@@ -9,10 +9,12 @@ import { AppComponent }         from './app.component';
 import { DashboardComponent }   from './dashboard/dashboard.component';
 import { LoginComponent }       from './login/login.component';
 import { MastheadComponent }    from './masthead/masthead.component';
+import { AuthComponent }        from './auth/auth.component';
 
 const routes: Routes = [
-    { path: '', component: DashboardComponent },
-    { path: 'login',     component: LoginComponent }
+    { path: '',       component: DashboardComponent },
+    { path: 'login',  component: LoginComponent },
+    { path: 'auth',   component: AuthComponent }
 ];
 
 @NgModule({
@@ -24,6 +26,7 @@ const routes: Routes = [
     ],
     declarations: [
         AppComponent,
+        AuthComponent,
         DashboardComponent,
         LoginComponent,
         MastheadComponent
