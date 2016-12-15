@@ -27,7 +27,6 @@ const routes: Routes = [
         HttpModule,
     ],
     providers: [
-
       AuthService,
       AuthGuard
     ],
