@@ -12,11 +12,13 @@ import { MastheadComponent }    from './masthead/masthead.component';
 import { AuthComponent }        from './auth/auth.component';
 import { AuthService }          from './auth/auth.service';
 import { AuthGuard }            from './auth/auth.guard';
+import { ApplicationComponent } from './resources/application.component';
 
 const routes: Routes = [
-    { path: '',       component: DashboardComponent, canActivate: [AuthGuard] },
-    { path: 'login',  component: LoginComponent },
-    { path: 'auth',   component: AuthComponent }
+    { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'login',              component: LoginComponent },
+    { path: 'auth',               component: AuthComponent },
+    { path: 'applications/:uuid', component: ApplicationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -34,9 +36,10 @@ const routes: Routes = [
     declarations: [
         AuthComponent,
         AppComponent,
+        ApplicationComponent,
         DashboardComponent,
         LoginComponent,
-        MastheadComponent
+        MastheadComponent,
     ],
     bootstrap: [ AppComponent ]
 })
