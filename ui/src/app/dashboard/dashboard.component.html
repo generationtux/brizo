@@ -1,4 +1,8 @@
 <div class="dashboard">
     <p>Dashboard</p>
-    {{ applications | json }}
+    <p>Applications</p>
+    <ul *ngFor="let app of applications">
+      <li><a href="/app/applications/{{ app.Uuid }}">{{ app.Name }}</a></li>
+    </ul>
+    <p>{{ applications | json }}</p>
 </div>
