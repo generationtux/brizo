@@ -6,12 +6,15 @@ import (
 
 	testdb "github.com/erikstmartin/go-testdb"
 	"github.com/jinzhu/gorm"
+	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCanCreateAnApplication(t *testing.T) {
+	id := uuid.New()
 	app := Application{
 		Name: "foobar",
+		Uuid: id,
 	}
 	db, _ := gorm.Open("testdb", "")
 	var query string
@@ -24,7 +27,8 @@ func TestCanCreateAnApplication(t *testing.T) {
 	})
 
 	CreateApplication(db, &app)
-	expectQuery := "INSERT INTO \"applications\" (\"created_at\",\"updated_at\",\"name\") VALUES (?,?,?)"
+	expectQuery := "INSERT INTO \"applications\" (\"created_at\",\"updated_at\",\"uuid\",\"name\") VALUES (?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
-	assert.Equal(t, "foobar", args[2])
+	assert.Equal(t, id, args[2])
+	assert.Equal(t, "foobar", args[3])
 }

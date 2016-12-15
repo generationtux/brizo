@@ -19,9 +19,8 @@ func GetApplicationPods(app resources.Application) ([]Pod, error) {
 	}
 
 	kubePods := client.Pods("brizo")
-	// @todo update to app.UUID with Johns work merged
 	list := kubePods.List(v1.ListOptions{
-		Labels: fmt.Sprintf("appUUID=%v,brizoManaged=true", app.Name),
+		Labels: fmt.Sprintf("appUUID=%v,brizoManaged=true", app.UUID),
 	})
 
 	pods := []Pod{}
@@ -30,7 +29,7 @@ func GetApplicationPods(app resources.Application) ([]Pod, error) {
 	}
 
 	if len(pods) == 0 {
-		pods = [0]Pod{}
+		pods = make([]Pod, 0)
 	}
 
 	return pods, nil

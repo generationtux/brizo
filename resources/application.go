@@ -1,16 +1,28 @@
 package resources
 
 import (
+	"errors"
+
 	"github.com/generationtux/brizo/database"
 	"github.com/generationtux/brizo/kube"
 	"github.com/jinzhu/gorm"
+	"github.com/pborman/uuid"
 )
 
 // Application as defined by Brizo.
 type Application struct {
 	database.Model
+	UUID string     `gorm:"not null;unique_index" sql:"type:varchar(36)"`
 	Name string     `gorm:"not null;unique_index"`
 	Pods []kube.Pod `gorm:"-"` // gorm will ignore, but we can populate
+}
+
+// BeforeCreate is a hook that runs before inserting a new record into the database
+func (a *Application) BeforeCreate() (err error) {
+	if a.UUID == "" {
+		a.UUID = uuid.New()
+	}
+	return
 }
 
 // AllApplications will return all of the Applications
@@ -36,15 +48,19 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 }
 
 // GetApplication will get an existing Application by name
-func GetApplication(db *gorm.DB, name string, getPods kube.PodRetrieval) (*Application, error) {
-	app := new(Application)
-	if err := db.Where("name = ?").First(&app).Error; err != nil {
+func GetApplication(db *gorm.DB, id string, getPods kube.PodRetrieval) (*Application, error) {
+	if _, valid := uuid.Parse(id).Version(); valid {
+		app := new(Application)
+		if err := db.Where("uuid = ?", id).First(&app).Error; err != nil {
+			return app, err
+		}
+
+		app.Pods, err = getPods(app)
+
 		return app, err
 	}
 
-	app.Pods, err = getPods(app)
-
-	return app, err
+	return new(Application), errors.New("invalid id uuid version or format")
 }
 
 // DeleteApplication will delete an existing Application by name
