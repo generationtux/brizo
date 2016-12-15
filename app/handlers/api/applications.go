@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/generationtux/brizo/database"
-	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
 )
@@ -45,7 +44,7 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := bone.GetValue(r, "uuid")
-	app, err := resources.GetApplication(db, id, kube.GetApplicationPods)
+	app, err := resources.GetApplication(db, id, resources.GetApplicationPods)
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
