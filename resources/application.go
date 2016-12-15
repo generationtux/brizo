@@ -42,9 +42,9 @@ func GetApplication(db *gorm.DB, name string, getPods kube.PodRetrieval) (*Appli
 		return app, err
 	}
 
-	app.Pods = getPods(app)
+	app.Pods, err = getPods(app)
 
-	return app, nil
+	return app, err
 }
 
 // DeleteApplication will delete an existing Application by name
