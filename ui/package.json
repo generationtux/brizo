@@ -34,6 +34,7 @@
     "@types/jasmine": "^2.5.35",
     "@types/node": "^6.0.45",
     "angular2-template-loader": "^0.4.0",
+    "angular2-jwt": "^0.1.26",
     "assets-webpack-plugin": "^3.5.0",
     "awesome-typescript-loader": "^2.2.4",
     "core-js": "^2.4.1",

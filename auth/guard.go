@@ -68,20 +68,6 @@ func jwtSecret() string {
 	return os.Getenv("JWT_SECRET")
 }
 
-// jwtSigningMethod get the configured JWT signing method
-func jwtSigningMethod() jwt.SigningMethod {
-	switch os.Getenv("JWT_ALGO") {
-	case "HS256":
-		return jwt.SigningMethodHS256
-	case "HS384":
-		return jwt.SigningMethodHS384
-	case "HS512":
-		return jwt.SigningMethodHS512
-	default:
-		return nil
-	}
-}
-
 // extractJWTFromHeader will parse the header string and return just the token
 // header should be formatted as Bearer [TOKEN]
 func extractJWTFromHeader(header string) string {

@@ -9,12 +9,16 @@ import { AppComponent }         from './app.component';
 import { DashboardComponent }   from './dashboard/dashboard.component';
 import { LoginComponent }       from './login/login.component';
 import { MastheadComponent }    from './masthead/masthead.component';
+import { AuthComponent }        from './auth/auth.component';
+import { AuthService }          from './auth/auth.service';
+import { AuthGuard }            from './auth/auth.guard';
 import { ApplicationComponent } from './resources/application.component';
 
 const routes: Routes = [
-    { path: '',                   component: DashboardComponent },
+    { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'login',              component: LoginComponent },
-    { path: 'applications/:uuid', component: ApplicationComponent },
+    { path: 'auth',               component: AuthComponent },
+    { path: 'applications/:uuid', component: ApplicationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -24,7 +28,12 @@ const routes: Routes = [
         RouterModule.forRoot(routes),
         HttpModule,
     ],
+    providers: [
+      AuthService,
+      AuthGuard
+    ],
     declarations: [
+        AuthComponent,
         AppComponent,
         ApplicationComponent,
         DashboardComponent,
