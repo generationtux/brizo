@@ -32,6 +32,7 @@ func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, token string
 func HydrateOAuthConfig(oauthConf *oauth2.Config) {
 	oauthConf.ClientID = config.App.OAuthGithubClientID
 	oauthConf.ClientSecret = config.App.OAuthGithubClientSecret
+	oauthConf.RedirectURL = config.App.URL + "/o/auth/callback/github"
 }
 
 // IsFirstUser will determine if any users have registered yet

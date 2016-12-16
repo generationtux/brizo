@@ -2,7 +2,7 @@
     <p>Dashboard</p>
     <p>Applications</p>
     <ul *ngFor="let app of applications">
-      <li><a href="/app/applications/{{ app.Uuid }}">{{ app.Name }}</a></li>
+      <li><a [routerLink]="['/applications', app.UUID]">{{ app.Name }}</a></li>
     </ul>
     <p>{{ applications | json }}</p>
 </div>

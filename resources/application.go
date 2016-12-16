@@ -48,19 +48,19 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 
 // GetApplication will get an existing Application by name
 func GetApplication(db *gorm.DB, id string, getPods PodRetrieval) (*Application, error) {
-	if _, valid := uuid.Parse(id).Version(); valid {
-		app := new(Application)
-		if err := db.Where("uuid = ?", id).First(&app).Error; err != nil {
-			return app, err
-		}
-
-		pods, err := getPods(app.UUID)
-		app.Pods = pods
-
+	app := new(Application)
+	if err := db.Where("uuid = ?", id).First(&app).Error; err != nil {
 		return app, err
 	}
 
-	return new(Application), errors.New("invalid id uuid version or format")
+	if app.ID == 0 {
+		return new(Application), errors.New("not-found")
+	}
+
+	pods, err := getPods(app.UUID)
+	app.Pods = pods
+
+	return app, err
 }
 
 // DeleteApplication will delete an existing Application by name

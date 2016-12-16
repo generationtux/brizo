@@ -1,6 +1,5 @@
 import { Component }              from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription }           from "rxjs/Rx";
 
 @Component({
     selector: 'auth',
@@ -8,16 +7,14 @@ import { Subscription }           from "rxjs/Rx";
 })
 
 export class AuthComponent {
-  private subscription: Subscription;
-  private token: string;
 
   constructor(private router: Router, private route: ActivatedRoute) {
-    this.subscription = route.queryParams.subscribe(
-      (queryParam: any) => this.token = queryParam['token']
+    route.queryParams.subscribe(
+      (queryParam: any) => {
+        localStorage.setItem('id_token', queryParam['token']);
+        this.router.navigate(['./']);
+      }
     );
-
-    localStorage.setItem('id_token', this.token);
-    this.router.navigate(['./']);
   }
 
 }
