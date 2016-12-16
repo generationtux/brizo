@@ -1,7 +1,21 @@
-<div>
-  <ul>
-    <li>id: {{ application?.Uuid }}</li>
-    <li>name: {{ application?.Name }}</li>
-  </ul>
-  <p>Pods: {{ application?.Pods | json }}</p>
+<div class="container">
+  <small><a [routerLink]="['/']">&lt; Back</a></small>
+  <br>
+
+  <h4>
+    {{ application?.Name }} <small>({{ application?.UUID }})</small>
+  </h4>
+  <hr>
+  <br><br>
+
+  <h5>Pods</h5><br>
+  <div class="row">
+    <div *ngFor="let pod of application?.Pods" class="col s3">
+      <div class="card green darken-1">
+        <div class="card-content white-text">
+          {{ pod.Name }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

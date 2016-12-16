@@ -1,8 +1,17 @@
-<div class="dashboard">
-    <p>Dashboard</p>
-    <p>Applications</p>
-    <ul *ngFor="let app of applications">
-      <li><a [routerLink]="['/applications', app.UUID]">{{ app.Name }}</a></li>
-    </ul>
-    <p>{{ applications | json }}</p>
+<div class="container">
+  <h4>Applications</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let app of applications">
+        <td>{{ app.UUID }}</td>
+        <td><a [routerLink]="['/applications', app.UUID]">{{ app.Name }}</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
