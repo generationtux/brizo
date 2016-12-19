@@ -30,3 +30,20 @@ ci:
 
 build-release:
   box: golang
+  steps:
+    - wercker/golint
+    - script:
+        name: go build
+        code: |
+          go build ./...
+    - script:
+        name: go test
+        code: |
+          go test ./...
+    - internal/docker-push:
+        cmd: brizo run
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        repository: gentux/brizo
+        disable-sync: true
+        tag: latest
