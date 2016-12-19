@@ -40,10 +40,9 @@ build-release:
         name: copy binary
         code: cp brizo "$WERCKER_OUTPUT_DIR"
     - internal/docker-push:
-        working_dir: .
-        cmd: ./brizo run
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
+        cmd: ./brizo run
         repository: gentux/brizo
         disable-sync: true
         tag: latest
