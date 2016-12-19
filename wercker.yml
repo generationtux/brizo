@@ -30,7 +30,13 @@ ci:
 
 build-release:
   steps:
+    - setup-go-workspace
+    - script:
+        name: go build
+        code: |
+          go build
     - internal/docker-push:
+        working_dir: .
         cmd: brizo run
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
