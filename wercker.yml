@@ -32,7 +32,6 @@ build-release:
   steps:
     - wercker/setup-go-workspace:
       package-dir: github.com/generationtux/brizo
-    - wercker/golint
     - script:
         name: go build
         code: |
