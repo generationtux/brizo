@@ -35,14 +35,14 @@ build-release:
     - script:
         name: go build
         code: |
-          go build
+          go build -o $GOPATH/bin/brizo
     - script:
         name: copy binary
         code: cp brizo "$WERCKER_OUTPUT_DIR"
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        cmd: ./brizo run
+        cmd: brizo run
         repository: gentux/brizo
         disable-sync: true
         tag: latest
