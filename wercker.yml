@@ -30,14 +30,16 @@ ci:
 
 build-release:
   steps:
-    - setup-go-workspace
+    - wercker/setup-go-workspace:
+      package-dir: github.com/generationtux/brizo
+    - wercker/golint
     - script:
         name: go build
         code: |
           go build
     - internal/docker-push:
         working_dir: .
-        cmd: brizo run
+        cmd: $WERCKER_SOURCE_DIR/brizo run
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
         repository: gentux/brizo
