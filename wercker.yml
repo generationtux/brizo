@@ -28,6 +28,7 @@ ci:
         code: |
           bash <(curl -s https://codecov.io/bash)
 
+# pushes release image to docker hub
 build-release:
   steps:
     - wercker/setup-go-workspace:
