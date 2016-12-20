@@ -27,3 +27,21 @@ ci:
         name: upload coverage
         code: |
           bash <(curl -s https://codecov.io/bash)
+
+# pushes release image to docker hub
+build-release:
+  steps:
+    - wercker/setup-go-workspace:
+      package-dir: github.com/generationtux/brizo
+    - script:
+        name: go build
+        code: |
+          go build -o $GOPATH/bin/brizo
+          rm -rf $GOPATH/src/github.com/generationtux/brizo/.git
+    - internal/docker-push:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+        cmd: brizo run
+        repository: gentux/brizo
+        disable-sync: true
+        tag: latest
