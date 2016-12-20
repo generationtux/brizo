@@ -34,6 +34,10 @@ build-release:
     - wercker/setup-go-workspace:
       package-dir: github.com/generationtux/brizo
     - script:
+        name: clean
+        code: |
+          rm -rf $GOPATH/src/brizo/{.git,.gitignore}
+    - script:
         name: go build
         code: |
           go build -o $GOPATH/bin/brizo
