@@ -1,6 +1,7 @@
 <div class="dashboard">
     <p>Dashboard</p>
     <p>Applications</p>
+    <application-listing></application-listing>
     <ul *ngFor="let app of applications">
       <li><a href="/app/applications/{{ app.Uuid }}">{{ app.Name }}</a></li>
     </ul>

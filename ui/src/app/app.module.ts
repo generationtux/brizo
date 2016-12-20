@@ -12,7 +12,8 @@ import { MastheadComponent }    from './masthead/masthead.component';
 import { AuthComponent }        from './auth/auth.component';
 import { AuthService }          from './auth/auth.service';
 import { AuthGuard }            from './auth/auth.guard';
-import { ApplicationComponent } from './resources/application.component';
+import { ApplicationComponent } from './resources/applications/application-details.component';
+import { ApplicationListingComponent } from './resources/applications/application-listing.component';
 
 const routes: Routes = [
     { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
@@ -36,6 +37,7 @@ const routes: Routes = [
         AuthComponent,
         AppComponent,
         ApplicationComponent,
+        ApplicationListingComponent,
         DashboardComponent,
         LoginComponent,
         MastheadComponent,

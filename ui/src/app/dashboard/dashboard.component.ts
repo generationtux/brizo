@@ -3,8 +3,8 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { Application } from '../resources/application.component'
-import { ApplicationService } from '../resources/application.service'
+import { Application } from '../resources/applications/application-details.component'
+import { ApplicationService } from '../resources/applications/application.service'
 
 @Component({
     selector:    'dashboard',
@@ -28,11 +28,13 @@ export class DashboardComponent {
       )
     }
 
+
     private applications: Application[]
 
     private application: Application
 
     private applicationsIndexUrl = '/api/v1/applications'
+    private applicationsCreateUrl = '/api/v1/applications'
 
     logError(err: any) {
       console.error('There was an error: ' + err);

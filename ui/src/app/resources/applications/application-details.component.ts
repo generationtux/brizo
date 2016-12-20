@@ -2,11 +2,11 @@ import { ActivatedRoute }     from '@angular/router'
 import { Component }          from '@angular/core'
 
 import { ApplicationService } from './application.service'
-import { Pod }                from './pod.component'
+import { Pod }                from '../pod.component'
 
 @Component({
   selector:    'application',
-  templateUrl: './application.component.html',
+  templateUrl: './application-details.component.html',
   providers:   [ApplicationService],
 })
 

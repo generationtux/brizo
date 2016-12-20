@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Rx';
 import { Component, Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
-import { Application } from './application.component'
+import { Application } from './application-details.component'
 
 @Injectable()
 export class ApplicationService {

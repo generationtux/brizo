@@ -53,3 +53,28 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(app)
 }
+
+// ApplicationCreate creates a new Application
+func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		return
+	}
+
+	app := resources.Application{
+		Name: bone.GetValue(r, "name"),
+	}
+	_, err = resources.CreateApplication(db, &app)
+	// @todo handle failed save w/out error?
+	if err != nil {
+		log.Printf("Error when retrieving application: '%s'\n", err)
+		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
+		return
+	}
+
+	// @todo should return a 201 actually
+	http.Redirect(w, r, "/applications", http.StatusTemporaryRedirect)
+}

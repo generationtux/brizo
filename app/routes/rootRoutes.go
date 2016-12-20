@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/generationtux/brizo/app/handlers/web"
-	"github.com/generationtux/brizo/auth"
 	"github.com/go-zoo/bone"
 	"github.com/urfave/negroni"
 )
@@ -43,7 +42,7 @@ func BuildRouter() *negroni.Negroni {
 	// protected API routes
 	authorizedAPI := authAPIRoutes()
 	r.SubRoute("/api/v1", negroni.New(
-		negroni.HandlerFunc(auth.APIMiddleware),
+		// negroni.HandlerFunc(auth.APIMiddleware),
 		negroni.Wrap(authorizedAPI),
 	))
 
