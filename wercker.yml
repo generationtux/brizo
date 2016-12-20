@@ -46,4 +46,4 @@ build-release:
         tag: latest
     - script:
         name: clean
-        code: rm -rf $GOPATH/src/brizo/.git
+        code: rm -rf $GOPATH/src/github.com/generationtux/brizo/.git
