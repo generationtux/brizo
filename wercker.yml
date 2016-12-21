@@ -37,7 +37,7 @@ build-release:
         name: go build
         code: |
           go build -o $GOPATH/bin/brizo
-          rm -rf $GOPATH/src/github.com/generationtux/brizo/.git
+          rm -rf $GOPATH/src/*
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
