@@ -1,0 +1,8 @@
+Applications
+
+
+<ul *ngFor="let app of applications | async">
+  <li><a [routerLink]="['/applications/', app.UUID]">{{ app.Name }}</a></li>
+</ul>
+
+<p>{{ applications | async | json }}</p>

@@ -5,15 +5,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpModule }           from '@angular/http';
 
 // App is our top level component
-import { AppComponent }         from './app.component';
-import { DashboardComponent }   from './dashboard/dashboard.component';
-import { LoginComponent }       from './login/login.component';
-import { MastheadComponent }    from './masthead/masthead.component';
-import { AuthComponent }        from './auth/auth.component';
-import { AuthService }          from './auth/auth.service';
-import { AuthGuard }            from './auth/auth.guard';
-import { ApplicationComponent } from './resources/applications/application-details.component';
-import { ApplicationListingComponent } from './resources/applications/application-listing.component';
+import { AppComponent }                 from './app.component';
+import { DashboardComponent }           from './dashboard/dashboard.component';
+import { LoginComponent }               from './login/login.component';
+import { MastheadComponent }            from './masthead/masthead.component';
+import { AuthComponent }                from './auth/auth.component';
+import { AuthService }                  from './auth/auth.service';
+import { AuthGuard }                    from './auth/auth.guard';
+import { ApplicationComponent }         from './resources/applications/application-details.component';
+import { ApplicationCreationComponent } from './resources/applications/application-creation.component';
+import { ApplicationListingComponent }  from './resources/applications/application-listing.component';
 
 const routes: Routes = [
     { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
@@ -37,6 +38,7 @@ const routes: Routes = [
         AuthComponent,
         AppComponent,
         ApplicationComponent,
+        ApplicationCreationComponent,
         ApplicationListingComponent,
         DashboardComponent,
         LoginComponent,

@@ -1,9 +1,6 @@
 <div class="dashboard">
     <p>Dashboard</p>
-    <p>Applications</p>
+    <application-creation-form></application-creation-form>
+    <br>
     <application-listing></application-listing>
-    <ul *ngFor="let app of applications">
-      <li><a href="/app/applications/{{ app.Uuid }}">{{ app.Name }}</a></li>
-    </ul>
-    <p>{{ applications | json }}</p>
 </div>

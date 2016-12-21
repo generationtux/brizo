@@ -64,8 +64,20 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var createForm struct {
+		Name string
+	}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&createForm)
+	defer r.Body.Close()
+	if err != nil {
+		log.Printf("decoding error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		return
+	}
+
 	app := resources.Application{
-		Name: bone.GetValue(r, "name"),
+		Name: createForm.Name,
 	}
 	_, err = resources.CreateApplication(db, &app)
 	// @todo handle failed save w/out error?
@@ -75,6 +87,7 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// @todo should return a 201 actually
-	http.Redirect(w, r, "/applications", http.StatusTemporaryRedirect)
+	// @todo return some sort of content?
+	w.WriteHeader(http.StatusCreated)
+	return
 }

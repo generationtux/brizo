@@ -6,21 +6,17 @@ import { ApplicationService } from './application.service'
 
 @Component({
   selector: 'application-listing',
-  template: '<span>example</span>',
+  templateUrl: './application-listing.component.html',
   providers: [ApplicationService],
 })
 
 export class ApplicationListingComponent implements OnInit {
-  private applications: Application[]
+  private applications: Observable<Application[]>
 
   constructor(private applicationService: ApplicationService) {}
 
   ngOnInit() {
-    this.applicationService.getApplications().subscribe(
-      data => this.applications = data,
-      err => this.logError(err),
-      () => console.log('applications loaded')
-    )
+    this.applications = this.applicationService.getApplications()
   }
 
   logError(err: any) {
