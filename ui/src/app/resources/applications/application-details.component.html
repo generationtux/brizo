@@ -1,7 +1,33 @@
-<div>
-  <ul>
-    <li>id: {{ application?.UUID }}</li>
-    <li>name: {{ application?.Name }}</li>
-  </ul>
-  <p>Pods: {{ application?.Pods | json }}</p>
+<div class="application-details">
+  <div class="row">
+    <div class="col s12">
+      <p><a href="/app">&laquo; Back to Dashboard</a></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <h5>{{ application?.Name }}</h5>
+      <h6>{{ application?.UUID }}</h6>
+      <a href="">Launch Application</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <h6>Pods</h6>
+      <table>
+        <thead>
+          <tr>
+            <th>Pod</th>
+            <th>Containers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>[POD NAME]</td>
+            <td>[# of PODS]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

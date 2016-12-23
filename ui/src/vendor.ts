@@ -10,3 +10,6 @@ import '@angular/router';
 import 'rxjs';
 
 // Other third party
+import 'jquery';
+import 'materialize-css';
+import 'angular2-materialize';

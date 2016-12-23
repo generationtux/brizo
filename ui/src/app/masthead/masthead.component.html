@@ -1,3 +1,31 @@
 <div class="masthead">
-    <h1>Brizo</h1>
+  <nav class="nav-wrapper light-blue darken-1">
+    <a href="#" class="brand-logo">Brizo</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a (click)="openModal()">Create Application</a></li>
+      <li><a href="">Logout</a></li>
+    </ul>
+  </nav>
+</div>
+
+<div id="modal1" class="modal" materialize="modal" [materializeParams]="[{dismissible: true}]" [materializeActions]="modalActions">
+  <form [formGroup]="createAppForm" novalidate (ngSubmit)="save(createAppForm.name)">
+    <div class="modal-content">
+      <div class="col 12">
+        <div class="row">
+          <h5>Create Application</h5>
+        </div>
+      </div>
+      <div class="col 12">
+        <div class="row">
+          <label for="name">Name</label>
+          <input type="text" placeholder="Application name" name="name" formControlName="name">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-action modal-close waves-effect waves-green btn" type="submit">Create</button>
+      <a class="waves-effect waves-green btn-flat" (click)="closeModal()">Close</a>
+    </div>
+  </form>
 </div>

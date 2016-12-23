@@ -21,7 +21,8 @@ export class ApplicationCreationComponent {
       () => console.log('application created'),
     )
 
-    console.log(this.things)
+    console.log(this.things);
+    return;
   }
 
   logError(err: any) {
