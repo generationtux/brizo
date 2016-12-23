@@ -11,18 +11,13 @@ import { ApplicationService } from './application.service'
 })
 
 export class ApplicationCreationComponent {
-  private things: any
   constructor(private applicationService: ApplicationService) {}
 
   createApplication(name: string) {
     this.applicationService.createApplication(name).subscribe(
-      data => this.things = data,
       err => console.error('There was an error: ' + err),
       () => console.log('application created'),
     )
-
-    console.log(this.things);
-    return;
   }
 
   logError(err: any) {
