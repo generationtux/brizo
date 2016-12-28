@@ -343,6 +343,12 @@
 			"revisionTime": "2016-01-10T10:55:54Z"
 		},
 		{
+			"checksumSHA1": "RMSzeJov3QKqWd8TIvuTstIHAs4=",
+			"path": "github.com/ricardolonga/jsongo",
+			"revision": "459112a8028dfbecd765e6ee2bd775f4652f270c",
+			"revisionTime": "2016-12-15T11:09:33Z"
+		},
+		{
 			"checksumSHA1": "x6WnPggr3ijX7c/7g5q8hIePN+s=",
 			"path": "github.com/smartystreets/assertions",
 			"revision": "e60cfa771e3f4d18723a4119f1833898c9c62066",
