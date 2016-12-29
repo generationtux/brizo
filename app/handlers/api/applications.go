@@ -53,3 +53,41 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(app)
 }
+
+// ApplicationCreate creates a new Application
+func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		return
+	}
+
+	var createForm struct {
+		Name string
+	}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&createForm)
+	defer r.Body.Close()
+	if err != nil {
+		log.Printf("decoding error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		return
+	}
+
+	app := resources.Application{
+		Name: createForm.Name,
+	}
+	_, err = resources.CreateApplication(db, &app)
+	// @todo handle failed save w/out error?
+	if err != nil {
+		log.Printf("Error when retrieving application: '%s'\n", err)
+		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
+		return
+	}
+
+	// @todo return some sort of content?
+	w.WriteHeader(http.StatusCreated)
+	return
+}
