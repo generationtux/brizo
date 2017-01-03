@@ -27,7 +27,7 @@ ci:
         name: upload coverage
         code: |
           bash <(curl -s https://codecov.io/bash)
-    - domudall/nave@0.0.5
+    - domudall/nave@0.0.5:
         node-version: 6.9
     - npm-test
 
