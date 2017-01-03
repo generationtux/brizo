@@ -31,7 +31,7 @@ ci:
           bash <(curl -s https://codecov.io/bash)
 
 # build and test UI
-ui:
+ci-ui:
   box: node
   steps:
     - script:
