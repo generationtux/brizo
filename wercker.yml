@@ -28,6 +28,7 @@ ci:
         code: |
           bash <(curl -s https://codecov.io/bash)
 
+# build and test UI
 ci-ui:
   box: node:6.9-alpine
   steps:
