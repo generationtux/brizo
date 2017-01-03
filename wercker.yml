@@ -32,10 +32,16 @@ ci:
 ci-ui:
   box: node:6.9-alpine
   steps:
-    - npm-install:
-        cwd: ui/
-    - npm-test:
-        cwd: ui/
+    - script:
+        name: npm install
+        code: |
+          cd ui
+          npm install
+    - script:
+        name: run tests
+        code: |
+          cd ui
+          npm test
 
 # pushes release image to docker hub
 build-release:
