@@ -6,7 +6,7 @@ import (
 
 // Model base ORM struct
 type Model struct {
-	ID        uint `gorm:"primary_key"`
+	ID        uint `gorm:"primary_key" json:"ID,string"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

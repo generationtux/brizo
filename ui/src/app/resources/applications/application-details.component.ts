@@ -3,11 +3,11 @@ import { Component, OnInit }          from '@angular/core'
 import 'rxjs/add/operator/switchMap';
 
 import { ApplicationService } from './application.service'
-import { Pod }                from './pod.component'
+import { Pod }                from '../pod.component'
 
 @Component({
   selector:    'application',
-  templateUrl: './application.component.html',
+  templateUrl: './application-details.component.html',
   providers:   [ApplicationService],
 })
 

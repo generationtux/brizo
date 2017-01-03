@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
 	"github.com/mholt/binding"
@@ -20,7 +21,10 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 	user := auth.User{
@@ -31,10 +35,14 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 	if success == false {
 		log.Printf("%s when trying to create user\n", err)
 		// @todo correctly redirect w/ bad request shown
-		http.Error(w, "there was an error when attemping to create a new user", http.StatusBadRequest)
-	} else {
-		w.WriteHeader(http.StatusCreated)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusBadRequest,
+			"there was an error when attemping to create a new user")
+		jsonutil.RespondJSONError(w, jre)
+		return
 	}
+	w.WriteHeader(http.StatusCreated)
+	return
 }
 
 // ValidateToken validates the provided JWT token
