@@ -27,7 +27,7 @@ ci:
         name: npm build
         box: node:6-alpine
         code: |
-          npm run test
+          echo "hello"
     - script:
         name: upload coverage
         code: |
