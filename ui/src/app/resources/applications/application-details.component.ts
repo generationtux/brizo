@@ -1,5 +1,6 @@
-import { ActivatedRoute }     from '@angular/router'
-import { Component }          from '@angular/core'
+import { ActivatedRoute, Params }     from '@angular/router'
+import { Component, OnInit }          from '@angular/core'
+import 'rxjs/add/operator/switchMap';
 
 import { ApplicationService } from './application.service'
 import { Pod }                from '../pod.component'
@@ -10,19 +11,19 @@ import { Pod }                from '../pod.component'
   providers:   [ApplicationService],
 })
 
-export class ApplicationComponent {
+export class ApplicationComponent implements OnInit {
   private application: Application
 
-  constructor(private applicationService: ApplicationService, private route: ActivatedRoute) {
-    let uuid: string
-    route.params.subscribe(
-      data => uuid = data['uuid'],
-    )
-    applicationService.getApplication(uuid).subscribe(
-      data => this.application = data,
-      err => console.error('There was an error: ' + err),
-      () => console.log('application loaded'),
-    )
+  constructor(private applicationService: ApplicationService, private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.params
+      .switchMap(
+        (params: Params) => this.applicationService.getApplication(params['uuid'])
+      ).subscribe(
+        data => this.application = data,
+        err => console.error('There was an error: ' + err)
+      );
   }
 }
 

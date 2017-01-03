@@ -3,6 +3,7 @@ import { Component, Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { Application } from './application-details.component'
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable()
 export class ApplicationService {
@@ -11,16 +12,16 @@ export class ApplicationService {
   private applicationsGetUrl    = '/api/v1/applications/'
   private applicationsIndexUrl  = '/api/v1/applications'
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private auth: AuthService) { }
 
   getApplications(): Observable<Application[]> {
-    return this.http.get(this.applicationsIndexUrl)
+    return this.http.get(this.applicationsIndexUrl, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
   getApplication(uuid: string): Observable<Application> {
-    return this.http.get(this.applicationsGetUrl + `${uuid}`)
+    return this.http.get(this.applicationsGetUrl + uuid, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

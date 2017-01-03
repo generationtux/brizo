@@ -2,6 +2,7 @@ package config
 
 // appConfiguration data structure for application configuration
 type appConfiguration struct {
+	URL                     string
 	MysqlHost               string
 	MysqlPort               string
 	MysqlUser               string

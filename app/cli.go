@@ -67,6 +67,12 @@ func getAddress() string {
 func runFlags() []cli.Flag {
 	dataFlags := []cli.Flag{
 		cli.StringFlag{
+			Name:        "app-url",
+			Usage:       "public URL for Brizo app",
+			Destination: &config.App.URL,
+			EnvVar:      "BRIZO_URL",
+		},
+		cli.StringFlag{
 			Name:        "mysql-host",
 			Usage:       "mysql host address",
 			Value:       "localhost",
