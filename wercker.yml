@@ -1,3 +1,4 @@
+# build and test go
 ci:
   box: golang
   steps:
