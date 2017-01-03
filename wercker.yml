@@ -24,14 +24,12 @@ ci:
 
           cat coverage.txt
     - script:
-        name: npm build
-        box: node:6-alpine
-        code: |
-          echo "hello"
-    - script:
         name: upload coverage
         code: |
           bash <(curl -s https://codecov.io/bash)
+    - domudall/nave@0.0.5
+        node-version: 6.9
+    - npm-test
 
 # pushes release image to docker hub
 build-release:
