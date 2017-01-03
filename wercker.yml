@@ -1,5 +1,6 @@
-box: golang
+# ci for go and ui
 ci:
+  box: golang
   steps:
     - setup-go-workspace
     - golint:
