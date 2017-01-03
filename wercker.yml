@@ -27,9 +27,14 @@ ci:
         name: upload coverage
         code: |
           bash <(curl -s https://codecov.io/bash)
-    - domudall/nave@0.0.5:
-        node-version: 6.9
-    - npm-test
+
+ci-ui:
+  box: node:6.9-alpine
+  steps:
+    - npm-install:
+        cwd: ui/
+    - npm-test:
+        cwd: ui/
 
 # pushes release image to docker hub
 build-release:
