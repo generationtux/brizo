@@ -32,7 +32,7 @@ ci:
 
 # build and test UI
 ui:
-  box: node:6.9-alpine
+  box: node
   steps:
     - script:
         name: npm install
