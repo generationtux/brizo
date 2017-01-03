@@ -1,3 +1,4 @@
+# ci for go and ui
 ci:
   box: golang
   steps:
