@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -60,4 +61,29 @@ func ValidateToken(rw http.ResponseWriter, request *http.Request) {
 
 	rw.Write([]byte("ok"))
 	rw.WriteHeader(200)
+}
+
+// AuthGetInvitees provides a listing of users who have not yet accepted their
+// invitation.
+func AuthGetInvitees(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+	invitees, err := auth.GetInvitedUsers(db)
+	if err != nil {
+		log.Printf("Error when retrieving invitees: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+	json.NewEncoder(w).Encode(invitees)
 }

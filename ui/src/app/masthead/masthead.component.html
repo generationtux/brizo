@@ -1,7 +1,16 @@
 <div class="masthead">
-  <nav class="nav-wrapper light-blue darken-1">
-    <a href="#" class="brand-logo">Brizo</a>
+  <nav materialize class="nav-wrapper light-blue darken-1">
+    <a href="#!" class="brand-logo">Brizo</a>
+    <a href="#" class="button-collapse" materialize="sideNav" data-activates="mobile-menu" data-sidenav="left" data-menuwidth="500" data-closeonclick="false">
+      <i class="material-icons">menu</i>
+    </a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/app/users/invite">Invite User</a></li>
+      <li><a (click)="openModal()">Create Application</a></li>
+      <li><a href="">Logout</a></li>
+    </ul>
+    <ul class="side-nav" id="mobile-menu">
+      <li><a href="/app/users/invite">Invite User</a></li>
       <li><a (click)="openModal()">Create Application</a></li>
       <li><a href="">Logout</a></li>
     </ul>
