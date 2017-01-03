@@ -1,5 +1,5 @@
-box: golang
 ci:
+  box: golang
   steps:
     - setup-go-workspace
     - golint:
