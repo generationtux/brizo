@@ -8,6 +8,7 @@ import { MaterializeDirective } from "angular2-materialize";
 // App is our top level component
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { InviteComponent } from './invite/invite.component';
 import { LoginComponent } from './login/login.component';
 import { MastheadComponent } from './masthead/masthead.component';
 import { AuthComponent } from './auth/auth.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
     { path: 'login',              component: LoginComponent },
     { path: 'auth',               component: AuthComponent },
     { path: 'applications/:uuid', component: ApplicationComponent, canActivate: [AuthGuard] },
+    { path: 'users/invite',       component: InviteComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -43,6 +45,7 @@ const routes: Routes = [
         ApplicationCreationComponent,
         ApplicationListingComponent,
         DashboardComponent,
+        InviteComponent,
         LoginComponent,
         MastheadComponent,
         MaterializeDirective,

@@ -51,3 +51,12 @@ func CreateJWTToken(user User) (string, error) {
 
 	return tokenString, err
 }
+
+// GetInvitedUsers will provide a slice of all of the Users who have been
+// invited to Brizo, but have yet to authenticate with Github.
+func GetInvitedUsers(db *gorm.DB) ([]User, error) {
+	var invitees []User
+	result := db.Where("username is not null").Where("github_token = \"\"").Find(&invitees)
+
+	return invitees, result.Error
+}
