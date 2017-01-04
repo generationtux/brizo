@@ -56,6 +56,12 @@ build-release:
         code: |
           go build -o $GOPATH/bin/brizo
           rm -rf $GOPATH/src/*
+    - script:
+        name: ui build
+        code: |
+          cd ui
+          node install
+          node run build
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
