@@ -35,20 +35,21 @@ ci-ui:
   box: node
   steps:
     - script:
-        name: npm install
+        name: install and build
         code: |
           cd ui
           npm install
+          npm build
     - script:
         name: run tests
         code: |
           cd ui
           npm test
     - script:
-        name: build ui
+        name: clean up
         code: |
           cd ui
-          npm build
+          rm -rf ./node_modules
 
 # pushes release image to docker hub
 build-release:
