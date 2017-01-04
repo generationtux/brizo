@@ -7,7 +7,8 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     files: [
-      {pattern: './config/karma-test-shim.js', watched: false}
+      {pattern: './config/karma-test-shim.js', watched: false},
+      'tests/*.test.js'
     ],
 
     preprocessors: {
@@ -35,4 +36,3 @@ module.exports = function (config) {
 
   config.set(_config);
 };
-
