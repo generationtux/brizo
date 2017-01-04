@@ -44,6 +44,11 @@ ci-ui:
         code: |
           cd ui
           npm test
+    - script:
+        name: build ui
+        code: |
+          cd ui
+          npm build
 
 # pushes release image to docker hub
 build-release:
