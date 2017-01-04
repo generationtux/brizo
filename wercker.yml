@@ -1,5 +1,7 @@
-box: golang
+# build and test go
+#
 ci:
+  box: golang
   steps:
     - setup-go-workspace
     - golint:
@@ -27,6 +29,22 @@ ci:
         name: upload coverage
         code: |
           bash <(curl -s https://codecov.io/bash)
+
+# build and test UI
+ci-ui:
+  box: node
+  steps:
+    - script:
+        name: install and build
+        code: |
+          cd ui
+          npm install
+          npm run build
+    - script:
+        name: run tests
+        code: |
+          cd ui
+          npm test
 
 # pushes release image to docker hub
 build-release:
