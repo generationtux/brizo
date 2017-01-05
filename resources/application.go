@@ -11,9 +11,10 @@ import (
 // Application as defined by Brizo.
 type Application struct {
 	database.Model
-	UUID string `gorm:"not null;unique_index" sql:"type:varchar(36)"`
-	Name string `gorm:"not null;unique_index"`
-	Pods []Pod  `gorm:"-"` // gorm will ignore, but we can populate
+	UUID         string        `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name         string        `gorm:"not null;unique_index" json:"name"`
+	Pods         []Pod         `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
+	Environments []Environment `json:"environments,array"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the database
@@ -27,7 +28,7 @@ func (a *Application) BeforeCreate() (err error) {
 // AllApplications will return all of the Applications
 func AllApplications(db *gorm.DB) ([]Application, error) {
 	var apps []Application
-	result := db.Find(&apps)
+	result := db.Preload("Environments").Find(&apps)
 
 	return apps, result.Error
 }
@@ -49,7 +50,7 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 // GetApplication will get an existing Application by name
 func GetApplication(db *gorm.DB, id string, getPods PodRetrieval) (*Application, error) {
 	app := new(Application)
-	if err := db.Where("uuid = ?", id).First(&app).Error; err != nil {
+	if err := db.Where("uuid = ?", id).Preload("Environments").First(&app).Error; err != nil {
 		return app, err
 	}
 

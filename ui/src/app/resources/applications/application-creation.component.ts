@@ -6,7 +6,7 @@ import { ApplicationService } from './application.service'
 
 @Component({
   selector: 'application-creation-form',
-  templateUrl: './application-creation.component.html',
+  templateUrl: './application-creation.html',
   providers: [ApplicationService],
 })
 

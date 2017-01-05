@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
@@ -11,8 +13,8 @@ import (
 	"github.com/go-zoo/bone"
 )
 
-// ApplicationIndex provides a listing of all Applications
-func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
+// EnvironmentIndex provides a listing of all Environments
+func EnvironmentIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -23,28 +25,21 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
-	apps, err := resources.AllApplications(db)
+	environments, err := resources.AllEnvironments(db)
 	if err != nil {
-		log.Printf("Error when retrieving applications: '%s'\n", err)
+		log.Printf("Error when retrieving environments: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
 			http.StatusInternalServerError,
 			"there was an error when attempting to connect to the database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
-	for i := range apps {
-		if len(apps[i].Pods) == 0 {
-			apps[i].Pods = make([]resources.Pod, 0)
-		}
-		if len(apps[i].Environments) == 0 {
-			apps[i].Environments = make([]resources.Environment, 0)
-		}
-	}
-	json.NewEncoder(w).Encode(apps)
+
+	json.NewEncoder(w).Encode(environments)
 }
 
-// ApplicationShow provides an Application
-func ApplicationShow(w http.ResponseWriter, r *http.Request) {
+// EnvironmentShow provides an Environment
+func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -57,21 +52,22 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := bone.GetValue(r, "uuid")
-	app, err := resources.GetApplication(db, id, resources.GetApplicationPods)
+	environment, err := resources.GetEnvironment(db, id)
 	if err != nil {
-		log.Printf("Error when retrieving application: '%s'\n", err)
+		log.Printf("Error when retrieving environment: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
 			http.StatusInternalServerError,
-			"there was an error when retrieving application")
+			"there was an error when retrieving environment")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
-	json.NewEncoder(w).Encode(app)
+	json.NewEncoder(w).Encode(environment)
 }
 
-// ApplicationCreate creates a new Application
-func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
+// EnvironmentCreate creates a new Environment
+func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("ping!")
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -81,25 +77,29 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var createForm struct {
-		Name string
+		Name          string
+		ApplicationID string
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&createForm)
+	fmt.Printf("%v\n", createForm)
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
 		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
 		return
 	}
-
-	app := resources.Application{
-		Name: createForm.Name,
+	// @todo
+	appID, _ := strconv.ParseUint(createForm.ApplicationID, 10, 0)
+	environment := resources.Environment{
+		Name:          createForm.Name,
+		ApplicationID: appID,
 	}
-	_, err = resources.CreateApplication(db, &app)
+	_, err = resources.CreateEnvironment(db, &environment)
 	// @todo handle failed save w/out error?
 	if err != nil {
-		log.Printf("Error when retrieving application: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
+		log.Printf("Error when retrieving environment: '%s'\n", err)
+		http.Error(w, "there was an error when retrieving environment", http.StatusInternalServerError)
 		return
 	}
 
