@@ -74,7 +74,7 @@ build-release:
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        entrypoint: brizo run
+        entrypoint: /go/bin/brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest
