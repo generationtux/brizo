@@ -1,5 +1,7 @@
-box: golang
+# build and test go
+#
 ci:
+  box: golang
   steps:
     - setup-go-workspace
     - golint:
@@ -28,20 +30,51 @@ ci:
         code: |
           bash <(curl -s https://codecov.io/bash)
 
+# build and test UI
+ci-ui:
+  box: node
+  steps:
+    - script:
+        name: install and build
+        code: |
+          cd ui
+          npm install
+          npm run build
+    - script:
+        name: run tests
+        code: |
+          cd ui
+          npm run test
+
+# build ui
+build-ui:
+  box: node
+  steps:
+    - script:
+        name: ui build
+        code: |
+          cd ui
+          node install
+          node run build
+    - script:
+        name: clean up
+        code: |
+          rm -rf $GOPATH/src/ui/node_modules
+
 # pushes release image to docker hub
 build-release:
+  box: golang
   steps:
     - wercker/setup-go-workspace:
       package-dir: github.com/generationtux/brizo
     - script:
         name: go build
         code: |
-          go build -o $GOPATH/bin/brizo
-          rm -rf $GOPATH/src/*
+          go install
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        cmd: brizo run
+        entrypoint: /go/bin/brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest
