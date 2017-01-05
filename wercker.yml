@@ -44,17 +44,12 @@ ci-ui:
         name: run tests
         code: |
           cd ui
-          npm test
+          npm run test
 
-# pushes release image to docker hub
-build-release:
+# build ui
+build-ui:
+  box: node
   steps:
-    - wercker/setup-go-workspace:
-      package-dir: github.com/generationtux/brizo
-    - script:
-        name: go build
-        code: |
-          go build -o $GOPATH/bin/brizo
     - script:
         name: ui build
         code: |
@@ -65,10 +60,21 @@ build-release:
         name: clean up
         code: |
           rm -rf $GOPATH/src/ui/node_modules
+
+# pushes release image to docker hub
+build-release:
+  box: golang
+  steps:
+    - wercker/setup-go-workspace:
+      package-dir: github.com/generationtux/brizo
+    - script:
+        name: go build
+        code: |
+          go install
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        cmd: brizo run
+        entrypoint: brizo run
         repository: gentux/brizo
         disable-sync: true
         tag: latest
