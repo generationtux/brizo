@@ -12,7 +12,44 @@ import (
 	"github.com/urfave/cli"
 )
 
+// New creates a new application instance
+func New() *Application {
+	app := new(Application)
+	app.version = "0.1.0" // @todo read version dynamically
+	app.cli = ConfigureCLI()
+	app.config = new(config.AppConfiguration)
+	app.server = listenAndServe
+	app.init = initializeApp
+
+	return app
+}
+
+// Application top level properties and methods for running Brizo
+type Application struct {
+	version string
+	cli     *cli.App
+	config  *config.AppConfiguration
+	server  HTTPServer
+	init    Initializer
+}
+
+// Version gets the apps current version
+func (app *Application) Version() string {
+	return app.version
+}
+
+// Server starts the HTTP server for the app
+func (app *Application) Server(addr string, handler http.Handler) error {
+	return app.server(addr, handler)
+}
+
+// Initialize makes sure the app is ready to run
+func (app *Application) Initialize() error {
+	return app.init()
+}
+
 // ConfigureCLI sets up the CLI app
+// @todo no need to export
 func ConfigureCLI() *cli.App {
 	app := cli.NewApp()
 	app.Name = "Brizo"
@@ -21,6 +58,10 @@ func ConfigureCLI() *cli.App {
 	app.Commands = registerCommands()
 
 	return app
+}
+
+func listenAndServe(addr string, handler http.Handler) error {
+	return nil
 }
 
 // registerCommands sets up the CLI commands
