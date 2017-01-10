@@ -1,11 +1,8 @@
 package app
 
-import (
-	"net/http"
-	"os"
-)
+import "os"
 
-func listenAndServe(addr string, handler http.Handler) error {
+func listenAndServe() error {
 	return nil
 }
 

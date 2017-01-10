@@ -2,17 +2,17 @@ package app
 
 import (
 	"errors"
-	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/urfave/cli"
 )
 
 func TestNewApplication(t *testing.T) {
 	app := New()
 	assert.NotEmpty(t, app.version)
 	assert.NotEmpty(t, app.server)
-	assert.NotEmpty(t, app.runner)
+	assert.NotEmpty(t, app.builder)
 }
 
 func TestAppVersion(t *testing.T) {
@@ -21,7 +21,7 @@ func TestAppVersion(t *testing.T) {
 }
 
 func TestAppServer(t *testing.T) {
-	app := &Application{server: func(addr string, handler http.Handler) error {
+	app := &Application{server: func() error {
 		return errors.New("custom-error-from-server")
 	}}
 
@@ -38,11 +38,11 @@ func TestAppInit(t *testing.T) {
 	assert.Equal(t, "custom-init-error", result.Error())
 }
 
-func TestAppRun(t *testing.T) {
-	app := &Application{runner: func(args []string) error {
-		return errors.New("custom-runner-error")
+func TestAppCliBuilder(t *testing.T) {
+	app := &Application{builder: func(version string) *cli.App {
+		return &cli.App{Name: "custom"}
 	}}
 
-	result := app.Run([]string{})
-	assert.Equal(t, "custom-runner-error", result.Error())
+	result := app.BuildCLI()
+	assert.Equal(t, "custom", result.Name)
 }
