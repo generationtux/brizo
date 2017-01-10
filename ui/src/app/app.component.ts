@@ -3,7 +3,7 @@ import '../assets/css/materialize.min.css';
 
 @Component({
     selector:       'app',
-    templateUrl:    './app.component.html'
+    templateUrl:    './app.html'
 })
 
 export class AppComponent {}

@@ -2,13 +2,14 @@ package resources
 
 import (
 	"fmt"
+
 	"github.com/generationtux/brizo/kube"
 	"k8s.io/client-go/pkg/api/v1"
 )
 
 // Pod is used to relate to Kubernetes pods
 type Pod struct {
-	Name string
+	Name string `json:"name,string"`
 }
 
 // PodRetrieval describes a method that can get a list of pods for a provided application UUID

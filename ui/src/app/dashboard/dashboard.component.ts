@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector:    'dashboard',
-    templateUrl: './dashboard.component.html'
+    templateUrl: './dashboard.html'
 })
 
 @Injectable()
