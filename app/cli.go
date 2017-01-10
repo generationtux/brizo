@@ -1,10 +1,8 @@
 package app
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/generationtux/brizo/app/routes"
 	"github.com/generationtux/brizo/config"
@@ -12,45 +10,12 @@ import (
 	"github.com/urfave/cli"
 )
 
-// New creates a new application instance
-func New() *Application {
-	app := new(Application)
-	app.version = "0.1.0" // @todo read version dynamically
-	app.cli = ConfigureCLI()
-	app.config = new(config.AppConfiguration)
-	app.server = listenAndServe
-	app.init = initializeApp
-
-	return app
+func runCli(args []string) error {
+	return nil
 }
 
-// Application top level properties and methods for running Brizo
-type Application struct {
-	version string
-	cli     *cli.App
-	config  *config.AppConfiguration
-	server  HTTPServer
-	init    Initializer
-}
-
-// Version gets the apps current version
-func (app *Application) Version() string {
-	return app.version
-}
-
-// Server starts the HTTP server for the app
-func (app *Application) Server(addr string, handler http.Handler) error {
-	return app.server(addr, handler)
-}
-
-// Initialize makes sure the app is ready to run
-func (app *Application) Initialize() error {
-	return app.init()
-}
-
-// ConfigureCLI sets up the CLI app
-// @todo no need to export
-func ConfigureCLI() *cli.App {
+// configureCLI sets up the CLI app
+func configureCLI() *cli.App {
 	app := cli.NewApp()
 	app.Name = "Brizo"
 	app.Usage = "PAAS powered by Kubernetes."
@@ -58,10 +23,6 @@ func ConfigureCLI() *cli.App {
 	app.Commands = registerCommands()
 
 	return app
-}
-
-func listenAndServe(addr string, handler http.Handler) error {
-	return nil
 }
 
 // registerCommands sets up the CLI commands
@@ -92,16 +53,6 @@ func runApp(c *cli.Context) error {
 	log.Printf("==> Brizo is starting on %s\n", address)
 	http.ListenAndServe(address, router)
 	return nil
-}
-
-// getAddress gets the port the app should listen on
-func getAddress() string {
-	port := os.Getenv("BRIZO_PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	return fmt.Sprintf(":%s", port)
 }
 
 // runFlags returns the configuration flags for the run command
