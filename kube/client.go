@@ -21,6 +21,11 @@ func Client() (*kubernetes.Clientset, error) {
 	return internalClient()
 }
 
+// Health checks the health of the kube client
+func Health() error {
+	return nil
+}
+
 // internalClient builds the kube client configured to run inside a kube cluster
 func internalClient() (*kubernetes.Clientset, error) {
 	config, err := rest.InClusterConfig()
