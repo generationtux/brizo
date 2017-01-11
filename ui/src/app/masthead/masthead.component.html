@@ -1,5 +1,5 @@
 <div class="masthead">
-  <nav class="navbar navbar-default">
+  <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -15,16 +15,16 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Invite User</a></li>
-          <li><a href="#" data-toggle="modal" data-target="#modal1">Create Application</a></li>
+          <li><a href="/app/users/invite">Invite User</a></li>
+          <li><a href="#" data-toggle="modal" data-target="#create-application-modal">Create Application</a></li>
           <li><a href="">Logout</a></li>
         </ul>
       </div>
     </div>
   </nav>
   
-  <!-- Modal -->
-  <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <!-- Create Application Modal -->
+  <div class="modal fade" id="create-application-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <form [formGroup]="createAppForm" novalidate (ngSubmit)="save(createAppForm.name)">
       <div class="modal-content">
@@ -37,7 +37,7 @@
             <input class="form-control" placeholder="Application name" name="name" type="text" formControlName="name">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           <button type="submit" class="btn btn-primary">Create</button>
         </div>
       </div>

@@ -1,33 +1,35 @@
-<div class="row">
-  <div class="col s6">
-    <form [formGroup]="form" (ngSubmit)="submitInviteForm()" class="col s12">
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="username" type="text" class="validate" formControlName="username">
-          <label for="username">Invite via Github username</label>
-        </div>
+<masthead></masthead>
+<div class="invitees">
+  <div class="container-fluid">
+      <div class="col-md-6">
+        <form [formGroup]="form" (ngSubmit)="submitInviteForm()" class="col s12">
+          <div class="row">
+            <div class="input-field col-md-12">
+              <div class="form-group">
+                <label for="username">Invite via Github Username</label>
+                <input id="username" type="text" class="form-control validate" formControlName="username">
+              </div>
+              <div class="form-group">
+                <input class="btn btn-default" type="reset" value="Clear" />
+                <input class="btn btn-primary" type="submit" value="Invite" />
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="row">
-        <div class="input-field col-12">
-          <button class="btn waves-effect waves-light" [disabled]="!form.valid">
-            Invite
-          </button>
-        </div>
+      <div class="col-md-6">
+        <table class="table">
+          <thead>
+            <tr>
+                <th data-field="id">Usernames</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invitee of invitees | async">
+              <td>{{ invitee.Username }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </form>
-  </div>
-  <div class="col s6">
-    <table>
-      <thead>
-        <tr>
-            <th data-field="id">Unaccepted invites</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let invitee of invitees | async">
-          <td>{{ invitee.Username }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </div>
