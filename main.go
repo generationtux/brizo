@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/generationtux/brizo/app"
@@ -20,6 +21,7 @@ func main() {
 	brizoCLI := cli.NewApp()
 	brizoCLI.Name = "Brizo"
 	brizoCLI.Usage = "PAAS powered by Kubernetes."
+	brizoCLI.UsageText = "brizo [options]"
 	brizoCLI.Version = version
 	brizoCLI.Action = runCLI
 	brizoCLI.Flags = buildFlagList(
@@ -35,11 +37,13 @@ func main() {
 func runCLI(c *cli.Context) error {
 	brizo := app.New()
 
+	log.Println("Intializing app...")
 	err := brizo.Initialize()
 	if err != nil {
 		return err
 	}
 
+	log.Println("Starting server...")
 	return brizo.Server()
 }
 
