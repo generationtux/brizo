@@ -1,20 +1,28 @@
 <div class="applications-list">
-  <table>
-    <thead>
-      <tr>
-        <th>Application Name</th>
-        <th>UUID</th>
-        <th>Created At</th>
-        <th>Last Updated</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let app of applications | async">
-        <td><a [routerLink]="['/applications/', app.UUID]">{{ app.Name }}</a></td>
-        <td>{{ app.UUID }}</td>
-        <td>{{ app.CreatedAt | date:'medium' }}</td>
-        <td>{{ app.UpdatedAt | date:'medium' }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container-fluid">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Application Name</th>
+          <th>UUID</th>
+          <th>Created At</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="">Foo Application</a></td>
+          <td>3a02cc55-0684-4e3a-a4fa-1ea7b32aa18d</td>
+          <td>12-31-2016 23:14:22</td>
+          <td>12-31-2016 23:14:22</td>
+        </tr>
+        <tr *ngFor="let app of applications | async">
+          <td><a [routerLink]="['/applications/', app.UUID]">{{ app.Name }}</a></td>
+          <td>{{ app.UUID }}</td>
+          <td>{{ app.CreatedAt | date:'medium' }}</td>
+          <td>{{ app.UpdatedAt | date:'medium' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
