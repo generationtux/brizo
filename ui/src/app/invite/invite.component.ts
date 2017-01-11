@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 
 @Component({
     selector:       'invite-form',
-    templateUrl:    './invite.component.html'
+    templateUrl:    './invite.html'
 })
 
 @Injectable()

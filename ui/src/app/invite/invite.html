@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col s6">
+    <form materialize [formGroup]="form" (ngSubmit)="submitInviteForm()" class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="username" type="text" class="validate" formControlName="username">
+          <label for="username">Invite via Github username</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col-12">
+          <button class="btn waves-effect waves-light" [disabled]="!form.valid">
+            Invite
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col s6">
+    <table>
+      <thead>
+        <tr>
+            <th data-field="id">Unaccepted invites</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let invitee of invitees | async">
+          <td>{{ invitee.github_username }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

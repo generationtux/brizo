@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 
 @Component({
     selector:       'masthead',
-    styleUrls:      ['./masthead.component.css'],
-    templateUrl:    './masthead.component.html',
+    styleUrls:      ['./masthead.css'],
+    templateUrl:    './masthead.html',
     providers:      [ApplicationService],
 })
 

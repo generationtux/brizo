@@ -42,6 +42,7 @@ func New() *Application {
 	brizo.shouldMigrate = []interface{}{
 		&auth.User{},
 		&resources.Application{},
+		&resources.Environment{},
 	}
 
 	return brizo

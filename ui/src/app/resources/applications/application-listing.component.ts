@@ -6,7 +6,7 @@ import { ApplicationService } from './application.service'
 
 @Component({
   selector: 'application-listing',
-  templateUrl: './application-listing.component.html',
+  templateUrl: './application-listing.html',
   providers: [ApplicationService],
 })
 
