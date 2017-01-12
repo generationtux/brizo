@@ -6,7 +6,6 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/switchMap';
 
 import { ApplicationService } from './application.service'
-import { MaterializeAction }  from 'angular2-materialize'
 import { Pod }                from '../pod.component'
 
 @Component({
@@ -20,7 +19,7 @@ export class ApplicationComponent implements OnInit {
   public createEnvironmentForm: FormGroup;
   private environments: Environment[];
   public submitted: boolean;
-  private modalActions = new EventEmitter<string|MaterializeAction>();
+  //private modalActions = new EventEmitter<string>();
 
   constructor(private applicationService: ApplicationService, private route: ActivatedRoute, private http: Http) {}
 
@@ -38,14 +37,6 @@ export class ApplicationComponent implements OnInit {
     this.createEnvironmentForm = new FormGroup({
       name: new FormControl('', Validators.required)
     });
-  }
-
-  openModal() {
-    this.modalActions.emit({action:"modal",params:['open']});
-  }
-
-  closeModal() {
-    this.modalActions.emit({action:"modal",params:['close']});
   }
 
   save() {

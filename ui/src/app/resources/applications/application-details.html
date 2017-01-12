@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<div id="environment-create-modal" class="modal" materialize="modal" [materializeParams]="[{dismissible: true}]" [materializeActions]="modalActions">
+<div id="environment-create-modal" class="modal">
   <form [formGroup]="createEnvironmentForm" novalidate (ngSubmit)="save(createEnvironmentForm.name)">
     <div class="modal-content">
       <div class="col 12">
