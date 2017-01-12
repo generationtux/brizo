@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -50,6 +51,8 @@ func New() *Application {
 
 // Server starts the HTTP server for the app
 func (app *Application) Server() error {
+	address := getAddress()
+	log.Println("Starting server on " + address)
 	return app.serverListener(getAddress(), app.serverHandler)
 }
 
@@ -62,6 +65,7 @@ func (app *Application) Initialize() error {
 		}
 	}
 
+	log.Println("Running database migrations...")
 	return app.migrator(app.shouldMigrate...)
 }
 
