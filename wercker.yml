@@ -46,6 +46,7 @@ build-ui:
           cd ui &&
           npm run build &&
           ls -la .
+          ls -la ../
 
 build-release:
   box: golang
