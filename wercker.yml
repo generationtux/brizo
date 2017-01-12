@@ -8,29 +8,29 @@ ci:
     - script:
         name: go test
         code: |
-          #set -e
-          #echo "" > coverage.txt
+          set -e
+          echo "" > coverage.txt
 
-          #for d in $(go list ./... | grep -v vendor | grep -v config | grep -v dev | grep -v ui); do
-          #go test -race -coverprofile=profile.out -covermode=atomic $d
-          #if [ -f profile.out ]; then
-          #cat profile.out >> coverage.txt
-          #rm profile.out
-          #fi
-          #done
+          for d in $(go list ./... | grep -v vendor | grep -v config | grep -v dev | grep -v ui); do
+            go test -race -coverprofile=profile.out -covermode=atomic $d
+            if [ -f profile.out ]; then
+              cat profile.out >> coverage.txt
+              rm profile.out
+            fi
+          done
 
-          #cat coverage.txt
-          echo "temp skip tests"
+          cat coverage.txt
     - script:
         name: upload coverage
         code: |
-          echo "temp skip coverage"
-          #bash <(curl -s https://codecov.io/bash)
+          bash <(curl -s https://codecov.io/bash)
 
 ci-ui:
   box: node:6.9
   steps:
     - npm-install:
+        cwd: ui
+    - npm-test:
         cwd: ui
 
 build-ui:
@@ -40,8 +40,7 @@ build-ui:
         name: ui build
         cwd: ui
         code: |
-          npm run build
-          ls -la .
+          ./node_modules/.bin/webpack --config config/webpack.prod.js --progress --profile --bail
 
 build-release:
   box: golang
@@ -53,7 +52,6 @@ build-release:
         code: |
           cd $GOPATH/src/github.com/generationtux/brizo
           go build
-          ls -la ui
           rm -rf vendor
           rm -rf ui/node_modules
     - internal/docker-push:
