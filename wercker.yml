@@ -54,8 +54,8 @@ build-ui:
         name: ui build
         code: |
           cd ui
-          node install
-          node run build
+          npm install
+          npm run build
     - script:
         name: clean up
         code: |
