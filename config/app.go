@@ -1,7 +1,7 @@
 package config
 
-// appConfiguration data structure for application configuration
-type appConfiguration struct {
+// AppConfiguration data structure for application configuration
+type AppConfiguration struct {
 	URL                     string
 	MysqlHost               string
 	MysqlPort               string
@@ -13,4 +13,4 @@ type appConfiguration struct {
 }
 
 // App holds the apps configuration
-var App = appConfiguration{}
+var App = AppConfiguration{}
