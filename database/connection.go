@@ -26,8 +26,18 @@ func getDBAddress() string {
 
 // Health will check make sure the database is reachable or return an error
 func Health() error {
-	db, e := Connect()
+	db, err := Connect()
 	defer db.Close()
 
-	return e
+	return err
+}
+
+// Migrate will modify the database to match the provied interfaces
+func Migrate(values ...interface{}) error {
+	db, err := Connect()
+	if err != nil {
+		return err
+	}
+
+	return db.AutoMigrate(values...).Error
 }

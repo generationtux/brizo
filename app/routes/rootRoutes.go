@@ -36,7 +36,7 @@ func mainRoutes() *bone.Mux {
 }
 
 // BuildRouter configures the application router
-func BuildRouter() *negroni.Negroni {
+func BuildRouter() http.Handler {
 	// other routes
 	r := mainRoutes()
 

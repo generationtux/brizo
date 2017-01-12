@@ -1,0 +1,3 @@
+#!/bin/bash
+
+go test $(go list ./... | grep -v vendor | grep -v ui | grep -v docs | grep -v dev)

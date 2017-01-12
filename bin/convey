@@ -1,0 +1,3 @@
+#!/bin/bash
+
+goconvey -excludedDirs bin,dev,docs,ui,vendor
