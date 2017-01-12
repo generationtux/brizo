@@ -44,12 +44,11 @@ build-ui:
         name: ui build
         code: |
           cd ui
-          export NODE_ENV=production
           mkdir dist
           cat config/webpack.prod.js
           npm run build
           ls -la .
-          ls -la ./dist
+          ls -la /$WERCKER_OUTPUT_DIR
 
 build-release:
   box: golang
