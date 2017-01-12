@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
-import { MaterializeAction } from 'angular2-materialize';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApplicationService } from '../resources/applications/application.service';
 import { Router } from '@angular/router';
@@ -17,18 +16,10 @@ export class MastheadComponent implements OnInit {
   public applications: any;
   public createAppForm: FormGroup;
   public submitted: boolean;
-  public modalActions: EventEmitter<MaterializeAction>;
+  public modalActions: EventEmitter<string>;
 
   constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder) {
-    this.modalActions = new EventEmitter<string|MaterializeAction>();
-  }
-
-  openModal() {
-    this.modalActions.emit({action:"modal",params:['open']});
-  }
-
-  closeModal() {
-    this.modalActions.emit({action:"modal",params:['close']});
+    this.modalActions = new EventEmitter<string>();
   }
 
   ngOnInit() {

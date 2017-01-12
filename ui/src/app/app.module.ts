@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { MaterializeDirective } from "angular2-materialize";
 
 // App is our top level component
 import { AppComponent } from './app.component';
@@ -48,7 +47,6 @@ const routes: Routes = [
         InviteComponent,
         LoginComponent,
         MastheadComponent,
-        MaterializeDirective,
     ],
     bootstrap: [ AppComponent ]
 })

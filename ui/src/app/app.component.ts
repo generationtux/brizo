@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import '../assets/css/materialize.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
 
 @Component({
     selector:       'app',
