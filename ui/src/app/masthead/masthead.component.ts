@@ -21,16 +21,6 @@ export class MastheadComponent implements OnInit {
   constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder) {
     this.modalActions = new EventEmitter<string>();
   }
-  
-  /*
-  openModal() {
-    this.modalActions.emit({action:"modal",params:['open']});
-  }
-
-  closeModal() {
-    this.modalActions.emit({action:"modal",params:['close']});
-  }
-  */
 
   ngOnInit() {
     this.createAppForm = new FormGroup({

@@ -19,7 +19,6 @@ export class ApplicationComponent implements OnInit {
   public createEnvironmentForm: FormGroup;
   private environments: Environment[];
   public submitted: boolean;
-  //private modalActions = new EventEmitter<string>();
 
   constructor(private applicationService: ApplicationService, private route: ActivatedRoute, private http: Http) {}
 
