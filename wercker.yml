@@ -40,8 +40,8 @@ build-ui:
         name: build assets
         cwd: ui
         code: |
-          ./node_modules/.bin/webpack --config config/webpack.prod.js --progress
-          ls -la ./dist
+          npm run build
+          ls -la ./compiled
 
 build-release:
   box: golang
