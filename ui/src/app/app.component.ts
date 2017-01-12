@@ -4,7 +4,7 @@ import 'bootstrap/dist/js/bootstrap.js';
 
 @Component({
     selector:       'app',
-    templateUrl:    './app.component.html'
+    templateUrl:    './app.html'
 })
 
 export class AppComponent {}

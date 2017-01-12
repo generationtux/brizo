@@ -37,5 +37,6 @@ func runMigrations() error {
 	return db.AutoMigrate(
 		&auth.User{},
 		&resources.Application{},
+		&resources.Environment{},
 	).Error
 }

@@ -11,11 +11,11 @@ import (
 // User represents a Brizo user
 type User struct {
 	database.Model
-	Username       string `gorm:"not null;unique_index"`
-	Name           string
-	Email          string
-	GithubUsername string
-	GithubToken    string
+	Username       string `gorm:"not null;unique_index" json:"username"`
+	Name           string `json:"name"`
+	Email          string `json:"email"`
+	GithubUsername string `json:"github_username"`
+	GithubToken    string `json:"github_token"`
 }
 
 // CreateUser creates a Brizo specific user without forcing any validation on
