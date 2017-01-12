@@ -30,25 +30,18 @@ ci:
 ci-ui:
   box: node:6.9
   steps:
-    - script:
-        name: run tests
-        code: |
-          cd ui
-          npm install
-          #npm run test
+    - npm-install:
+        cwd: ui
 
 build-ui:
   box: node:6.9
   steps:
     - script:
         name: ui build
+        cwd: ui
         code: |
-          cd ui
-          mkdir dist
-          cat config/webpack.prod.js
           npm run build
           ls -la .
-          ls -la /$WERCKER_OUTPUT_DIR
 
 build-release:
   box: golang
