@@ -44,9 +44,10 @@ build-ui:
         name: ui build
         code: |
           cd ui &&
+          mkdir dist &&
           npm run build &&
           ls -la .
-          ls -la ../
+          ls -la ./dist
 
 build-release:
   box: golang
