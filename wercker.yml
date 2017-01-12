@@ -1,5 +1,4 @@
 # build and test go
-#
 ci:
   box: golang
   steps:
@@ -28,9 +27,8 @@ ci:
           echo "temp skip coverage"
           #bash <(curl -s https://codecov.io/bash)
 
-# build and test UI
 ci-ui:
-  box: node
+  box: node:6.9
   steps:
     - script:
         name: run tests
@@ -39,19 +37,16 @@ ci-ui:
           npm install
           #npm run test
 
-# build ui
 build-ui:
-  box: node
+  box: node:6.9
   steps:
     - script:
         name: ui build
         code: |
-          cd ui
-          #npm install
-          npm run build
+          cd ui &&
+          npm run build &&
           ls -la .
 
-# pushes release image to docker hub
 build-release:
   box: golang
   steps:
