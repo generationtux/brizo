@@ -41,6 +41,7 @@ build-ui:
         cwd: ui
         code: |
           ./node_modules/.bin/webpack --config config/webpack.prod.js --progress --profile --bail
+          ls -la ./dist
 
 build-release:
   box: golang
