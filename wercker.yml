@@ -59,12 +59,13 @@ build-release:
         code: |
           cd $GOPATH/src/github.com/generationtux/brizo
           go build
+          ln -s $(pwd)/brizo /go/bin/brizo
           rm -rf vendor
           rm -rf ui/node_modules
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        entrypoint: $GOPATH/src/github.com/generationtux/brizo/brizo
+        entrypoint: brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest
