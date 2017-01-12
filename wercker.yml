@@ -30,8 +30,8 @@ ci-ui:
   steps:
     - npm-install:
         cwd: ui
-    - npm-test:
-        cwd: ui
+    #- npm-test:
+        #cwd: ui
 
 build-ui:
   box: node:6.9
@@ -40,7 +40,7 @@ build-ui:
         name: build assets
         cwd: ui
         code: |
-          ./node_modules/.bin/webpack --config config/webpack.prod.js --progress --profile --bail
+          webpack --config config/webpack.prod.js --progress
           ls -la ./dist
 
 build-release:
