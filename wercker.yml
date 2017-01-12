@@ -49,6 +49,7 @@ build-ui:
           cd ui
           #npm install
           npm run build
+          ls -la .
 
 # pushes release image to docker hub
 build-release:
