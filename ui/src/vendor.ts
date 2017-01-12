@@ -11,4 +11,3 @@ import 'rxjs';
 
 // Other third party
 import 'jquery';
-import 'bootstrap';
