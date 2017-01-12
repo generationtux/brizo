@@ -70,7 +70,7 @@ build-release:
     - script:
         name: go build
         code: |
-          go install
+          CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' .
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
