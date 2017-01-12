@@ -56,10 +56,6 @@ build-ui:
           cd ui
           npm install
           npm run build
-    - script:
-        name: clean up
-        code: |
-          rm -rf $GOPATH/src/ui/node_modules
 
 # pushes release image to docker hub
 build-release:
@@ -70,11 +66,13 @@ build-release:
     - script:
         name: go build
         code: |
-          CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' .
+          go build
+          rm -rf vendor
+          rm -rf ui/node_modules
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        entrypoint: /go/bin/brizo
+        entrypoint: /go/src/github.com/generationtux/brizo/brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest

@@ -50,9 +50,9 @@ func getUIAssets() (uiAssets, error) {
 	if !ok {
 		return uiAssets{}, errors.New("Unable to find current file path.")
 	}
+	assetPath := path.Join(path.Dir(file), "../../../ui/dist/assets.json")
 
 	var assets uiAssets
-	assetPath := path.Join(path.Dir(file), "../../../ui/dist/assets.json")
 	assetContents, err := ioutil.ReadFile(assetPath)
 	if err != nil {
 		return uiAssets{}, err
