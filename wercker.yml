@@ -7,10 +7,6 @@ ci:
     - golint:
         exclude: vendor/**/*
     - script:
-        name: go build
-        code: |
-          go build
-    - script:
         name: go test
         code: |
           set -e
@@ -35,15 +31,10 @@ ci-ui:
   box: node
   steps:
     - script:
-        name: install and build
-        code: |
-          cd ui
-          npm install
-          npm run build
-    - script:
         name: run tests
         code: |
           cd ui
+          npm install
           npm run test
 
 # build ui
@@ -62,17 +53,18 @@ build-release:
   box: golang
   steps:
     - wercker/setup-go-workspace:
-      package-dir: github.com/generationtux/brizo
+        package-dir: github.com/generationtux/brizo
     - script:
         name: go build
         code: |
+          cd $GOPATH/src/github.com/generationtux/brizo
           go build
           rm -rf vendor
           rm -rf ui/node_modules
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        entrypoint: /go/src/github.com/generationtux/brizo/brizo
+        entrypoint: $GOPATH/src/github.com/generationtux/brizo/brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest
