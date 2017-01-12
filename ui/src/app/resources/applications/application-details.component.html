@@ -1,20 +1,15 @@
+<masthead></masthead>
 <div class="application-details">
-  <div class="row">
+  <div class="container-fluid">
     <div class="col s12">
       <p><a href="/app">&laquo; Back to Dashboard</a></p>
     </div>
-  </div>
-  <div class="row">
     <div class="col s12">
-      <h5>{{ application?.Name }}</h5>
-      <h6>{{ application?.UUID }}</h6>
-      <a href="">Launch Application</a>
+      <h3><a href="">{{ application?.Name }}</a></h3>
+      <h5>{{ application?.UUID }}</h5>
     </div>
-  </div>
-  <div class="row">
     <div class="col s12">
-      <h6>Pods</h6>
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th>Pod</th>

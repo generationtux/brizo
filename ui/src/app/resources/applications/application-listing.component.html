@@ -10,12 +10,6 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><a href="">Foo Application</a></td>
-          <td>3a02cc55-0684-4e3a-a4fa-1ea7b32aa18d</td>
-          <td>12-31-2016 23:14:22</td>
-          <td>12-31-2016 23:14:22</td>
-        </tr>
         <tr *ngFor="let app of applications | async">
           <td><a [routerLink]="['/applications/', app.UUID]">{{ app.Name }}</a></td>
           <td>{{ app.UUID }}</td>
