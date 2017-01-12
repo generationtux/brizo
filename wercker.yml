@@ -8,18 +8,18 @@ ci:
     - script:
         name: go test
         code: |
-          set -e
-          echo "" > coverage.txt
+          #set -e
+          #echo "" > coverage.txt
 
-          for d in $(go list ./... | grep -v vendor | grep -v config | grep -v dev | grep -v ui); do
-            go test -race -coverprofile=profile.out -covermode=atomic $d
-            if [ -f profile.out ]; then
-              cat profile.out >> coverage.txt
-              rm profile.out
-            fi
-          done
+          #for d in $(go list ./... | grep -v vendor | grep -v config | grep -v dev | grep -v ui); do
+            #go test -race -coverprofile=profile.out -covermode=atomic $d
+            #if [ -f profile.out ]; then
+              #cat profile.out >> coverage.txt
+              #rm profile.out
+            #fi
+          #done
 
-          cat coverage.txt
+          #cat coverage.txt
     - script:
         name: upload coverage
         code: |
@@ -37,7 +37,7 @@ build-ui:
   box: node:6.9
   steps:
     - script:
-        name: ui build
+        name: build assets
         cwd: ui
         code: |
           ./node_modules/.bin/webpack --config config/webpack.prod.js --progress --profile --bail
