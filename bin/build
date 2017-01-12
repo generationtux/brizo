@@ -1,0 +1,6 @@
+#!/bin/bash
+
+docker run --rm -v $(pwd)/ui:/opt/code -w /opt/code node:6.9 npm install
+docker run --rm -v $(pwd)/ui:/opt/code -w /opt/code node:6.9 npm rebuild
+docker run --rm -v $(pwd)/ui:/opt/code -w /opt/code node:6.9 npm run build
+docker build -t gentux/brizo:dev .
