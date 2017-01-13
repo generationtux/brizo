@@ -1,33 +1,34 @@
-<div class="row">
-  <div class="col s6">
-    <form [formGroup]="form" (ngSubmit)="submitInviteForm()" class="col s12">
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="username" type="text" class="validate" formControlName="username">
-          <label for="username">Invite via Github username</label>
-        </div>
+<div class="login">
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-3">
+          <form [formGroup]="form" (ngSubmit)="submitInviteForm()">
+          <div class="form-group">
+            <label class="control-label" for="username">Invite via Github username</label>
+            <div class="input-group">
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+              </span>
+              <input id="username" type="text" class="form-control" formControlName="username" aria-describedby="inputGroupSuccess1Status">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-default" [disabled]="!form.valid">Invite</button>
+        </form>
       </div>
-      <div class="row">
-        <div class="input-field col-12">
-          <button class="btn waves-effect waves-light" [disabled]="!form.valid">
-            Invite
-          </button>
-        </div>
+      <div class="col-md-3">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+                <th data-field="id">Unaccepted invites</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invitee of invitees | async">
+              <td>{{ invitee.github_username }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </form>
-  </div>
-  <div class="col s6">
-    <table>
-      <thead>
-        <tr>
-            <th data-field="id">Unaccepted invites</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let invitee of invitees | async">
-          <td>{{ invitee.github_username }}</td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
   </div>
 </div>

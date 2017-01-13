@@ -1,40 +1,39 @@
+<masthead></masthead>
 <div class="application-details">
-  <div class="row">
-    <div class="col s12">
+  <div class="contiainer-fluid">
+    <div class="col-md-12">
       <p><a href="/app">&laquo; Back to Dashboard</a></p>
     </div>
-  </div>
-  <div class="row">
-    <div class="col m3 s12 right">
-      <button class="modal-action modal-close waves-effect waves-green btn" type="submit" (click)="openModal()">Create Environment</button>
+    <div class="col-md-6">
+      <h3><a href="">{{ application?.name }}</a></h3>
+      <h4>{{ application?.uuid }}</h4>
     </div>
-    <div class="col m9" s12>
-      <h5>{{ application?.name }}</h5>
-      <h6>{{ application?.uuid }}</h6>
-      <a href="">Launch Application</a>
+    <div class="col-md-6">
+      <div class="btn-group pull-right" role="group" aria-label="...">
+        <button class="btn btn-default" data-toggle="modal" data-target="#environment-create-modal">Create Environment</button>
+        <button class="btn btn-default" type="submit">Create Pod</button>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col s12">
-      <h6>Environments</h6>
-      <table>
+    <div class="col-md-12">
+      <h5>Environments</h5>
+      <table class="table">
         <thead>
           <tr>
             <th>Name</th>
+            <th># of Pods</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let environment of environments">
-            <td><span>{{ environment.name }}</span></td>
+          <tr>
+            <td>[ENV NAME]</td>
+            <td>[# of PODS]</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="row">
-    <div class="col s12">
-      <h6>Pods</h6>
-      <table>
+    <div class="col-md-12">
+      <h5>Pods</h5>
+      <table class="table">
         <thead>
           <tr>
             <th>Pod</th>
@@ -52,24 +51,23 @@
   </div>
 </div>
 
-<div id="environment-create-modal" class="modal">
-  <form [formGroup]="createEnvironmentForm" novalidate (ngSubmit)="save(createEnvironmentForm.name)">
+<div class="modal fade" id="environment-create-modal" tabindex="-1" role="dialog" aria-labelledby="create-application-model">
+  <div class="modal-dialog" role="document">
+    <form [formGroup]="createEnvironmentForm" novalidate (ngSubmit)="save(createEnvironmentForm.name)">
     <div class="modal-content">
-      <div class="col 12">
-        <div class="row">
-          <h5>Create Environment</h5>
-        </div>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Create Environment</h4>
       </div>
-      <div class="col 12">
-        <div class="row">
+      <div class="modal-body">
           <label for="name">Name</label>
-          <input type="text" placeholder="Environment name" name="name" formControlName="name">
-        </div>
+          <input class="form-control" placeholder="Environment name" name="name" type="text" formControlName="name">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="modal-action modal-close waves-effect waves-green btn" type="submit">Create</button>
-      <a class="waves-effect waves-green btn-flat" (click)="closeModal()">Close</a>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

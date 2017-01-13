@@ -3,6 +3,8 @@ import { Component, Injectable } from '@angular/core';
 import { Http, Response, Request, RequestMethod } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
+import { AuthService } from '../auth/auth.service';
+
 @Component({
     selector:       'invite-form',
     templateUrl:    './invite.html'
@@ -16,7 +18,7 @@ export class InviteComponent {
   public invitees: Observable<Invitee[]>;
   public username = new FormControl(null, Validators.required);
 
-  constructor(private formBuilder: FormBuilder, private http: Http) {
+  constructor(private formBuilder: FormBuilder, private http: Http, private auth: AuthService) {
     this.form = formBuilder.group({
       'username': this.username,
     });
@@ -30,7 +32,7 @@ export class InviteComponent {
     const data = {
       'username': this.username.value,
     }
-    this.http.post(this.invitePostUrl, data).subscribe(
+    this.http.post(this.invitePostUrl, data, this.auth.jwtRequestOptions()).subscribe(
       (res: Response) => {
         this.hydrateInvitees();
         this.username.setValue(null);
@@ -39,7 +41,7 @@ export class InviteComponent {
   }
 
   getInvitees(): Observable<Invitee[]> {
-    return this.http.get(this.invitesGetUrl)
+    return this.http.get(this.invitesGetUrl, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

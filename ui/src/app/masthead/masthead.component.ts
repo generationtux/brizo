@@ -32,7 +32,7 @@ export class MastheadComponent implements OnInit {
   save() {
     return this.applicationService.createApplication(this.createAppForm.controls['name'].value).subscribe(
       err => console.error('There was an error: ' + err),
-      () => (this.router.navigate([''])),
+      () => (this._complete()),
     )
   }
 
@@ -41,5 +41,9 @@ export class MastheadComponent implements OnInit {
     // @todo move to auth service
     localStorage.removeItem('id_token');
     this.router.navigate(['login'])
+  }
+  
+  _complete() {
+    (<any>$('#create-application-modal')).modal('hide');
   }
 }

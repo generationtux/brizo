@@ -27,7 +27,10 @@ export class ApplicationService {
   }
 
   createApplication(name: string): Observable<Application> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.auth.getToken()
+    });
     const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.applicationsCreateUrl, { name }, options)
