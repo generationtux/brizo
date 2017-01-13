@@ -36,11 +36,13 @@ ci-ui:
 build-ui:
   box: node:6.9
   steps:
+    - mitelone/webpack:
+        cwd: ui
+        config-file: ./config/webpack.prod.js
     - script:
-        name: build assets
+        name: view assets
         cwd: ui
         code: |
-          npm run build
           ls -la ./dist
 
 build-release:
