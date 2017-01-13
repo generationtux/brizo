@@ -26,7 +26,7 @@ ci:
           bash <(curl -s https://codecov.io/bash)
 
 ci-ui:
-  box: node:6.9
+  box: node:7
   steps:
     - npm-install:
         cwd: ui
@@ -34,7 +34,7 @@ ci-ui:
         #cwd: ui
 
 build-ui:
-  box: node:6.9
+  box: node:7
   steps:
     - script:
         name: build assets
