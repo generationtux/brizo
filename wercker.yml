@@ -65,3 +65,4 @@ build-release:
         repository: gentux/brizo
         disable-sync: true
         tag: latest
+        working_dir: /go/src/github.com/generationtux/brizo
