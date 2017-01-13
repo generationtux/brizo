@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ApplicationService } from '../resources/applications/application.service';
+import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +19,7 @@ export class MastheadComponent implements OnInit {
   public submitted: boolean;
   public modalActions: EventEmitter<string>;
 
-  constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder) {
+  constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder, private auth: AuthService) {
     this.modalActions = new EventEmitter<string>();
   }
 
@@ -33,5 +34,12 @@ export class MastheadComponent implements OnInit {
       err => console.error('There was an error: ' + err),
       () => (this.router.navigate([''])),
     )
+  }
+
+  logout(event: any) {
+    event.preventDefault();
+    // @todo move to auth service
+    localStorage.removeItem('id_token');
+    this.router.navigate(['login'])
   }
 }
