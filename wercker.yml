@@ -48,19 +48,19 @@ build-ui:
 build-release:
   box: golang
   steps:
-    - wercker/setup-go-workspace:
-        package-dir: github.com/generationtux/brizo
     - script:
         name: go build
         code: |
-          cd $GOPATH/src/github.com/generationtux/brizo
+          ln -s $WERCKER_ROOT /go/src/github.com/generationtux/brizo
+          cd /go/src/github.com/generationtux/brizo
+          ls -la ui/dist
           go build
           rm -rf vendor
           rm -rf ui/node_modules
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        entrypoint: /go/src/github.com/generationtux/brizo/brizo
+        cmd: /go/src/github.com/generationtux/brizo/brizo
         repository: gentux/brizo
         disable-sync: true
         tag: latest
