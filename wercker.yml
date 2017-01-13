@@ -40,8 +40,7 @@ build-ui:
         name: build assets
         cwd: ui
         code: |
-          ./node_modules/.bin/webpack --config ./config/webpack.prod.js --progress
-          pwd
+          npm run build
           ls -la ./dist
 
 build-release:
