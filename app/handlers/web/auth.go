@@ -27,11 +27,6 @@ func AuthAddNewUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(htmlAddUser))
 }
 
-const htmlIndex = `<html><body>
-Log in with <a href="/o/auth/login/github">GitHub</a>
-</body></html>
-`
-
 var (
 	oauthConf = &oauth2.Config{
 		ClientID:     "",
@@ -42,13 +37,6 @@ var (
 	oauthStateString = auth.GetOAuthStateString()
 )
 
-// AuthMainHandler @todo move to JS UI
-func AuthMainHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(htmlIndex))
-}
-
 // AuthGithubHandler for requesting oauth access from Github
 func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
@@ -56,23 +44,36 @@ func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+func authErrorRedirect(w http.ResponseWriter, r *http.Request) {
+	endpoint := "/app/login?err=1"
+	http.Redirect(w, r, endpoint, http.StatusTemporaryRedirect)
+}
+func authDenyRedirect(w http.ResponseWriter, r *http.Request) {
+	endpoint := "/app/login?err=2"
+	http.Redirect(w, r, endpoint, http.StatusTemporaryRedirect)
+}
+
 // AuthGithubCallbackHandler for handling oauth access response from Github
+// any errors here should return a redirect back to the apps login form to display the error
 func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
 	oAuthCallbackForm := new(auth.OAuthCallbackForm)
 	errs := binding.Bind(r, oAuthCallbackForm)
-	if errs.Handle(w) {
+	if errs.Len() > 0 {
+		authErrorRedirect(w, r)
 		return
 	}
+
 	if oAuthCallbackForm.State != oauthStateString {
 		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, oAuthCallbackForm.State)
-		http.Error(w, "invalid oauth state", http.StatusBadRequest)
+		authErrorRedirect(w, r)
 		return
 	}
+
 	token, err := oauthConf.Exchange(oauth2.NoContext, oAuthCallbackForm.Code)
 	if err != nil {
 		log.Printf("oauthConf.Exchange() failed with '%s'\n", err)
-		http.Error(w, "there was an error when establishing an oauth exchange", http.StatusBadRequest)
+		authErrorRedirect(w, r)
 		return
 	}
 
@@ -80,15 +81,16 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	client := githuboauth.NewClient(oauthClient)
 	user, _, err := client.Users.Get("")
 	if err != nil {
-		log.Printf("client.Users.Get() failed with '%s'\n", err)
-		http.Error(w, "there was an error while attempting to get user details", http.StatusBadGateway)
+		log.Println("unable to get user details")
+		authErrorRedirect(w, r)
 		return
 	}
+
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error while connecting to the database", http.StatusInternalServerError)
+		log.Println(err)
+		authErrorRedirect(w, r)
 		return
 	}
 
@@ -98,8 +100,8 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		user, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
 
 		if err != nil {
-			log.Printf("failed to create user '%s' because '%s'\n", user.Username, err)
-			http.Error(w, "there was an error when creating new user", http.StatusInternalServerError)
+			log.Println(err)
+			authErrorRedirect(w, r)
 			return
 		}
 
@@ -116,28 +118,20 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		success, err := auth.UpdateUser(db, &brizoUser)
 
-		if success == false {
-			log.Printf("failed to update user '%s' because '%s'\n", *user.Login, err)
-			// @todo update to correct status code
-			http.Error(w, "there was an error when updating the user", http.StatusInternalServerError)
-			return
-		}
-
-		if err != nil {
-			// @todo handle error message
-			http.Redirect(w, r, "/app/login", http.StatusTemporaryRedirect)
+		if success == false || err != nil {
+			authErrorRedirect(w, r)
 			return
 		}
 
 		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
+	} else {
+		// user is not allowed
+		authDenyRedirect(w, r)
 	}
 
 	if jwtError != nil {
-		log.Printf("failed to create jwt token because '%s'\n", jwtError)
-
-		// @todo update to correct status code
-		http.Error(w, "there was an error creating jwt token", http.StatusInternalServerError)
-		return
+		log.Println(jwtError)
+		authErrorRedirect(w, r)
 	}
 
 	http.Redirect(w, r, "/app/auth?token="+jwtToken, http.StatusTemporaryRedirect)

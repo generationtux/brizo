@@ -30,7 +30,6 @@ func mainRoutes() *bone.Mux {
 
 	// @todo move to JS UI
 	router.GetFunc("/users", web.AuthAddNewUser)
-	router.GetFunc("/login", web.AuthMainHandler)
 
 	return router
 }
