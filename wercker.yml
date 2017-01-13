@@ -40,9 +40,7 @@ build-ui:
         name: build assets
         cwd: ui
         code: |
-          npm install
-          export PATH=node_modules/.bin:$PATH
-          webpack --config ./config/webpack.prod.js --progress
+          sh -c "./node_modules/.bin/webpack --config ./config/webpack.prod.js --progress"
           ls -la ./dist
 
 build-release:
