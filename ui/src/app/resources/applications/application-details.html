@@ -21,12 +21,16 @@
           <tr>
             <th>Name</th>
             <th># of Pods</th>
+            <th>Created At</th>
+            <th>Last Updated</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>[ENV NAME]</td>
-            <td>[# of PODS]</td>
+          <tr *ngFor="let environment of environments">
+            <td>{{ environment.name }}</td>
+            <td>n/a</td>
+            <td>{{ environment.created_at | date:'medium' }}</td>
+            <td>{{ environment.updated_at | date:'medium' }}</td>
           </tr>
         </tbody>
       </table>
