@@ -16,6 +16,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { ApplicationComponent } from './resources/applications/application-details.component';
 import { ApplicationCreationComponent } from './resources/applications/application-creation.component';
 import { ApplicationListingComponent } from './resources/applications/application-listing.component';
+import { EnvironmentService } from './resources/environments/environment.service';
 
 const routes: Routes = [
     { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
@@ -35,7 +36,8 @@ const routes: Routes = [
     ],
     providers: [
       AuthService,
-      AuthGuard
+      AuthGuard,
+      EnvironmentService,
     ],
     declarations: [
         AuthComponent,

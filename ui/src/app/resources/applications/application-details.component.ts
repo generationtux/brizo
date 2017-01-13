@@ -6,6 +6,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/switchMap';
 
 import { ApplicationService } from './application.service'
+import { EnvironmentService } from '../environments/environment.service'
 import { Pod }                from '../pod.component'
 
 @Component({
@@ -20,7 +21,7 @@ export class ApplicationComponent implements OnInit {
   private environments: Environment[];
   public submitted: boolean;
 
-  constructor(private applicationService: ApplicationService, private route: ActivatedRoute, private http: Http) {}
+  constructor(private applicationService: ApplicationService, private route: ActivatedRoute, private http: Http, private environmentService: EnvironmentService) {}
 
   ngOnInit() {
     this.route.params
@@ -39,21 +40,14 @@ export class ApplicationComponent implements OnInit {
   }
 
   save() {
-    this.createEnvironment(this.createEnvironmentForm.controls['name'].value)
-      .subscribe(
-        data => console.log(data),
-        err => console.error('There was an error: ' + err),
-      );
+    return this.environmentService.createEnvironment(this.createEnvironmentForm.controls['name'].value, this.application.id).subscribe(
+      err => console.error('There was an error: ' + err),
+      () => (this._complete()),
+    )
   }
 
-  createEnvironment(name: string): Observable<Environment> {
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    const options = new RequestOptions({ headers: headers });
-    const data = { name: name, applicationId: this.application.ID };
-
-    return this.http.post('/api/v1/environments', data, options)
-      .map((res: Response) => res.json() || {})
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  _complete() {
+    (<any>$('#environment-create-modal')).modal('hide');
   }
 }
 
