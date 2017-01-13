@@ -31,7 +31,11 @@ export class MastheadComponent implements OnInit {
   save() {
     return this.applicationService.createApplication(this.createAppForm.controls['name'].value).subscribe(
       err => console.error('There was an error: ' + err),
-      () => (this.router.navigate([''])),
+      () => (this._complete()),
     )
+  }
+  
+  _complete() {
+    (<any>$('#create-application-modal')).modal('hide');
   }
 }
