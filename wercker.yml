@@ -26,7 +26,7 @@ ci:
           bash <(curl -s https://codecov.io/bash)
 
 ci-ui:
-  box: node:7
+  box: node:6.9
   steps:
     - npm-install:
         cwd: ui
@@ -34,14 +34,16 @@ ci-ui:
         #cwd: ui
 
 build-ui:
-  box: node:7
+  box: node:6.9
   steps:
     - script:
         name: build assets
         cwd: ui
         code: |
-          npm run build
-          ls -la ./compiled
+          npm install
+          export PATH=node_modules/.bin:$PATH
+          webpack --config ./config/webpack.prod.js --progress
+          ls -la ./dist
 
 build-release:
   box: golang
