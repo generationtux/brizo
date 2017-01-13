@@ -11,3 +11,4 @@ import 'rxjs';
 
 // Other third party
 import 'jquery';
+import "font-awesome/css/font-awesome.css";
