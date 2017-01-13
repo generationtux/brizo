@@ -6,6 +6,8 @@
           <i class="fa fa-github" aria-hidden="true"></i> &nbsp;
           Login with Github
         </a>
+        <br>
+        <div *ngIf="this.loginError" class="text-danger text-center">{{ this.loginError }}</div>
       </div>
     </div>
   </div>
