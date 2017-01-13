@@ -51,6 +51,7 @@ build-release:
     - script:
         name: go build
         code: |
+          mkdir -p /go/src/github.com/generationtux
           ln -s $WERCKER_ROOT /go/src/github.com/generationtux/brizo
           cd /go/src/github.com/generationtux/brizo
           ls -la ui/dist
