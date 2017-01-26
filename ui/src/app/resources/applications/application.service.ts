@@ -10,6 +10,7 @@ export class ApplicationService {
 
   private applicationsCreateUrl = '/api/v1/applications'
   private applicationsGetUrl    = '/api/v1/applications/'
+  private applicationsUpdateUrl = '/api/v1/applications/'
   private applicationsIndexUrl  = '/api/v1/applications'
 
   constructor(private http: Http, private auth: AuthService) { }
@@ -34,6 +35,21 @@ export class ApplicationService {
     const options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.applicationsCreateUrl, { name }, options)
+      .map((res: Response) => res.json() || {})
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+  
+  editApplication(name: string, uuid: string): Observable<Application> {
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.auth.getToken()
+    });
+    console.log(uuid);
+    console.log(name);
+    const options = new RequestOptions({ headers: headers });
+    const data = { name: name, uuid: uuid }
+    
+    return this.http.patch(this.applicationsUpdateUrl + uuid, data, options)
       .map((res: Response) => res.json() || {})
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

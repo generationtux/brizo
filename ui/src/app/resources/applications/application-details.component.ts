@@ -17,6 +17,7 @@ import { Pod }                from '../pod.component'
 
 export class ApplicationComponent implements OnInit {
   private application: Application;
+  public editApplicationForm: FormGroup;
   public createEnvironmentForm: FormGroup;
   private environments: Environment[];
   public submitted: boolean;
@@ -34,6 +35,10 @@ export class ApplicationComponent implements OnInit {
         },
         err => console.error('There was an error: ' + err)
       );
+    this.editApplicationForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      uuid: new FormControl('', Validators.required)
+    });
     this.createEnvironmentForm = new FormGroup({
       name: new FormControl('', Validators.required)
     });
@@ -45,9 +50,18 @@ export class ApplicationComponent implements OnInit {
       () => (this._complete()),
     )
   }
+  
+  update() {
+    console.log(this.editApplicationForm.controls);
+    return this.applicationService.editApplication(this.editApplicationForm.controls['uuid'].value, this.editApplicationForm.controls['name'].value).subscribe(
+      err => console.error('There was an error: ' + err),
+      () => (this._complete()),
+    )
+  }
 
   _complete() {
     (<any>$('#environment-create-modal')).modal('hide');
+    (<any>$('#appliction-edit-modal')).modal('hide');
   }
 }
 

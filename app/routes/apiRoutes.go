@@ -17,6 +17,7 @@ func authAPIRoutes() *bone.Mux {
 	router.GetFunc("/applications", api.ApplicationIndex)
 	router.GetFunc("/applications/:uuid", api.ApplicationShow)
 	router.PostFunc("/applications", api.ApplicationCreate)
+	router.PatchFunc("/applications/:uuid", api.ApplicationUpdate)
 
 	// environments
 	router.GetFunc("/environments", api.EnvironmentIndex)
