@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
 	"github.com/generationtux/brizo/resources"
@@ -104,6 +105,7 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	application.Name = editForm.Name
+	application.Slug = slugify.Slugify(editForm.Name)
 
 	_, err = resources.UpdateApplication(db, application)
 	if err != nil {
@@ -129,6 +131,7 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 
 	var createForm struct {
 		Name string
+		Slug string
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&createForm)
@@ -141,6 +144,7 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 
 	app := resources.Application{
 		Name: createForm.Name,
+		Slug: slugify.Slugify(createForm.Name),
 	}
 	_, err = resources.CreateApplication(db, &app)
 	// @todo handle failed save w/out error?

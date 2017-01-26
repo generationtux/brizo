@@ -13,6 +13,7 @@ type Application struct {
 	database.Model
 	UUID         string        `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name         string        `gorm:"not null;unique_index" json:"name"`
+	Slug         string        `gorm:"not null;unique_index" json:"slug"`
 	Pods         []Pod         `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
 	Environments []Environment `json:"environments,array"`
 }
