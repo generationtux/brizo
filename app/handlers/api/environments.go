@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -67,7 +66,6 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 
 // EnvironmentCreate creates a new Environment
 func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ping!")
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -82,7 +80,6 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&createForm)
-	fmt.Printf("%v\n", createForm)
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
@@ -106,4 +103,53 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	// @todo return some sort of content?
 	w.WriteHeader(http.StatusCreated)
 	return
+}
+
+// EnvironmentEdit edits an Environment
+func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	var editForm struct {
+		Name string
+	}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&editForm)
+	defer r.Body.Close()
+	if err != nil {
+		log.Printf("decoding error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		return
+	}
+
+	id := bone.GetValue(r, "uuid")
+	environment, err := resources.GetEnvironment(db, id)
+	if err != nil {
+		log.Printf("Error when retrieving environment: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	environment.Name = editForm.Name
+
+	_, err = resources.UpdateEnvironment(db, environment)
+	if err != nil {
+		log.Printf("Error when updating environment: '%s'\n", err)
+		http.Error(w, "there was an error when updating environment", http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(environment)
+	w.WriteHeader(http.StatusOK)
 }

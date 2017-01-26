@@ -42,7 +42,7 @@ func CreateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
 
 // UpdateEnvironment will update an existing Environment
 func UpdateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
-	result := db.Model(environment).Where("name = ?", environment.Name).
+	result := db.Model(environment).Where("uuid = ?", environment.UUID).
 		UpdateColumns(environment)
 
 	return result.RowsAffected == 1, result.Error
