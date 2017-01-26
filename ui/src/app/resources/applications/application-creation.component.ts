@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Component } from '@angular/core';
 
-import { Application } from './application-details.component'
+import { Application } from './application.component'
 import { ApplicationService } from './application.service'
 
 @Component({

@@ -2,9 +2,11 @@ import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params }                          from '@angular/router'
 import { Component, EventEmitter, OnInit }                 from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { Http, Response, Headers, RequestOptions }         from '@angular/http';
 import 'rxjs/add/operator/switchMap';
 
+import { Application }        from './application.component';
+import { Environment }        from '../environments/environment.component';
 import { ApplicationService } from './application.service'
 import { EnvironmentService } from '../environments/environment.service'
 import { Pod }                from '../pod.component'
@@ -37,7 +39,6 @@ export class ApplicationComponent implements OnInit {
       );
     this.editApplicationForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      uuid: new FormControl('', Validators.required)
     });
     this.createEnvironmentForm = new FormGroup({
       name: new FormControl('', Validators.required)
@@ -52,8 +53,19 @@ export class ApplicationComponent implements OnInit {
   }
   
   update() {
-    console.log(this.editApplicationForm.controls);
-    return this.applicationService.editApplication(this.editApplicationForm.controls['uuid'].value, this.editApplicationForm.controls['name'].value).subscribe(
+    const application = new Application(
+      this.application.id,
+      this.application.id,
+      this.application.uuid,
+      this.editApplicationForm.controls['name'].value,
+      this.application.environments,
+      this.application.pods,
+    );
+    
+    this.applicationService.editApplication(application).subscribe(
+      data => {
+        this.application = data;
+      },
       err => console.error('There was an error: ' + err),
       () => (this._complete()),
     )
@@ -65,6 +77,7 @@ export class ApplicationComponent implements OnInit {
   }
 }
 
+/*
 export class Application {
   constructor(
     public id:   number,
@@ -83,3 +96,4 @@ export class Environment {
     public application_id: number,
   ){}
 }
+*/

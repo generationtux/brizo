@@ -92,18 +92,27 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app := resources.Application{
-		Name: editForm.Name,
+	id := bone.GetValue(r, "uuid")
+	application, err := resources.GetApplication(db, id, resources.GetApplicationPods)
+	if err != nil {
+		log.Printf("Error when retrieving application: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving application")
+		jsonutil.RespondJSONError(w, jre)
+		return
 	}
-	_, err = resources.UpdateApplication(db, &app)
-	// @todo handle failed save w/out error?
+
+	application.Name = editForm.Name
+
+	_, err = resources.UpdateApplication(db, application)
 	if err != nil {
 		log.Printf("Error when updating application: '%s'\n", err)
 		http.Error(w, "there was an error when updating application", http.StatusInternalServerError)
 		return
 	}
 
-	// @todo return some sort of content?
+	json.NewEncoder(w).Encode(application)
 	w.WriteHeader(http.StatusOK)
 	return
 }
