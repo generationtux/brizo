@@ -1,22 +1,29 @@
 <div class="applications-list">
   <div class="container-fluid">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Application Name</th>
-          <th>UUID</th>
-          <th>Created At</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let app of applications | async">
-          <td><a [routerLink]="['/applications/', app.uuid]">{{ app.name }}</a></td>
-          <td>{{ app.uuid }}</td>
-          <td>{{ app.created_at | date:'medium' }}</td>
-          <td>{{ app.updated_at | date:'medium' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="(applications | async)?.length==0" class="col-md-4 col-md-offset-4">
+      <a class="btn btn-lg btn-default center-block" href="" data-toggle="modal" data-target="#create-application-modal">
+        <i class="fa fa-plus"></i> Create Your First Application
+      </a>
+    </div>
+    <div *ngIf="(applications | async)?.length>0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Application Name</th>
+            <th>UUID</th>
+            <th>Created At</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of applications | async">
+            <td><a [routerLink]="['/applications/', app.uuid]">{{ app.name }}</a></td>
+            <td>{{ app.uuid }}</td>
+            <td>{{ app.created_at | date:'medium' }}</td>
+            <td>{{ app.updated_at | date:'medium' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

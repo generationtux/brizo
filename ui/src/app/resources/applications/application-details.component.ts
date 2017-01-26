@@ -76,24 +76,3 @@ export class ApplicationComponent implements OnInit {
     (<any>$('#appliction-edit-modal')).modal('hide');
   }
 }
-
-/*
-export class Application {
-  constructor(
-    public id:   number,
-    public ID:   number,
-    public uuid: string,
-    public name: string,
-    public environments: Environment[],
-    public pods: Array<Pod>
-  ){}
-}
-
-export class Environment {
-  constructor(
-    public id:             number,
-    public uuid:           string,
-    public application_id: number,
-  ){}
-}
-*/

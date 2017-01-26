@@ -17,10 +17,15 @@ export class ApplicationCreationComponent {
     this.applicationService.createApplication(name).subscribe(
       err => console.error('There was an error: ' + err),
       () => console.log('application created'),
+      () => (this._complete())
     )
   }
 
   logError(err: any) {
     console.error('There was an error: ' + err);
+  }
+  
+  _complete() {
+    (<any>$('#create-application-modal')).modal('hide');
   }
 }
