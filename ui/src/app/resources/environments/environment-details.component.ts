@@ -58,6 +58,7 @@ export class EnvironmentDetailsComponent implements OnInit {
     const environment = new Environment(
       this.environment.id,
       form.name,
+      form.name,
       this.environment.uuid,
       this.environment.application_id,
     );

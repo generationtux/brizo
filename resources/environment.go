@@ -3,6 +3,7 @@ package resources
 import (
 	"errors"
 
+	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
@@ -13,14 +14,18 @@ type Environment struct {
 	database.Model
 	UUID          string `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name          string `gorm:"not null;unique_index" json:"name"`
+	Slug          string `gorm:"not null;unique_index" json:"slug"`
 	ApplicationID uint64 `json:"application_id,string"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
 // database
-func (a *Environment) BeforeCreate() (err error) {
-	if a.UUID == "" {
-		a.UUID = uuid.New()
+func (environment *Environment) BeforeCreate() (err error) {
+	if environment.UUID == "" {
+		environment.UUID = uuid.New()
+	}
+	if environment.Slug == "" {
+		environment.Slug = slugify.Slugify(environment.Name)
 	}
 	return
 }
@@ -42,6 +47,7 @@ func CreateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
 
 // UpdateEnvironment will update an existing Environment
 func UpdateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
+	environment.Slug = slugify.Slugify(environment.Name)
 	result := db.Model(environment).Where("uuid = ?", environment.UUID).
 		UpdateColumns(environment)
 

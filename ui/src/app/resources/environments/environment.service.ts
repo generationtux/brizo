@@ -30,18 +30,18 @@ export class EnvironmentService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-    getEnvironment(uuid: string): Observable<Environment> {
-      return this.http.get(this.environmentsGetUrl + uuid, this.auth.jwtRequestOptions())
-        .map((res: Response) => res.json())
-        .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+  getEnvironment(uuid: string): Observable<Environment> {
+    return this.http.get(this.environmentsGetUrl + uuid, this.auth.jwtRequestOptions())
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
 
-    updateEnvironment(environment: Environment): Observable<Environment> {
-      const options = new RequestOptions({ headers: this.getHeaders() });
-      const data = { name: environment.name };
+  updateEnvironment(environment: Environment): Observable<Environment> {
+    const options = new RequestOptions({ headers: this.getHeaders() });
+    const data = { name: environment.name };
 
-      return this.http.patch(this.environmentsEditUrl + environment.uuid, data, this.auth.jwtRequestOptions())
-        .map((res: Response) => res.json())
-        .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
-    }
+    return this.http.patch(this.environmentsEditUrl + environment.uuid, data, this.auth.jwtRequestOptions())
+      .map((res: Response) => res.json())
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
 }
