@@ -1,0 +1,37 @@
+<masthead></masthead>
+<div class="environment-details">
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <p><a href="/app">&laquo; Back to Dashboard</a></p>
+        </div>
+      </div>
+      <div class="row">
+        <form [formGroup]="editForm" novalidate>
+          <div class="col-sm-6">
+            <div class="form-group-lg">
+                <h3>
+                  <span *ngIf="!editing">{{ environment?.name }}</span>
+                  <input type="text" class="form-control" *ngIf="editing" formControlName="name">
+                </h3>
+            </div>
+            <h4>{{ environment?.uuid }}</h4>
+            <h5>{{ environment?.slug}}</h5>
+        </div>
+        <div class="col-sm-6">
+          <div class="btn-group pull-right" role="group" aria-label="...">
+            <button class="btn btn-default" type="button" *ngIf="!editing" (click)="editing=!editing">
+              Edit <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-default" type="button" *ngIf="editing" (click)="cancelEditing()">
+              Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-default" type="button" *ngIf="editing" (click)="saveEnvironment()">
+              Save <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

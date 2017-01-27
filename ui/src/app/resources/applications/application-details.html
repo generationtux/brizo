@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let environment of environments">
-            <td>{{ environment.name }}</td>
+            <td><a [routerLink]="['/environments/', environment.uuid]">{{ environment.name }}</a></td>
             <td>n/a</td>
             <td>{{ environment.created_at | date:'medium' }}</td>
             <td>{{ environment.updated_at | date:'medium' }}</td>

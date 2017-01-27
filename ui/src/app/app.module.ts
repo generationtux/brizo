@@ -12,17 +12,19 @@ import { LoginComponent } from './login/login.component';
 import { MastheadComponent } from './masthead/masthead.component';
 import { AuthComponent } from './auth/auth.component';
 import { AuthService } from './auth/auth.service';
+import { EnvironmentService } from './resources/environments/environment.service';
 import { AuthGuard } from './auth/auth.guard';
 import { ApplicationComponent } from './resources/applications/application-details.component';
 import { ApplicationCreationComponent } from './resources/applications/application-creation.component';
 import { ApplicationListingComponent } from './resources/applications/application-listing.component';
-import { EnvironmentService } from './resources/environments/environment.service';
+import { EnvironmentDetailsComponent } from './resources/environments/environment-details.component';
 
 const routes: Routes = [
     { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'login',              component: LoginComponent },
     { path: 'auth',               component: AuthComponent },
     { path: 'applications/:uuid', component: ApplicationComponent, canActivate: [AuthGuard] },
+    { path: 'environments/:uuid', component: EnvironmentDetailsComponent, canActivate: [AuthGuard] },
     { path: 'users/invite',       component: InviteComponent, canActivate: [AuthGuard] },
 ];
 
@@ -46,6 +48,7 @@ const routes: Routes = [
         ApplicationCreationComponent,
         ApplicationListingComponent,
         DashboardComponent,
+        EnvironmentDetailsComponent,
         InviteComponent,
         LoginComponent,
         MastheadComponent,

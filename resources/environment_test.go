@@ -27,7 +27,7 @@ func TestCanCreateAnEnvironment(t *testing.T) {
 	})
 
 	CreateEnvironment(db, &app)
-	expectQuery := "INSERT INTO \"environments\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"application_id\") VALUES (?,?,?,?,?)"
+	expectQuery := "INSERT INTO \"environments\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"application_id\") VALUES (?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
