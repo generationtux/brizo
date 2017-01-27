@@ -27,7 +27,7 @@ func TestCanCreateAnApplication(t *testing.T) {
 	})
 
 	CreateApplication(db, &app)
-	expectQuery := "INSERT INTO \"applications\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\") VALUES (?,?,?,?)"
+	expectQuery := "INSERT INTO \"applications\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\") VALUES (?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
