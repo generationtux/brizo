@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Component } from '@angular/core';
 
-import { Application } from './application-details.component'
+import { Application } from './application.component'
 import { ApplicationService } from './application.service'
 
 @Component({
@@ -17,10 +17,15 @@ export class ApplicationCreationComponent {
     this.applicationService.createApplication(name).subscribe(
       err => console.error('There was an error: ' + err),
       () => console.log('application created'),
+      () => (this._complete())
     )
   }
 
   logError(err: any) {
     console.error('There was an error: ' + err);
+  }
+  
+  _complete() {
+    (<any>$('#create-application-modal')).modal('hide');
   }
 }

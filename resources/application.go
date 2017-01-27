@@ -13,6 +13,7 @@ type Application struct {
 	database.Model
 	UUID         string        `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name         string        `gorm:"not null;unique_index" json:"name"`
+	Slug         string        `gorm:"not null;unique_index" json:"slug"`
 	Pods         []Pod         `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
 	Environments []Environment `json:"environments,array"`
 }
@@ -42,7 +43,7 @@ func CreateApplication(db *gorm.DB, app *Application) (bool, error) {
 
 // UpdateApplication will update an existing Application
 func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
-	result := db.Model(app).Where("name = ?", app.Name).UpdateColumns(app)
+	result := db.Model(app).Where("uuid = ?", app.UUID).UpdateColumns(app)
 
 	return result.RowsAffected == 1, result.Error
 }

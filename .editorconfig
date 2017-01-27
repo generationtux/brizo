@@ -1,3 +1,5 @@
+root = true
+
 [ui/**]
 indent_style = space
 indent_size = 2
