@@ -31,6 +31,12 @@
 			"revisionTime": "2016-10-01T11:30:26Z"
 		},
 		{
+			"checksumSHA1": "2k9OviPoVFL2KYZE8bsYHSo20k0=",
+			"path": "github.com/Machiel/slugify",
+			"revision": "41c84c0beaaff50afb3405924315f6cafa95f781",
+			"revisionTime": "2017-01-04T11:11:25Z"
+		},
+		{
 			"checksumSHA1": "NX4v3cbkXAJxFlrncqT9yEUBuoA=",
 			"path": "github.com/PuerkitoBio/purell",
 			"revision": "0bcb03f4b4d0a9428594752bd2a3b9aa0a9d4bd4",
