@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func generateRandomString(length int) string {
+func GenerateRandomString(length int) string {
 	const characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))

@@ -9,7 +9,7 @@ import (
 
 // GetOAuthStateString provides a randomized string to prevent csrf
 func GetOAuthStateString() (oauthStateString string) {
-	return generateRandomString(64)
+	return GenerateRandomString(64)
 }
 
 // CreateNewGithubUser takes oauth response values and creates a new Brizo user

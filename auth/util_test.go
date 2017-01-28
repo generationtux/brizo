@@ -8,7 +8,7 @@ import (
 )
 
 func TestRandomStringIsGenerated(t *testing.T) {
-	generatedString := generateRandomString(32)
+	generatedString := GenerateRandomString(32)
 	matches, _ := regexp.Match("[a-zA-Z0-9]", []byte(generatedString))
 
 	assert.Len(t, generatedString, 32)
