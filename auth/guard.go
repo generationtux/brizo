@@ -38,8 +38,9 @@ func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.Hand
 	rw.Write([]byte("not authorized"))
 }
 
+// ValidatePersonalAccessToken check that a valid access token exists in the
+// database.
 func ValidatePersonalAccessToken(token string) bool {
-	fmt.Printf("token: %v\n", token)
 	// @todo this db connection stuff's is a real mess. This should be kicked into
 	// callback or something to allow for any db connections to be caught?
 	db, err := database.Connect()

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// GenerateRandomString will provide a [0-9a-Z] string of a specified length.
 func GenerateRandomString(length int) string {
 	const characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
