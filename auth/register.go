@@ -14,16 +14,10 @@ func GetOAuthStateString() (oauthStateString string) {
 
 // BuildUserFromGithubUser handles the checks needed to build a brizo user from
 // possible github user attributes.
-func BuildUserFromGithubUser(githubUser *githuboauth.User, token string) User {
-	var (
-		email string
-		name  string
-	)
+func BuildUserFromGithubUser(githubUser *githuboauth.User, email string, token string) User {
+	var name string
 	if githubUser.Name != nil {
 		name = *githubUser.Name
-	}
-	if githubUser.Email != nil {
-		email = *githubUser.Email
 	}
 	return User{
 		Username:       *githubUser.Login,
@@ -35,8 +29,8 @@ func BuildUserFromGithubUser(githubUser *githuboauth.User, token string) User {
 }
 
 // CreateNewGithubUser takes oauth response values and creates a new Brizo user
-func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, token string) (User, error) {
-	user := BuildUserFromGithubUser(githubUser, token)
+func CreateNewGithubUser(db *gorm.DB, githubUser *githuboauth.User, email string, token string) (User, error) {
+	user := BuildUserFromGithubUser(githubUser, email, token)
 	err := db.Create(&user).Error
 
 	return user, err

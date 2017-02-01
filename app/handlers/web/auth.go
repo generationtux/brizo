@@ -65,8 +65,23 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	oauthClient := oauthConf.Client(oauth2.NoContext, token)
 	client := githuboauth.NewClient(oauthClient)
 	user, _, err := client.Users.Get("")
+
 	if err != nil {
 		log.Println("unable to get user details")
+		authErrorRedirect(w, r)
+		return
+	}
+
+	emails, _, err := client.Users.ListEmails(&githuboauth.ListOptions{})
+	var email string
+	for _, userEmail := range emails {
+		if *userEmail.Primary {
+			email = *userEmail.Email
+		}
+	}
+
+	if err != nil {
+		log.Println("unable to get user email")
 		authErrorRedirect(w, r)
 		return
 	}
@@ -82,7 +97,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	var jwtToken string
 	var jwtError error
 	if auth.IsFirstUser(db) {
-		brizoUser, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
+		brizoUser, err := auth.CreateNewGithubUser(db, user, email, token.AccessToken)
 
 		if err != nil {
 			log.Println(err)
@@ -92,7 +107,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
 	} else if auth.GithubUserAllowed(db, *user.Login) {
-		brizoUser := auth.BuildUserFromGithubUser(user, token.AccessToken)
+		brizoUser := auth.BuildUserFromGithubUser(user, email, token.AccessToken)
 		success, err := auth.UpdateUser(db, &brizoUser)
 
 		if success == false || err != nil {
