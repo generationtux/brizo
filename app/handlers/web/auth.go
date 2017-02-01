@@ -12,21 +12,6 @@ import (
 	"golang.org/x/oauth2/github"
 )
 
-const htmlAddUser = `<!doctype html><html><body>
-<form action="/api/v1/users" method="post">
-  <label>Add user:</label>
-  <input type="text" name="username">
-</form>
-</body></html>
-`
-
-// AuthAddNewUser @todo move to JS UI
-func AuthAddNewUser(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(htmlAddUser))
-}
-
 var (
 	oauthConf = &oauth2.Config{
 		ClientID:     "",
@@ -80,8 +65,23 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	oauthClient := oauthConf.Client(oauth2.NoContext, token)
 	client := githuboauth.NewClient(oauthClient)
 	user, _, err := client.Users.Get("")
+
 	if err != nil {
 		log.Println("unable to get user details")
+		authErrorRedirect(w, r)
+		return
+	}
+
+	emails, _, err := client.Users.ListEmails(&githuboauth.ListOptions{})
+	var email string
+	for _, userEmail := range emails {
+		if *userEmail.Primary {
+			email = *userEmail.Email
+		}
+	}
+
+	if err != nil {
+		log.Println("unable to get user email")
 		authErrorRedirect(w, r)
 		return
 	}
@@ -97,7 +97,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	var jwtToken string
 	var jwtError error
 	if auth.IsFirstUser(db) {
-		user, err := auth.CreateNewGithubUser(db, user, token.AccessToken)
+		brizoUser, err := auth.CreateNewGithubUser(db, user, email, token.AccessToken)
 
 		if err != nil {
 			log.Println(err)
@@ -105,25 +105,15 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		jwtToken, jwtError = auth.CreateJWTToken(user)
+		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
 	} else if auth.GithubUserAllowed(db, *user.Login) {
-		// @todo check that non-required attributes exist
-		brizoUser := auth.User{
-			Username:       *user.Login,
-			Name:           *user.Name,
-			Email:          *user.Email,
-			GithubUsername: *user.Login,
-			GithubToken:    token.AccessToken,
-		}
-
+		brizoUser := auth.BuildUserFromGithubUser(user, email, token.AccessToken)
 		success, err := auth.UpdateUser(db, &brizoUser)
 
 		if success == false || err != nil {
 			authErrorRedirect(w, r)
 			return
 		}
-
-		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
 	} else {
 		// user is not allowed
 		authDenyRedirect(w, r)

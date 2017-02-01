@@ -42,7 +42,7 @@ func TestCreateNewGithubUser(t *testing.T) {
 		return driver.ResultNoRows, nil
 	})
 
-	CreateNewGithubUser(db, user, token)
+	CreateNewGithubUser(db, user, email, token)
 	expectQuery := "INSERT INTO \"users\" (\"created_at\",\"updated_at\",\"username\",\"name\",\"email\",\"github_username\",\"github_token\") VALUES (?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	// args are prefixed with created_at and update_at

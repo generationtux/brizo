@@ -28,9 +28,6 @@ func mainRoutes() *bone.Mux {
 	router.GetFunc("/o/auth/login/github", web.AuthGithubHandler)
 	router.GetFunc("/o/auth/callback/github", web.AuthGithubCallbackHandler)
 
-	// @todo move to JS UI
-	router.GetFunc("/users", web.AuthAddNewUser)
-
 	return router
 }
 
