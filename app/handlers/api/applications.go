@@ -8,6 +8,7 @@ import (
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
 )
@@ -24,6 +25,7 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
+
 	apps, err := resources.AllApplications(db)
 	if err != nil {
 		log.Printf("Error when retrieving applications: '%s'\n", err)
@@ -33,9 +35,10 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
+
 	for i := range apps {
 		if len(apps[i].Pods) == 0 {
-			apps[i].Pods = make([]resources.Pod, 0)
+			apps[i].Pods = make([]kube.Pod, 0)
 		}
 		if len(apps[i].Environments) == 0 {
 			apps[i].Environments = make([]resources.Environment, 0)
@@ -50,15 +53,21 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
+		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	kubeClient, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to Kubernetes")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
 	id := bone.GetValue(r, "uuid")
-	app, err := resources.GetApplication(db, id, resources.GetApplicationPods)
+	app, err := resources.GetApplication(db, kubeClient, id)
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
@@ -93,8 +102,16 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	kubeClient, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to Kubernetes")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
 	id := bone.GetValue(r, "uuid")
-	application, err := resources.GetApplication(db, id, resources.GetApplicationPods)
+	application, err := resources.GetApplication(db, kubeClient, id)
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(

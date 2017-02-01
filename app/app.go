@@ -8,7 +8,6 @@ import (
 	"github.com/generationtux/brizo/app/routes"
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
-	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 )
 
@@ -37,7 +36,6 @@ func New() *Application {
 	brizo.serverHandler = routes.BuildRouter()
 	brizo.healthChecks = []ChecksHealth{
 		database.Health,
-		kube.Health,
 	}
 	brizo.migrator = database.Migrate
 	brizo.shouldMigrate = []interface{}{
