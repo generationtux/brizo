@@ -12,17 +12,46 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-// Client builds the kubernetes client
-func Client() (*kubernetes.Clientset, error) {
-	if config.Kubernetes.External {
-		return externalClient()
-	}
+// Client client for interacting with Kubernetes cluster
+type Client struct {
+	external  bool
+	k8sClient *kubernetes.Clientset
+}
 
-	return internalClient()
+// New create new instance of kube client
+func New() (*Client, error) {
+	c := new(Client)
+	c.external = config.Kubernetes.External
+	err := c.initiateK8sClient()
+
+	return c, err
+}
+
+// initializeK8sClient creates the k8s.io client
+func (c *Client) initiateK8sClient() error {
+	var k8sClient *kubernetes.Clientset
+	var err error
+
+	k8sClient, err = internalClient()
+	if c.external {
+		k8sClient, err = externalClient()
+	}
+	c.k8sClient = k8sClient
+
+	return err
 }
 
 // Health checks the health of the kube client
-func Health() error {
+func (c *Client) Health() error {
+	if c.k8sClient == nil {
+		return errors.New("Misconfigured k8s client.")
+	}
+
+	_, err := c.k8sClient.ServerVersion()
+	if err != nil {
+		return errors.New("Unable to reach k8s cluster.")
+	}
+
 	return nil
 }
 
