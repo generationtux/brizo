@@ -10,8 +10,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewClient(t *testing.T) {
+func TestMain(m *testing.M) {
+	setupTests()
+	status := m.Run()
+	os.Exit(status)
+}
+
+func setupTests() {
 	config.Kubernetes.External = true
+}
+
+func TestNewClient(t *testing.T) {
 	c, _ := New()
 	assert.True(t, c.external)
 	assert.NotEmpty(t, c.k8sClient)
@@ -19,7 +28,6 @@ func TestNewClient(t *testing.T) {
 
 // Expects the connected k8s cluster to be external
 func TestClientHealth(t *testing.T) {
-	config.Kubernetes.External = true
 	c, _ := New()
 	assert.Nil(t, c.Health())
 
