@@ -32,8 +32,10 @@ func TestCreateDeployment(t *testing.T) {
 func TestFindDeploymentByName(t *testing.T) {
 	setup(t)
 	c, _ := New()
-	deployment, err := c.FindDeploymentByName("foo")
+	deployment, err := c.FindDeploymentByName("product-mocker", "brizo")
 
 	assert.Nil(t, err)
-	assert.Equal(t, "foo", deployment.Name)
+	assert.Equal(t, "product-mocker", deployment.Name)
+	assert.Equal(t, "brizo", deployment.Namespace)
+	assert.Equal(t, 3, len(deployment.Pods))
 }

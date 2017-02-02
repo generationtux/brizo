@@ -1,6 +1,11 @@
 package kube
 
-import "k8s.io/client-go/pkg/api/v1"
+import (
+	"errors"
+	"fmt"
+
+	"k8s.io/client-go/pkg/api/v1"
+)
 
 // Pod spec
 type Pod struct {
@@ -9,8 +14,10 @@ type Pod struct {
 
 // Deployment spec
 type Deployment struct {
-	Name string
-	Pods []Pod
+	Name        string
+	Namespace   string
+	Pods        []Pod
+	MatchLabels map[string]string
 }
 
 // PodOptions used to refine queries for pods
@@ -45,9 +52,41 @@ func (c *Client) CreateDeployment(deployment *Deployment) error {
 
 // FindDeploymentByName will lookup a deployment in the k8s cluster using
 // the provided name
-func (c *Client) FindDeploymentByName(name string) (*Deployment, error) {
+func (c *Client) FindDeploymentByName(name, namespace string) (*Deployment, error) {
+	k8sDeployment, err := c.k8sClient.Deployments(namespace).Get(name)
+	if err != nil {
+		return new(Deployment), err
+	}
+
 	deployment := new(Deployment)
-	deployment.Name = name
+	deployment.Name = k8sDeployment.Name
+	deployment.Namespace = k8sDeployment.Namespace
+	deployment.MatchLabels = k8sDeployment.Spec.Selector.MatchLabels
+
+	pods, err := c.getPodsForDeployment(deployment)
+	if err != nil {
+		return new(Deployment), err
+	}
+
+	deployment.Pods = pods
 
 	return deployment, nil
+}
+
+// getPodsForDeployment will retrieve the pods associated to the provided deployment
+func (c *Client) getPodsForDeployment(deployment *Deployment) ([]Pod, error) {
+	labelSelector := ""
+	for key, value := range deployment.MatchLabels {
+		labelSelector = fmt.Sprintf("%s,%s=%s", labelSelector, key, value)
+	}
+	labelSelector = labelSelector[1:] // remove first comma
+
+	if labelSelector == "" {
+		return []Pod{}, errors.New("No label selector specified for deployment")
+	}
+
+	return c.GetPods(PodOptions{
+		Namespace: deployment.Namespace,
+		Labels:    labelSelector,
+	})
 }
