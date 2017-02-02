@@ -1,6 +1,7 @@
 package kube
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -11,13 +12,24 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	setupTests()
-	status := m.Run()
+	var status int
+	if os.Getenv("BRIZO_TEST_KUBE") == "true" {
+		setupTests(os.Getenv("BRIZO_TEST_KUBE_CONTEXT"))
+		status = m.Run()
+	} else {
+		status = 0
+		fmt.Println("Skipping kube tests. Set BRIZO_TEST_KUBE=true to run tests.")
+	}
 	os.Exit(status)
 }
 
-func setupTests() {
+func setupTests(kubeContext string) {
+	if kubeContext == "" {
+		kubeContext = "minikube"
+	}
+
 	config.Kubernetes.External = true
+	config.Kubernetes.Context = kubeContext
 }
 
 func TestNewClient(t *testing.T) {
