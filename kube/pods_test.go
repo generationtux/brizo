@@ -23,10 +23,19 @@ func TestCreateDeployment(t *testing.T) {
 	setup(t)
 	c, _ := New()
 
-	deployment := new(Deployment)
+	deployment := &Deployment{
+		Name:      "test-brizo-deploy-1",
+		Namespace: "brizo",
+		MatchLabels: map[string]string{
+			"appUUID": "randomTestUUID1",
+		},
+	}
 	err := c.CreateDeployment(deployment)
-
 	assert.Nil(t, err)
+
+	found, err := c.FindDeploymentByName(deployment.Name, deployment.Namespace)
+	assert.Nil(t, err)
+	assert.NotNil(t, found)
 }
 
 func TestFindDeploymentByName(t *testing.T) {

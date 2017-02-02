@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"k8s.io/client-go/pkg/api/v1"
+	"k8s.io/client-go/pkg/apis/extensions/v1beta1"
+	metav1 "k8s.io/client-go/pkg/apis/meta/v1"
 )
 
 // Pod spec
@@ -47,7 +49,19 @@ func (c *Client) GetPods(options PodOptions) ([]Pod, error) {
 // CreateDeployment will create a new deployment in the k8s cluster
 // using the provided deployment spec for configuration
 func (c *Client) CreateDeployment(deployment *Deployment) error {
-	return nil
+	k8sDeployment := new(v1beta1.Deployment)
+	k8sDeployment.Name = deployment.Name
+	k8sDeployment.Namespace = deployment.Namespace
+	k8sDeployment.Spec = v1beta1.DeploymentSpec{
+		Selector: &metav1.LabelSelector{
+			MatchLabels: deployment.MatchLabels,
+		},
+		Template: v1.PodTemplateSpec{},
+	}
+
+	_, err := c.k8sClient.Deployments(deployment.Namespace).Create(k8sDeployment)
+
+	return err
 }
 
 // FindDeploymentByName will lookup a deployment in the k8s cluster using
