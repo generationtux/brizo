@@ -1,7 +1,6 @@
 package kube
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -11,19 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(m *testing.M) {
-	var status int
-	if os.Getenv("BRIZO_TEST_KUBE") == "true" {
-		setupTests(os.Getenv("BRIZO_TEST_KUBE_CONTEXT"))
-		status = m.Run()
-	} else {
-		status = 0
-		fmt.Println("Skipping kube tests. Set BRIZO_TEST_KUBE=true to run tests.")
+func setup(t *testing.T) {
+	if os.Getenv("BRIZO_TEST_KUBE") == "" {
+		t.Skip("Set BRIZO_TEST_KUBE=true to test kube package.")
+		return
 	}
-	os.Exit(status)
-}
 
-func setupTests(kubeContext string) {
+	kubeContext := os.Getenv("BRIZO_TEST_KUBE_CONTEXT")
 	if kubeContext == "" {
 		kubeContext = "minikube"
 	}
@@ -33,6 +26,7 @@ func setupTests(kubeContext string) {
 }
 
 func TestNewClient(t *testing.T) {
+	setup(t)
 	c, _ := New()
 	assert.True(t, c.external)
 	assert.NotEmpty(t, c.k8sClient)
@@ -40,6 +34,7 @@ func TestNewClient(t *testing.T) {
 
 // Expects the connected k8s cluster to be external
 func TestClientHealth(t *testing.T) {
+	setup(t)
 	c, _ := New()
 	assert.Nil(t, c.Health())
 
@@ -49,6 +44,7 @@ func TestClientHealth(t *testing.T) {
 }
 
 func TestGetConfigLoadingRules(t *testing.T) {
+	setup(t)
 	ioutil.WriteFile("./kubeconfig", []byte("test"), 0644)
 	config.Kubernetes.ConfigFile = "./kubeconfig"
 	rules, err := getConfigLoadingRules()
@@ -62,8 +58,8 @@ func TestGetConfigLoadingRules(t *testing.T) {
 }
 
 func TestGetConfigOverrides(t *testing.T) {
+	setup(t)
 	overrides := getConfigOverrides()
-	assert.Equal(t, "", overrides.CurrentContext)
 
 	config.Kubernetes.Context = "custom"
 	overrides = getConfigOverrides()
@@ -71,6 +67,7 @@ func TestGetConfigOverrides(t *testing.T) {
 }
 
 func TestGetKubeConfigPath(t *testing.T) {
+	setup(t)
 	// if config file is specified, validate exists
 	config.Kubernetes.ConfigFile = "./client.go"
 	path, err := getKubeConfigPath()
@@ -92,6 +89,7 @@ func TestGetKubeConfigPath(t *testing.T) {
 }
 
 func TestValidateFilePath(t *testing.T) {
+	setup(t)
 	// expands home dir
 	path, _ := validateFilePath("~/foo")
 	expect, _ := homedir.Expand("~/foo")

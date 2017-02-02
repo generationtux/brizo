@@ -75,7 +75,7 @@ func DeleteApplication(db *gorm.DB, name string) (bool, error) {
 
 // GetApplicationPods returns the pods running a provided application
 func GetApplicationPods(client kube.APIInterface, UUID string) ([]kube.Pod, error) {
-	return client.GetPods()
+	return client.GetPods(kube.PodOptions{})
 	// if err != nil {
 	// 	return []Pod{}, err
 	// }

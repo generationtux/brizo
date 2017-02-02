@@ -7,14 +7,20 @@ import (
 )
 
 func TestGetPods(t *testing.T) {
+	setup(t)
 	c, _ := New()
-	pods, err := c.GetPods()
+	options := PodOptions{
+		Namespace: "brizo",
+		Labels:    "appUUID=abc123",
+	}
+	pods, err := c.GetPods(options)
 
 	assert.Nil(t, err)
-	assert.Equal(t, []Pod{}, pods)
+	assert.Equal(t, 3, len(pods))
 }
 
 func TestCreateDeployment(t *testing.T) {
+	setup(t)
 	c, _ := New()
 
 	deployment := new(Deployment)
@@ -24,6 +30,7 @@ func TestCreateDeployment(t *testing.T) {
 }
 
 func TestFindDeploymentByName(t *testing.T) {
+	setup(t)
 	c, _ := New()
 	deployment, err := c.FindDeploymentByName("foo")
 
