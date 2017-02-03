@@ -2,11 +2,13 @@ package resources
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/generationtux/brizo/database"
 	"github.com/generationtux/brizo/kube"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
+	"k8s.io/client-go/pkg/api/v1"
 )
 
 // Application as defined by Brizo.
@@ -15,7 +17,7 @@ type Application struct {
 	UUID         string        `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name         string        `gorm:"not null;unique_index" json:"name"`
 	Slug         string        `gorm:"not null;unique_index" json:"slug"`
-	Pods         []kube.Pod    `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
+	Pods         []v1.Pod      `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
 	Environments []Environment `json:"environments,array"`
 }
 
@@ -74,25 +76,14 @@ func DeleteApplication(db *gorm.DB, name string) (bool, error) {
 }
 
 // GetApplicationPods returns the pods running a provided application
-func GetApplicationPods(client kube.APIInterface, UUID string) ([]kube.Pod, error) {
-	return client.GetPods(kube.PodOptions{})
-	// if err != nil {
-	// 	return []Pod{}, err
-	// }
-	//
-	// kubePods := client.Pods("brizo")
-	// list, err := kubePods.List(v1.ListOptions{
-	// 	LabelSelector: fmt.Sprintf("appUUID=%v, brizoManaged=true", UUID),
-	// })
-	//
-	// pods := []Pod{}
-	// for _, kubePod := range list.Items {
-	// 	pods = append(pods, Pod{Name: kubePod.GetName()})
-	// }
-	//
-	// if len(pods) == 0 {
-	// 	pods = make([]Pod, 0)
-	// }
-	//
-	// return pods, err
+func GetApplicationPods(client kube.APIInterface, UUID string) ([]v1.Pod, error) {
+	pods, err := client.GetPods("brizo", v1.ListOptions{
+		LabelSelector: fmt.Sprintf("appUUID=%v", UUID),
+	})
+
+	if len(pods) == 0 {
+		pods = make([]v1.Pod, 0)
+	}
+
+	return pods, err
 }

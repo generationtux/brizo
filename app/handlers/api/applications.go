@@ -37,9 +37,6 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range apps {
-		if len(apps[i].Pods) == 0 {
-			apps[i].Pods = make([]kube.Pod, 0)
-		}
 		if len(apps[i].Environments) == 0 {
 			apps[i].Environments = make([]resources.Environment, 0)
 		}
