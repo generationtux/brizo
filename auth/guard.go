@@ -8,6 +8,8 @@ import (
 	"regexp"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/resources"
 )
 
 // APIMiddleware authenticates API requests
@@ -26,14 +28,32 @@ func APIMiddleware(rw http.ResponseWriter, request *http.Request, next http.Hand
 		return
 	}
 
-	jwtToken := extractJWTFromHeader(authHeader)
-	if !ValidateJWTToken(jwtToken) {
-		rw.WriteHeader(401)
-		rw.Write([]byte("not authorized"))
+	jwtToken := extractBearerTokenFromHeader(authHeader)
+	if ValidateJWTToken(jwtToken) || ValidatePersonalAccessToken(jwtToken) {
+		next(rw, request)
 		return
 	}
 
-	next(rw, request)
+	rw.WriteHeader(401)
+	rw.Write([]byte("not authorized"))
+}
+
+// ValidatePersonalAccessToken check that a valid access token exists in the
+// database.
+func ValidatePersonalAccessToken(token string) bool {
+	// @todo this db connection stuff's is a real mess. This should be kicked into
+	// callback or something to allow for any db connections to be caught?
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		// http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		return false
+	}
+	if resources.HasAccessToken(db, token) {
+		return true
+	}
+	return false
 }
 
 // validateAuthHeader will ensure the header is formatted correctly
@@ -68,8 +88,8 @@ func jwtSecret() string {
 	return os.Getenv("JWT_SECRET")
 }
 
-// extractJWTFromHeader will parse the header string and return just the token
+// extractBearerTokenFromHeader will parse the header string and return just the token
 // header should be formatted as Bearer [TOKEN]
-func extractJWTFromHeader(header string) string {
+func extractBearerTokenFromHeader(header string) string {
 	return header[7:]
 }

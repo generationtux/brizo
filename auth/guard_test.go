@@ -34,9 +34,9 @@ func TestAPIMiddlewareInvalidHeader(t *testing.T) {
 	rw.AssertExpectations(t)
 }
 
-func TestExtractJWTFromHeader(t *testing.T) {
+func TestExtractBearerTokenFromHeader(t *testing.T) {
 	header := "Bearer tokenabc123"
-	token := extractJWTFromHeader(header)
+	token := extractBearerTokenFromHeader(header)
 	assert.Equal(t, "tokenabc123", token)
 }
 
