@@ -281,10 +281,10 @@
 			"revisionTime": "2016-08-17T01:46:01Z"
 		},
 		{
-			"checksumSHA1": "ljZrmD7pmMXAkGNfp6IEzj31fY8=",
+			"checksumSHA1": "jlwOmjGv8JQzRQWko5kj/zIKGts=",
 			"path": "github.com/joho/godotenv",
-			"revision": "4ed13390c0acd2ff4e371e64d8b97c8954138243",
-			"revisionTime": "2015-09-07T01:02:28Z"
+			"revision": "726cc8b906e3d31c70a9671c90a13716a8d3f50d",
+			"revisionTime": "2016-12-16T23:05:37Z"
 		},
 		{
 			"checksumSHA1": "SGc5vSs9tXhrGJ5ncymDyMvTg24=",
