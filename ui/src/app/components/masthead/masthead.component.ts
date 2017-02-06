@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs/Rx';
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { ApplicationService } from '../resources/applications/application.service';
-import { AuthService } from '../auth/auth.service';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Router } from '@angular/router';
+
+import { AuthService } from '../../modules/auth/auth.service';
+import { ApplicationService } from '../../modules/applications/application.service';
 
 @Component({
     selector:       'masthead',
@@ -42,7 +43,7 @@ export class MastheadComponent implements OnInit {
     localStorage.removeItem('id_token');
     this.router.navigate(['login'])
   }
-  
+
   _complete() {
     (<any>$('#create-application-modal')).modal('hide');
   }

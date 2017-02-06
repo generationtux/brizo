@@ -4,56 +4,40 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-// App is our top level component
-import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { InviteComponent } from './invite/invite.component';
-import { LoginComponent } from './login/login.component';
-import { MastheadComponent } from './masthead/masthead.component';
-import { AuthComponent } from './auth/auth.component';
-import { AuthService } from './auth/auth.service';
-import { EnvironmentService } from './resources/environments/environment.service';
-import { AuthGuard } from './auth/auth.guard';
-import { ApplicationComponent } from './resources/applications/application-details.component';
-import { ApplicationCreationComponent } from './resources/applications/application-creation.component';
-import { ApplicationListingComponent } from './resources/applications/application-listing.component';
-import { EnvironmentDetailsComponent } from './resources/environments/environment-details.component';
+import { SharedModule } from './modules/shared.module';
 
-const routes: Routes = [
-    { path: '',                   component: DashboardComponent, canActivate: [AuthGuard] },
-    { path: 'login',              component: LoginComponent },
-    { path: 'auth',               component: AuthComponent },
-    { path: 'applications/:uuid', component: ApplicationComponent, canActivate: [AuthGuard] },
-    { path: 'environments/:uuid', component: EnvironmentDetailsComponent, canActivate: [AuthGuard] },
-    { path: 'users/invite',       component: InviteComponent, canActivate: [AuthGuard] },
-];
+import { ApplicationModule } from './modules/applications/application.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { EnvironmentModule } from './modules/environments/environment.module';
+import { InviteModule } from './modules/invite/invite.module';
+import { LoginModule } from './modules/login/login.module';
+
+import { AppComponent } from './app.component';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { AuthService } from './modules/auth/auth.service';
+
+// Routes are delegated to each module
+const routes: Routes = [];
 
 @NgModule({
     imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule.forRoot(routes),
-        HttpModule,
+      ApplicationModule,
+      AuthModule,
+      BrowserModule,
+      DashboardModule,
+      EnvironmentModule,
+      FormsModule,
+      HttpModule,
+      InviteModule,
+      LoginModule,
+      ReactiveFormsModule,
+      RouterModule.forRoot(routes),
+      SharedModule,
     ],
-    providers: [
-      AuthService,
-      AuthGuard,
-      EnvironmentService,
-    ],
-    declarations: [
-        AuthComponent,
-        AppComponent,
-        ApplicationComponent,
-        ApplicationCreationComponent,
-        ApplicationListingComponent,
-        DashboardComponent,
-        EnvironmentDetailsComponent,
-        InviteComponent,
-        LoginComponent,
-        MastheadComponent,
-    ],
-    bootstrap: [ AppComponent ]
+    providers:    [ AuthGuard ],
+    declarations: [ AppComponent],
+    bootstrap:    [ AppComponent ]
 })
 
-export class AppModule {}
+export class AppModule {};

@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs/Rx';
 import { Component, OnInit } from '@angular/core';
 
-import { Application } from './application.component'
-import { ApplicationService } from './application.service'
+import { Application } from '../application.model';
+import { ApplicationService } from '../application.service';
 
 @Component({
-  selector: 'application-listing',
+  selector:    'application-listing',
   templateUrl: './application-listing.html',
-  providers: [ApplicationService],
+  providers:   [ ApplicationService ],
 })
 
 export class ApplicationListingComponent implements OnInit {

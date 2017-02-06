@@ -1,23 +1,23 @@
-import { Observable } from 'rxjs/Rx';
-import { ActivatedRoute, Params }                          from '@angular/router'
-import { Component, EventEmitter, OnInit }                 from '@angular/core'
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
-import { Http, Response, Headers, RequestOptions }         from '@angular/http';
 import 'rxjs/add/operator/switchMap';
+import { Observable } from 'rxjs/Rx';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
-import { Application }        from './application.component';
-import { Environment }        from '../environments/environment.component';
-import { ApplicationService } from './application.service'
-import { EnvironmentService } from '../environments/environment.service'
-import { Pod }                from '../pod.component'
+import { Application } from '../application.model';
+import { ApplicationService } from '../application.service'
+import { Environment } from '../../environments/environment.model';
+import { EnvironmentService } from '../../environments/environment.service';
+import { Pod } from '../../pod.model';
 
 @Component({
-  selector:    'application',
+  selector:    'application-details',
   templateUrl: './application-details.html',
-  providers:   [ApplicationService],
+  providers:   [ ApplicationService ],
 })
 
-export class ApplicationComponent implements OnInit {
+export class ApplicationDetailsComponent implements OnInit {
   private application: Application;
   public editApplicationForm: FormGroup;
   public createEnvironmentForm: FormGroup;
@@ -51,7 +51,7 @@ export class ApplicationComponent implements OnInit {
       () => (this._complete()),
     )
   }
-  
+
   update() {
     const application = new Application(
       this.application.id,
@@ -61,7 +61,7 @@ export class ApplicationComponent implements OnInit {
       this.application.environments,
       this.application.pods,
     );
-    
+
     this.applicationService.editApplication(application).subscribe(
       data => {
         this.application = data;

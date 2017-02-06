@@ -2,8 +2,8 @@ import { Observable } from 'rxjs/Rx';
 import { Component, Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
-import { Environment } from './environment.component';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
+import { Environment } from './environment.model';
 
 @Injectable()
 export class EnvironmentService {
