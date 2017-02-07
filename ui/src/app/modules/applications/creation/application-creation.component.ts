@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs/Rx';
 import { Component } from '@angular/core';
 
-import { Application } from './application.component'
-import { ApplicationService } from './application.service'
+import { Application } from '../application.model';
+import { ApplicationService } from '../application.service';
 
 @Component({
-  selector: 'application-creation-form',
+  selector:    'application-creation-form',
   templateUrl: './application-creation.html',
-  providers: [ApplicationService],
+  providers:   [ ApplicationService ],
 })
 
 export class ApplicationCreationComponent {
@@ -24,7 +24,7 @@ export class ApplicationCreationComponent {
   logError(err: any) {
     console.error('There was an error: ' + err);
   }
-  
+
   _complete() {
     (<any>$('#create-application-modal')).modal('hide');
   }

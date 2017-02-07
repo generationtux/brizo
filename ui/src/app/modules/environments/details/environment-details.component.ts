@@ -4,13 +4,13 @@ import { ActivatedRoute, Params } from '@angular/router'
 import { Component, EventEmitter, OnInit } from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
-import { Environment } from './environment.component';
-import { EnvironmentService } from './environment.service';
+import { Environment } from '../environment.model';
+import { EnvironmentService } from '../environment.service';
 
 @Component({
   selector:    'environment',
   templateUrl: './environment-details.html',
-  providers:   [EnvironmentService],
+  providers:   [ EnvironmentService ],
 })
 
 export class EnvironmentDetailsComponent implements OnInit {

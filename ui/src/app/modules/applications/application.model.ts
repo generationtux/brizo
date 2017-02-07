@@ -1,5 +1,5 @@
-import { Environment } from '../environments/environment.component'
-import { Pod } from '../pod.component'
+import { Environment } from '../environments/environment.model';
+import { Pod } from '../pod.model';
 
 export class Application {
   constructor(

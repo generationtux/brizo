@@ -2,8 +2,8 @@ import { Observable } from 'rxjs/Rx';
 import { Component, Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
-import { Application } from './application.component'
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../auth/auth.service';
+import { Application } from './application.model'
 
 @Injectable()
 export class ApplicationService {
@@ -38,7 +38,7 @@ export class ApplicationService {
       .map((res: Response) => res.json() || {})
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
-  
+
   editApplication(application: Application): Observable<Application> {
     const headers = new Headers({
       'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export class ApplicationService {
 
     const options = new RequestOptions({ headers: headers });
     const data = { name: application.name }
-    
+
     return this.http.patch(this.applicationsUpdateUrl + application.uuid, data, options)
       .map((res: Response) => res.json() || {})
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
