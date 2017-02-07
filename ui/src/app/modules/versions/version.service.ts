@@ -21,7 +21,7 @@ export class VersionService {
     });
   }
   
-  createVersion(name: string, applicationId: number): Observable<Version> {
+  createVersion(name: string, image: string, replicas: number, applicationId: number): Observable<Version> {
     const options = new RequestOptions({ headers: this.getHeaders() });
     const data = { name: name, applicationId: applicationId }
 
@@ -30,7 +30,7 @@ export class VersionService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
   
-  getVersion(uuid: string): Observable<Environment> {
+  getVersion(uuid: string): Observable<Version> {
     return this.http.get(this.versionsGetUrl + uuid, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));

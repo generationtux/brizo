@@ -6,6 +6,8 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { Environment } from '../environment.model';
 import { EnvironmentService } from '../environment.service';
+import { Version } from '../../versions/version.model';
+import { VersionService } from '../../versions/version.service';
 
 @Component({
   selector:    'environment',
@@ -15,14 +17,24 @@ import { EnvironmentService } from '../environment.service';
 
 export class EnvironmentDetailsComponent implements OnInit {
   private editForm: FormGroup;
+  private createVersionForm: FormGroup;
   private editing = false;
   private environment: Environment;
 
-  constructor(private environmentService: EnvironmentService, private route: ActivatedRoute, private formBuilder: FormBuilder) {}
+  constructor(private environmentService: EnvironmentService,
+              private versionService: VersionService,
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.editForm = this.formBuilder.group({
       name: ['', [<any>Validators.required, <any>Validators.minLength(1)]],
+    });
+
+    this.createVersionForm = this.formBuilder.group({
+      name: new FormControl('', Validators.required),
+      image: new FormControl('', Validators.required),
+      replicas: new FormControl('', Validators.required),
     });
 
     this.route.params
@@ -70,5 +82,15 @@ export class EnvironmentDetailsComponent implements OnInit {
         },
         err => console.error('There was an error: ' + err)
       );
+  }
+  
+  private createVersion() {
+    return this.versionService.createVersion(this.createVersionForm.controls['name'].value,
+                                             this.createVersionForm.controls['image'].value,
+                                             this.createVersionForm.controls['replicas'].value,
+                                             this.environment.application_id).subscribe(
+     err => console.error('There was an error: ' + err),
+     () => ((<any>$('#environment-create-modal')).modal('hide')),
+    )
   }
 }
