@@ -20,6 +20,7 @@
         </div>
         <div class="col-sm-6">
           <div class="btn-group pull-right" role="group" aria-label="...">
+            <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
             <button class="btn btn-default" type="button" *ngIf="!editing" (click)="editing=!editing">
               Edit <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             </button>
@@ -33,5 +34,32 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="version-create-modal" tabindex="-1" role="dialog" aria-labelledby="create-environment-model">
+  <div class="modal-dialog" role="document">
+    <form>
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Create Version</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="image">Image</label>
+          <input class="form-control" placeholder="go" name="image" type="text">
+        </div>
+        <div class="form-group">
+          <label for="replicas">Replicas</label>
+          <input class="form-control" placeholder="1" name="replicas" type="text">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+    </form>
   </div>
 </div>
