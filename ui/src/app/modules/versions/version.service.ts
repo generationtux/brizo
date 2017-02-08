@@ -8,10 +8,11 @@ import { Version } from './version.model';
 @Injectable()
 export class VersionService {
   
-  private versionsCreateUrl = '/api/v1/versions'
-  private versionsGetUrl    = '/api/v1/versions/'
-  private versionsEditUrl   = '/api/v1/versions/'
-  private versionsIndexUrl  = '/api/v1/versions'
+  private url = '/api/v1/environments/';
+  //private versionsCreateUrl = '/api/v1/versions'
+  //private versionsGetUrl    = '/api/v1/versions/'
+  //private versionsEditUrl   = '/api/v1/versions/'
+  //private versionsIndexUrl  = '/api/v1/environments/:environment-uuid/versions'
   
   constructor(private http: Http, private auth: AuthService) {}
   
@@ -22,23 +23,27 @@ export class VersionService {
     });
   }
   
-  createVersion(name: string, image: string, replicas: number, applicationId: number): Observable<Version> {
+  createVersion(name: string, image: string, replicas: number, environmentId: number, environmentUuid: string): Observable<Version> {
     const options = new RequestOptions({ headers: this.getHeaders() });
-    const data = { name: name, applicationId: applicationId }
+    const data = { name: name, image: image, replicas: replicas, environment_id: environmentId }
+    
+    const url = this.url + environmentUuid + '/versions';
 
-    return this.http.post(this.versionsCreateUrl, data, options)
+    return this.http.post(url, data, options)
       .map((res: Response) => res.json() || {})
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
   
-  getVersions(): Observable<Version[]> {
-    return this.http.get(this.versionsIndexUrl, this.auth.jwtRequestOptions())
-      .map((res: Response) => console.log(res.json()))
+  getVersions(environmentUuid: string): Observable<Version[]> {
+    const url = this.url + environmentUuid + '/versions';
+    
+    return this.http.get(url, this.auth.jwtRequestOptions())
+      .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
   
   getVersion(uuid: string): Observable<Version> {
-    return this.http.get(this.versionsGetUrl + uuid, this.auth.jwtRequestOptions())
+    return this.http.get(this.url + uuid, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
@@ -47,7 +52,7 @@ export class VersionService {
     const options = new RequestOptions({ headers: this.getHeaders() });
     const data = { name: version.name };
 
-    return this.http.patch(this.versionsEditUrl + version.uuid, data, this.auth.jwtRequestOptions())
+    return this.http.patch(this.url + version.uuid, data, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }

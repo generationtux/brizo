@@ -37,21 +37,26 @@
     <div class="row">
       <div class="col-md-12">
         <h5>Versions</h5>
-        <table class="table">
+        <p *ngIf="(versions | async)?.length==0">
+          <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
+        </p>
+        <table *ngIf="(versions | async)?.length > 0" class="table">
           <thead>
             <tr>
               <th>Name</th>
-              <th># of Pods</th>
+              <th>Image</th>
+              <th>Replicas</th>
               <th>Created At</th>
               <th>Last Updated</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let version of versions | async">
-              <td><a href="">{{ version.name }}</a></td>
-              <td>n/a</td>
-              <td></td>
-              <td></td>
+              <td>{{ version.name }}</td>
+              <td>{{ version.image }}</td>
+              <td>{{ version.replicas }}</td>
+              <td>{{ version.created_at }}</td>
+              <td>{{ version.updated_at }}</td>
             </tr>
           </tbody>
         </table>

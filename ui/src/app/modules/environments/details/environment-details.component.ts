@@ -35,7 +35,7 @@ export class EnvironmentDetailsComponent implements OnInit {
     this.createVersionForm = this.formBuilder.group({
       name: new FormControl('', Validators.required),
       image: new FormControl('', Validators.required),
-      replicas: new FormControl('', Validators.required),
+      replicas: new FormControl(0, Validators.required),
     });
 
     this.route.params
@@ -49,7 +49,7 @@ export class EnvironmentDetailsComponent implements OnInit {
         err => console.error('There was an error: ' + err)
       );
       
-    this.versions = this.versionService.getVersions();
+      this.versions = this.versionService.getVersions('0b0be6f1-feaf-4553-806b-eacc234dff3c');
   }
 
   private resetEnvironmentForm(environment: Environment) {
@@ -90,8 +90,9 @@ export class EnvironmentDetailsComponent implements OnInit {
   private createVersion() {
     return this.versionService.createVersion(this.createVersionForm.controls['name'].value,
                                              this.createVersionForm.controls['image'].value,
-                                             this.createVersionForm.controls['replicas'].value,
-                                             this.environment.application_id).subscribe(
+                                             parseInt(this.createVersionForm.controls['replicas'].value),
+                                             this.environment.id,
+                                             this.environment.uuid).subscribe(
      err => console.error('There was an error: ' + err),
      () => ((<any>$('#environment-create-modal')).modal('hide')),
     )
