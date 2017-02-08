@@ -19,6 +19,7 @@ type Application struct {
 	Slug         string        `gorm:"not null;unique_index" json:"slug"`
 	Pods         []v1.Pod      `gorm:"-" json:"pods,array"` // gorm will ignore, but we can populate
 	Environments []Environment `json:"environments,array"`
+	Versions     []Version     `json:"versions,array"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the database
