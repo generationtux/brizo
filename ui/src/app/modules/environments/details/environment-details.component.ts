@@ -58,10 +58,6 @@ export class EnvironmentDetailsComponent implements OnInit {
         },
         err => console.error('There was an error: ' + err)
       );
-      
-      //console.log(this.route.params);
-      
-      //this.versions = this.versionService.getVersions('0b0be6f1-feaf-4553-806b-eacc234dff3c');
   }
 
   private resetEnvironmentForm(environment: Environment) {
