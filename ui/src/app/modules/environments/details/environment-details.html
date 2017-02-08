@@ -37,10 +37,10 @@
     <div class="row">
       <div class="col-md-12">
         <h5>Versions</h5>
-        <p *ngIf="(versions | async)?.length==0">
+        <p *ngIf="versions?.length == 0">
           <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
         </p>
-        <table *ngIf="(versions | async)?.length > 0" class="table">
+        <table *ngIf="versions?.length > 0" class="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -51,7 +51,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let version of versions | async">
+            <tr *ngFor="let version of versions">
               <td>{{ version.name }}</td>
               <td>{{ version.image }}</td>
               <td>{{ version.replicas }}</td>
