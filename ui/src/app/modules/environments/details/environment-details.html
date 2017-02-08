@@ -52,7 +52,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let version of versions">
-              <td>{{ version.name }}</td>
+              <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
               <td>{{ version.image }}</td>
               <td>{{ version.replicas }}</td>
               <td>{{ version.created_at }}</td>

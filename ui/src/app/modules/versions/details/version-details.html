@@ -1,0 +1,28 @@
+<masthead></masthead>
+<div class="version-details">
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <p><a href="/app">&laquo; Back to Dashboard</a></p>
+        </div>
+      </div>
+      <div class="row">
+        <form [formGroup]="editForm" novalidate>
+          <div class="col-sm-6">
+            <div class="form-group-lg">
+                <h3>
+                  <span *ngIf="!editing">{{ version?.name }}</span>
+                  <input type="text" class="form-control" *ngIf="editing" formControlName="name">
+                </h3>
+            </div>
+            <h4>{{ version?.uuid }}</h4>
+            <h5>{{ version?.slug}}</h5>
+            <p>{{ version?.image }}</p>
+            <p>{{ version?.replicas }}</p>
+            <p>{{ version?.created_at }}</p>
+            <p>{{ version?.updated_at }}</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
