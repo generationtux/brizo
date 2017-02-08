@@ -2,11 +2,15 @@ package resources
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
+	"k8s.io/client-go/pkg/api/v1"
+	"k8s.io/client-go/pkg/apis/extensions/v1beta1"
+	metav1 "k8s.io/client-go/pkg/apis/meta/v1"
 )
 
 // Version as defined by Brizo.
@@ -17,7 +21,6 @@ type Version struct {
 	Slug        string      `gorm:"not null;unique_index" json:"slug"`
 	Image       string      `gorm:"not null" json:"image"`
 	Replicas    int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	Application Application `gorm:"not null" json:"application_id"`
 	Environment Environment `form:"not null" json:"environment_id"`
 }
 
@@ -46,6 +49,55 @@ func CreateVersion(db *gorm.DB, version *Version) (bool, error) {
 	result := db.Create(&version)
 
 	return result.RowsAffected == 1, result.Error
+}
+
+// versionDeploymentDefinition builds a deployment spec for the provided version
+func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
+	replicas := int32(version.Replicas)
+	name := fmt.Sprintf(
+		"%v-%v-%v",
+		version.Environment.Application.Slug,
+		version.Environment.Slug,
+		version.Slug,
+	)
+
+	return &v1beta1.Deployment{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      name,
+			Namespace: "brizo",
+			Labels: map[string]string{
+				"brizoManaged": "true",
+				"appUUID":      version.Environment.Application.UUID,
+				"envUUID":      version.Environment.UUID,
+			},
+		},
+		Spec: v1beta1.DeploymentSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{
+					"envUUID":     version.Environment.UUID,
+					"versionUUID": version.UUID,
+				},
+			},
+			Replicas: &replicas,
+			Template: v1.PodTemplateSpec{
+				ObjectMeta: v1.ObjectMeta{
+					Labels: map[string]string{
+						"brizoManaged": "true",
+						"appUUID":      version.Environment.Application.UUID,
+						"envUUID":      version.Environment.UUID,
+						"versionUUID":  version.UUID,
+					},
+				},
+				Spec: v1.PodSpec{
+					Containers: []v1.Container{
+						v1.Container{
+							Image: version.Image,
+						},
+					},
+				},
+			},
+		},
+	}
 }
 
 // UpdateVersion will update an existing Version
