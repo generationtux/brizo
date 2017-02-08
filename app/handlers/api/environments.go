@@ -34,6 +34,13 @@ func EnvironmentIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for i := range environments {
+		if len(environments[i].Versions) == 0 {
+			environments[i].Versions = make([]resources.Version, 0)
+		}
+	}
+
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(environments)
 }
 
@@ -61,6 +68,11 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(environment.Versions) == 0 {
+		environment.Versions = make([]resources.Version, 0)
+	}
+
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(environment)
 }
 
@@ -101,6 +113,7 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// @todo return some sort of content?
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	return
 }
@@ -150,6 +163,7 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(environment)
 	w.WriteHeader(http.StatusOK)
 }

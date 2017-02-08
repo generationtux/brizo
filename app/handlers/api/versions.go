@@ -25,7 +25,7 @@ func VersionIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	versions, err := resources.AllVersions(db)
+	versions, err := resources.GetVersionsByEnvironmentUUID(db, bone.GetValue(r, "environment-uuid"))
 	if err != nil {
 		log.Printf("Error when retrieving versions: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
@@ -35,6 +35,7 @@ func VersionIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(versions)
 }
 
@@ -49,8 +50,8 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := bone.GetValue(r, "uuid")
-	version, err := resources.GetVersion(db, id)
+	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"))
+	// @todo this could be a 404, so we need to update this error to handle this
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
@@ -60,6 +61,25 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
+	if err != nil {
+		log.Printf("Error when retrieving version's environment: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving version's environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	if version.EnvironmentID != environment.ID {
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusNotFound,
+			"no versions with id of "+version.UUID+" for this environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(version)
 }
 
@@ -74,7 +94,9 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var editForm struct {
-		Name string
+		Name     string
+		Image    string
+		Replicas int
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&editForm)
@@ -85,8 +107,8 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := bone.GetValue(r, "uuid")
-	version, err := resources.GetVersion(db, id)
+	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"))
+	// @todo this could be a 404, so we need to update this error to handle this
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
@@ -96,8 +118,28 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
+	if err != nil {
+		log.Printf("Error when retrieving version's environment: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving version's environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	if version.EnvironmentID != environment.ID {
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusNotFound,
+			"no versions with id of "+version.UUID+" for this environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
 	version.Name = editForm.Name
 	version.Slug = slugify.Slugify(editForm.Name)
+	version.Image = editForm.Image
+	version.Replicas = editForm.Replicas
 
 	_, err = resources.UpdateVersion(db, version)
 	if err != nil {
@@ -106,6 +148,7 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(version)
 	w.WriteHeader(http.StatusOK)
 	return
@@ -122,8 +165,9 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var createForm struct {
-		Name string
-		Slug string
+		Name     string
+		Image    string
+		Replicas int
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&createForm)
@@ -134,9 +178,22 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
+	if err != nil {
+		log.Printf("Error when retrieving environment: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
 	version := resources.Version{
-		Name: createForm.Name,
-		Slug: slugify.Slugify(createForm.Name),
+		Name:          createForm.Name,
+		Slug:          slugify.Slugify(createForm.Name),
+		Image:         createForm.Image,
+		Replicas:      createForm.Replicas,
+		EnvironmentID: environment.ID,
 	}
 	_, err = resources.CreateVersion(db, &version)
 	// @todo handle failed save w/out error?
@@ -147,6 +204,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// @todo return some sort of content?
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	return
 }

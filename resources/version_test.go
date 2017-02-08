@@ -27,7 +27,7 @@ func TestCanCreateAVersion(t *testing.T) {
 	})
 
 	CreateVersion(db, &version)
-	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\") VALUES (?,?,?,?,?,?)"
+	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\") VALUES (?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
