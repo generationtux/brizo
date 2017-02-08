@@ -2,13 +2,30 @@ package resources
 
 import (
 	"database/sql/driver"
+	"errors"
 	"testing"
 
 	testdb "github.com/erikstmartin/go-testdb"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"k8s.io/client-go/pkg/api/v1"
+	"k8s.io/client-go/pkg/apis/extensions/v1beta1"
 )
+
+func TestCreateVersionDoesNotStoreWhenKubeFails(t *testing.T) {
+	version := &Version{Name: "foo"}
+	mockClient := new(mockKubeClient)
+	mockClient.On("CreateDeployment", mock.Anything).Return(errors.New("foo error"))
+
+	db, _ := gorm.Open("testdb", "")
+	result, err := CreateVersion(db, mockClient, version)
+	assert.False(t, result)
+	assert.Equal(t, "foo error", err.Error())
+
+	mockClient.AssertExpectations(t)
+}
 
 func TestCanCreateAVersion(t *testing.T) {
 	id := uuid.New()
@@ -16,6 +33,10 @@ func TestCanCreateAVersion(t *testing.T) {
 		Name: "foobar",
 		UUID: id,
 	}
+
+	mockClient := new(mockKubeClient)
+	mockClient.On("CreateDeployment", mock.Anything).Return(nil)
+
 	db, _ := gorm.Open("testdb", "")
 	var query string
 	var args []driver.Value
@@ -26,7 +47,7 @@ func TestCanCreateAVersion(t *testing.T) {
 		return driver.ResultNoRows, nil
 	})
 
-	CreateVersion(db, &version)
+	CreateVersion(db, mockClient, &version)
 	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\") VALUES (?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
@@ -60,4 +81,31 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 
 	expectTemplateLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123", "versionUUID": "version-uuid123"}
 	assert.Equal(t, expectTemplateLabels, deployment.Spec.Template.Labels)
+}
+
+// Mock kube client
+
+type mockKubeClient struct {
+	mock.Mock
+}
+
+func (m *mockKubeClient) Health() error {
+	return nil
+}
+
+func (m *mockKubeClient) GetPods(name string, options v1.ListOptions) ([]v1.Pod, error) {
+	return []v1.Pod{}, nil
+}
+
+func (m *mockKubeClient) CreateDeployment(deployment *v1beta1.Deployment) error {
+	args := m.Called(deployment)
+	return args.Error(0)
+}
+
+func (m *mockKubeClient) DeleteDeployment(deployment *v1beta1.Deployment) error {
+	return nil
+}
+
+func (m *mockKubeClient) FindDeploymentByName(namespace, name string) (*v1beta1.Deployment, error) {
+	return &v1beta1.Deployment{}, nil
 }

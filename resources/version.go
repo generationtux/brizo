@@ -6,6 +6,7 @@ import (
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
 	"k8s.io/client-go/pkg/api/v1"
@@ -45,11 +46,17 @@ func AllVersions(db *gorm.DB) ([]Version, error) {
 	return versions, result.Error
 }
 
-// CreateVersion will add a new Version to Brizo
-func CreateVersion(db *gorm.DB, version *Version) (bool, error) {
-	result := db.Create(&version)
+// CreateVersion will deploy a new version Brizo
+func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
+	deployment := versionDeploymentDefinition(version)
+	err := client.CreateDeployment(deployment)
+	if err != nil {
+		return false, err
+	}
 
-	return result.RowsAffected == 1, result.Error
+	persist := db.Create(&version)
+
+	return persist.RowsAffected == 1, persist.Error
 }
 
 // versionDeploymentDefinition builds a deployment spec for the provided version

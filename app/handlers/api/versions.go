@@ -8,6 +8,7 @@ import (
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
 )
@@ -156,6 +157,13 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 
 // VersionCreate creates a new Version
 func VersionCreate(w http.ResponseWriter, r *http.Request) {
+	client, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		http.Error(w, "unable to reach Kubernetes", http.StatusInternalServerError)
+		return
+	}
+
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -195,7 +203,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		Replicas:      createForm.Replicas,
 		EnvironmentID: environment.ID,
 	}
-	_, err = resources.CreateVersion(db, &version)
+	_, err = resources.CreateVersion(db, client, &version)
 	// @todo handle failed save w/out error?
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)
