@@ -55,8 +55,8 @@
               <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
               <td>{{ version.image }}</td>
               <td>{{ version.replicas }}</td>
-              <td>{{ version.created_at }}</td>
-              <td>{{ version.updated_at }}</td>
+              <td>{{ version.created_at | date:'medium'}}</td>
+              <td>{{ version.updated_at | date:'medium'}}</td>
             </tr>
           </tbody>
         </table>
