@@ -12,7 +12,7 @@ import { VersionService } from '../../versions/version.service';
 @Component({
   selector:    'environment',
   templateUrl: './environment-details.html',
-  providers:   [ EnvironmentService ],
+  providers:   [ EnvironmentService, VersionService ],
 })
 
 export class EnvironmentDetailsComponent implements OnInit {
@@ -20,6 +20,7 @@ export class EnvironmentDetailsComponent implements OnInit {
   private createVersionForm: FormGroup;
   private editing = false;
   private environment: Environment;
+  private versions: Observable<Version[]>
 
   constructor(private environmentService: EnvironmentService,
               private versionService: VersionService,
@@ -47,6 +48,8 @@ export class EnvironmentDetailsComponent implements OnInit {
         },
         err => console.error('There was an error: ' + err)
       );
+      
+    this.versions = this.versionService.getVersions();
   }
 
   private resetEnvironmentForm(environment: Environment) {

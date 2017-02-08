@@ -34,6 +34,29 @@
         </div>
       </form>
     </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Versions</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th># of Pods</th>
+              <th>Created At</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let version of versions | async">
+              <td><a href="">{{ version.name }}</a></td>
+              <td>n/a</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
