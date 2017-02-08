@@ -17,6 +17,7 @@ type Environment struct {
 	Slug          string `gorm:"not null;unique_index" json:"slug"`
 	ApplicationID uint64 `json:"application_id,string"`
 	Application   Application
+	Versions      []Version `json:"versions,array"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the

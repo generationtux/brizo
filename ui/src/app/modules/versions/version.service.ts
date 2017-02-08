@@ -11,6 +11,7 @@ export class VersionService {
   private versionsCreateUrl = '/api/v1/versions'
   private versionsGetUrl    = '/api/v1/versions/'
   private versionsEditUrl   = '/api/v1/versions/'
+  private versionsIndexUrl  = '/api/v1/versions'
   
   constructor(private http: Http, private auth: AuthService) {}
   
@@ -27,6 +28,12 @@ export class VersionService {
 
     return this.http.post(this.versionsCreateUrl, data, options)
       .map((res: Response) => res.json() || {})
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+  
+  getVersions(): Observable<Version[]> {
+    return this.http.get(this.versionsIndexUrl, this.auth.jwtRequestOptions())
+      .map((res: Response) => console.log(res.json()))
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
   

@@ -16,12 +16,13 @@ import (
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID        string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name        string      `gorm:"not null;unique_index" json:"name"`
-	Slug        string      `gorm:"not null;unique_index" json:"slug"`
-	Image       string      `gorm:"not null" json:"image"`
-	Replicas    int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	Environment Environment `form:"not null" json:"environment_id"`
+	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name          string      `gorm:"not null;unique_index" json:"name"`
+	Slug          string      `gorm:"not null;unique_index" json:"slug"`
+	Image         string      `gorm:"not null" json:"image"`
+	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
+	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
+	Environment   Environment `form:"not null" json:"environment_id"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -121,6 +122,22 @@ func GetVersion(db *gorm.DB, id string) (*Version, error) {
 	}
 
 	return version, nil
+}
+
+// GetVersionsByEnvironmentUUID will get an existing version using an
+// environment's UUID
+func GetVersionsByEnvironmentUUID(db *gorm.DB, uuid string) (*[]Version, error) {
+	var versions []Version
+	environment, err := GetEnvironment(db, uuid)
+	if err != nil {
+		return &versions, err
+	}
+
+	if err := db.Where("environment_id = ?", environment.ID).Find(&versions).Error; err != nil {
+		return &versions, err
+	}
+
+	return &versions, nil
 }
 
 // DeleteVersion will delete an existing Version by name
