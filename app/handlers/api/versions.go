@@ -202,6 +202,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		Image:         createForm.Image,
 		Replicas:      createForm.Replicas,
 		EnvironmentID: environment.ID,
+		Environment:   *environment,
 	}
 	_, err = resources.CreateVersion(db, client, &version)
 	// @todo handle failed save w/out error?

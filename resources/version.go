@@ -23,7 +23,7 @@ type Version struct {
 	Image         string      `gorm:"not null" json:"image"`
 	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
 	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
-	Environment   Environment `form:"not null" json:"environment_id"`
+	Environment   Environment `gorm:"not null" json:"environment"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -99,6 +99,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
 						v1.Container{
+							Name:  "app",
 							Image: version.Image,
 						},
 					},
@@ -120,7 +121,7 @@ func UpdateVersion(db *gorm.DB, version *Version) (bool, error) {
 // GetVersion will get an existing Version by id
 func GetVersion(db *gorm.DB, id string) (*Version, error) {
 	version := new(Version)
-	if err := db.Where("uuid = ?", id).First(&version).Error; err != nil {
+	if err := db.Preload("Environment.Application").Where("uuid = ?", id).First(version).Error; err != nil {
 		return version, err
 	}
 
@@ -140,7 +141,7 @@ func GetVersionsByEnvironmentUUID(db *gorm.DB, uuid string) (*[]Version, error) 
 		return &versions, err
 	}
 
-	if err := db.Where("environment_id = ?", environment.ID).Find(&versions).Error; err != nil {
+	if err := db.Where("environment_id = ?", environment.ID).Find(versions).Error; err != nil {
 		return &versions, err
 	}
 

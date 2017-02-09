@@ -12,12 +12,12 @@ import (
 // Environment as defined by Brizo.
 type Environment struct {
 	database.Model
-	UUID          string `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string `gorm:"not null;unique_index" json:"name"`
-	Slug          string `gorm:"not null;unique_index" json:"slug"`
-	ApplicationID uint64 `json:"application_id,string"`
-	Application   Application
-	Versions      []Version `json:"versions,array"`
+	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name          string      `gorm:"not null;unique_index" json:"name"`
+	Slug          string      `gorm:"not null;unique_index" json:"slug"`
+	ApplicationID uint64      `json:"application_id,string"`
+	Application   Application `json:"application,array"`
+	Versions      []Version   `json:"versions,array"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -59,7 +59,7 @@ func UpdateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
 // GetEnvironment will get an existing Environment by id
 func GetEnvironment(db *gorm.DB, id string) (*Environment, error) {
 	environment := new(Environment)
-	if err := db.Where("uuid = ?", id).First(&environment).Error; err != nil {
+	if err := db.Preload("Application").Where("uuid = ?", id).First(&environment).Error; err != nil {
 		return environment, err
 	}
 
