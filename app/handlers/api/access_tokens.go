@@ -27,7 +27,6 @@ func AccessTokenCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(token)
 	w.WriteHeader(http.StatusCreated)
 }

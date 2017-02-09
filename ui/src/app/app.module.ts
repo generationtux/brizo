@@ -12,7 +12,6 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { EnvironmentModule } from './modules/environments/environment.module';
 import { InviteModule } from './modules/invite/invite.module';
 import { LoginModule } from './modules/login/login.module';
-import { VersionModule } from './modules/versions/version.module';
 
 import { AppComponent } from './app.component';
 import { AuthGuard } from './modules/auth/auth.guard';
@@ -35,7 +34,6 @@ const routes: Routes = [];
       ReactiveFormsModule,
       RouterModule.forRoot(routes),
       SharedModule,
-      VersionModule,
     ],
     providers:    [ AuthGuard ],
     declarations: [ AppComponent],
