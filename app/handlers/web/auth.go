@@ -114,6 +114,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			authErrorRedirect(w, r)
 			return
 		}
+		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
 	} else {
 		// user is not allowed
 		authDenyRedirect(w, r)
