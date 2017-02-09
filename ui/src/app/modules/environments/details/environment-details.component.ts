@@ -6,32 +6,55 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { Environment } from '../environment.model';
 import { EnvironmentService } from '../environment.service';
+import { Version } from '../../versions/version.model';
+import { VersionService } from '../../versions/version.service';
 
 @Component({
   selector:    'environment',
   templateUrl: './environment-details.html',
-  providers:   [ EnvironmentService ],
+  providers:   [ EnvironmentService, VersionService ],
 })
 
 export class EnvironmentDetailsComponent implements OnInit {
   private editForm: FormGroup;
+  private createVersionForm: FormGroup;
   private editing = false;
   private environment: Environment;
+  private versions: Version[];
 
-  constructor(private environmentService: EnvironmentService, private route: ActivatedRoute, private formBuilder: FormBuilder) {}
+  constructor(private environmentService: EnvironmentService,
+              private versionService: VersionService,
+              private route: ActivatedRoute,
+              private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     this.editForm = this.formBuilder.group({
       name: ['', [<any>Validators.required, <any>Validators.minLength(1)]],
     });
 
+    this.createVersionForm = this.formBuilder.group({
+      name: new FormControl('', Validators.required),
+      image: new FormControl('', Validators.required),
+      replicas: new FormControl(0, Validators.required),
+    });
+
     this.route.params
       .switchMap(
-        (params: Params) => this.environmentService.getEnvironment(params['uuid'])
+        (params: Params) => this.environmentService.getEnvironment(params['uuid']),
       ).subscribe(
         data => {
           this.environment = data;
           this.resetEnvironmentForm(this.environment);
+        },
+        err => console.error('There was an error: ' + err)
+      );
+      
+    this.route.params
+      .switchMap(
+        (params: Params) => this.versionService.getVersions(params['uuid']),
+      ).subscribe(
+        data => {
+          this.versions = data;
         },
         err => console.error('There was an error: ' + err)
       );
@@ -70,5 +93,16 @@ export class EnvironmentDetailsComponent implements OnInit {
         },
         err => console.error('There was an error: ' + err)
       );
+  }
+  
+  private createVersion() {
+    return this.versionService.createVersion(this.createVersionForm.controls['name'].value,
+                                             this.createVersionForm.controls['image'].value,
+                                             parseInt(this.createVersionForm.controls['replicas'].value),
+                                             this.environment.id,
+                                             this.environment.uuid).subscribe(
+     err => console.error('There was an error: ' + err),
+     () => ((<any>$('#environment-create-modal')).modal('hide')),
+    )
   }
 }
