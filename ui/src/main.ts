@@ -1,3 +1,4 @@
+import '../favicon.ico';
 import './assets/scss/main.scss';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

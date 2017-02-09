@@ -1,5 +1,5 @@
-<div class="masthead">
-  <nav class="navbar navbar-default navbar-static-top">
+<div id="masthead">
+  <nav class="navbar navbar-default navbar-inverse navbar-static-top">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -9,7 +9,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#"><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/65035-200.png" height="24" /></a>
+        <a class="navbar-brand" [routerLink]="['/']">
+          <img src="./brizo-icon-light.png" class="img-responsive" />
+        </a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->

@@ -9,7 +9,6 @@ import { ApplicationService } from '../../modules/applications/application.servi
 
 @Component({
     selector:       'masthead',
-    styleUrls:      ['./masthead.css'],
     templateUrl:    './masthead.html',
     providers:      [ApplicationService],
 })
