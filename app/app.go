@@ -43,7 +43,6 @@ func New() *Application {
 		&resources.AccessToken{},
 		&resources.Application{},
 		&resources.Environment{},
-		&resources.Version{},
 	}
 
 	return brizo

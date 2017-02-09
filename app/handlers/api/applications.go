@@ -41,8 +41,6 @@ func ApplicationIndex(w http.ResponseWriter, r *http.Request) {
 			apps[i].Environments = make([]resources.Environment, 0)
 		}
 	}
-
-	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(apps)
 }
 
@@ -76,11 +74,6 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(app.Environments) == 0 {
-		app.Environments = make([]resources.Environment, 0)
-	}
-
-	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(app)
 }
 
@@ -135,7 +128,6 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(application)
 	w.WriteHeader(http.StatusOK)
 	return
@@ -177,7 +169,6 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// @todo return some sort of content?
-	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	return
 }

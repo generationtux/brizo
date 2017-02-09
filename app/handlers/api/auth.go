@@ -42,8 +42,6 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
-
-	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	return
 }
@@ -87,7 +85,5 @@ func AuthGetInvitees(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
-
-	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(invitees)
 }
