@@ -11,4 +11,4 @@ import 'rxjs';
 
 // Other third party
 import 'jquery';
-import "font-awesome/css/font-awesome.css";
+import 'bootstrap-sass/assets/javascripts/bootstrap.js';
