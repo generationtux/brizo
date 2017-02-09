@@ -141,7 +141,7 @@ func GetVersionsByEnvironmentUUID(db *gorm.DB, uuid string) (*[]Version, error) 
 		return &versions, err
 	}
 
-	if err := db.Where("environment_id = ?", environment.ID).Find(versions).Error; err != nil {
+	if err := db.Preload("Environment.Application").Where("environment_id = ?", environment.ID).Find(&versions).Error; err != nil {
 		return &versions, err
 	}
 
