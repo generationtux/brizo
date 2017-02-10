@@ -31,15 +31,19 @@ module.exports = {
         loader: 'file?name=[name].[hash].[ext]'
       },
       {
-        test: /\.css$/,
-        exclude: helpers.root('src', 'app'),
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+        test: /\.scss$/,
+        loaders: ['style-loader', 'css', 'sass'],
       },
+      // {
+      //   test: /\.css$/,
+      //   exclude: helpers.root('src', 'app'),
+      //   loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+      // },
       {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
         loader: 'raw'
-      }
+      },
     ]
   },
 

@@ -19,7 +19,8 @@ export class EnvironmentDetailsComponent implements OnInit {
   private editForm: FormGroup;
   private createVersionForm: FormGroup;
   private editing = false;
-  private environment: Environment;
+  private environment: any;
+  private application: any = {};
   private versions: Version[];
 
   constructor(private environmentService: EnvironmentService,
@@ -44,11 +45,12 @@ export class EnvironmentDetailsComponent implements OnInit {
       ).subscribe(
         data => {
           this.environment = data;
+          this.application = this.environment.application;
           this.resetEnvironmentForm(this.environment);
         },
         err => console.error('There was an error: ' + err)
       );
-      
+
     this.route.params
       .switchMap(
         (params: Params) => this.versionService.getVersions(params['uuid']),
@@ -94,15 +96,20 @@ export class EnvironmentDetailsComponent implements OnInit {
         err => console.error('There was an error: ' + err)
       );
   }
-  
+
   private createVersion() {
     return this.versionService.createVersion(this.createVersionForm.controls['name'].value,
                                              this.createVersionForm.controls['image'].value,
                                              parseInt(this.createVersionForm.controls['replicas'].value),
                                              this.environment.id,
                                              this.environment.uuid).subscribe(
+     (response) => (this.onCreateVersion(response)),
      err => console.error('There was an error: ' + err),
-     () => ((<any>$('#environment-create-modal')).modal('hide')),
     )
+  }
+
+  private onCreateVersion(response: any) {
+    (<any>$('#create-environment-model')).modal('hide');
+    this.versions.push(response);
   }
 }

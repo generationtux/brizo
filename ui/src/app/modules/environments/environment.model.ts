@@ -4,6 +4,6 @@ export class Environment {
     public name:           string,
     public slug:           string,
     public uuid:           string,
-    public application_id: number,
+    public application_id: number
   ){}
 }

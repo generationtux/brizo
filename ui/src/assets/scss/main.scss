@@ -1,0 +1,73 @@
+@import "variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~font-awesome/css/font-awesome.css";
+
+// annoying blue outline on links
+a:focus, a.btn:focus, button:focus { outline: none; }
+
+// type
+.text-default { color: $text-color; }
+
+// page headers
+.page-header {
+  .title-settings {
+    color: $gray-light;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-left: -10px;
+  }
+  .breadcrumb-previous a {
+    color: $gray-light;
+  }
+}
+
+// masthead
+#masthead {
+  .navbar {
+    border: none;
+    font-size: 12px;
+    .navbar-brand {
+      width: 50px;
+    }
+    .active {
+      background: $brand-primary;
+      color: #fff;
+    }
+    .user-menu {
+      padding:10px 15px;
+    }
+  }
+}
+
+// login
+.login {
+  margin-top: 200px;
+  .logo {
+    margin-bottom: 20px;
+  }
+}
+
+// modals
+.modal {
+  .modal-footer {
+    border-top: none;
+  }
+}
+
+// application list
+.app-list {
+  .app {
+    a.panel {
+      text-align: center;
+      display: block;
+      color: $gray;
+      &:hover {
+        text-decoration: none;
+        & .panel-heading {
+          background: $brand-primary;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

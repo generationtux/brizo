@@ -1,5 +1,5 @@
-<div class="masthead">
-  <nav class="navbar navbar-default navbar-static-top">
+<div id="masthead">
+  <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -9,39 +9,43 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#"><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/65035-200.png" height="24" /></a>
+        <a class="navbar-brand" [routerLink]="['/']">
+          <img src="./brizo-icon-light.png" class="img-responsive" />
+        </a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/app/users/invite">Invite User</a></li>
-          <li><a href="" data-toggle="modal" data-target="#create-application-modal">Create Application</a></li>
-          <li><a href="#" (click)="this.logout($event)">Logout</a></li>
+          <li>
+            <a [routerLink]="['/']" class="active">
+              <i class="fa fa-desktop"></i> Apps
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <i class="fa fa-cloud"></i> Cluster
+            </a>
+          </li>
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-cog"></i> Manage <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/app/users/invite">Invite User</a></li>
+            </ul>
+          </li>
+          <li>
+            <a class="dropdown-toggle user-menu" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <img src="{{ this.user.image() }}">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li class="dropdown-header">{{ this.user.name }}</li>
+              <li><a href="#" (click)="this.logout($event)">Logout</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Create Application Modal -->
-  <div class="modal fade" id="create-application-modal" tabindex="-1" role="dialog" aria-labelledby="create-application-model">
-    <div class="modal-dialog" role="document">
-      <form [formGroup]="createAppForm" novalidate (ngSubmit)="save(createAppForm.name)">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Create Application</h4>
-        </div>
-        <div class="modal-body">
-            <label for="name">Name</label>
-            <input class="form-control" placeholder="Application name" name="name" type="text" formControlName="name">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create</button>
-        </div>
-      </div>
-      </form>
-    </div>
-  </div>
 </div>
