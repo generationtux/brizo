@@ -1,66 +1,62 @@
 <masthead></masthead>
-<div class="environment-details">
-  <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <p><a href="/app">&laquo; Back to Dashboard</a></p>
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
+      {{ environment?.name }}
+      <button class="btn btn-link title-settings" *ngIf="!editing" (click)="editing=!editing"><i class="fa fa-cog"></i></button>
+    </h2>
+  </div>
+
+  <div class="row">
+    <form [formGroup]="editForm" novalidate>
+      <div class="col-sm-6">
+        <div class="form-group-lg">
+          <h3>
+            <input type="text" class="form-control" *ngIf="editing" formControlName="name">
+          </h3>
         </div>
       </div>
-      <div class="row">
-        <form [formGroup]="editForm" novalidate>
-          <div class="col-sm-6">
-            <div class="form-group-lg">
-                <h3>
-                  <span *ngIf="!editing">{{ environment?.name }}</span>
-                  <input type="text" class="form-control" *ngIf="editing" formControlName="name">
-                </h3>
-            </div>
-            <h4>{{ environment?.uuid }}</h4>
-            <h5>{{ environment?.slug}}</h5>
+      <div class="col-sm-6">
+        <div class="btn-group pull-right" role="group" aria-label="...">
+          <button class="btn btn-default" type="button" *ngIf="editing" (click)="cancelEditing()">
+            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+          <button class="btn btn-default" type="button" *ngIf="editing" (click)="saveEnvironment()">
+            Save <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+          </button>
         </div>
-        <div class="col-sm-6">
-          <div class="btn-group pull-right" role="group" aria-label="...">
-            <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
-            <button class="btn btn-default" type="button" *ngIf="!editing" (click)="editing=!editing">
-              Edit <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            </button>
-            <button class="btn btn-default" type="button" *ngIf="editing" (click)="cancelEditing()">
-              Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
-            <button class="btn btn-default" type="button" *ngIf="editing" (click)="saveEnvironment()">
-              Save <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <h5>Versions</h5>
-        <p *ngIf="versions?.length == 0">
-          <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
-        </p>
-        <table *ngIf="versions?.length > 0" class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Replicas</th>
-              <th>Created At</th>
-              <th>Last Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let version of versions">
-              <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
-              <td>{{ version.image }}</td>
-              <td>{{ version.replicas }}</td>
-              <td>{{ version.created_at | date:'medium'}}</td>
-              <td>{{ version.updated_at | date:'medium'}}</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
+    </form>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h5>Versions</h5>
+      <p *ngIf="versions?.length == 0">
+        <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
+      </p>
+      <table *ngIf="versions?.length > 0" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Replicas</th>
+            <th>Created At</th>
+            <th>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let version of versions">
+            <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
+            <td>{{ version.image }}</td>
+            <td>{{ version.replicas }}</td>
+            <td>{{ version.created_at | date:'medium'}}</td>
+            <td>{{ version.updated_at | date:'medium'}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -68,30 +64,30 @@
 <div class="modal fade" id="version-create-modal" tabindex="-1" role="dialog" aria-labelledby="create-environment-model">
   <div class="modal-dialog" role="document">
     <form [formGroup]="createVersionForm" novalidate (ngSubmit)="createVersion(createVersionForm.name, createVersionForm.image, createVersionForm.replicas)">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Create Version</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input class="form-control" placeholder="Name" name="name" type="text" formControlName="name">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Create Version</h4>
         </div>
-        <div class="form-group">
-          <label for="image">Image</label>
-          <input class="form-control" placeholder="go" name="image" type="text" formControlName="image">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" placeholder="Name" name="name" type="text" formControlName="name">
+          </div>
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input class="form-control" placeholder="go" name="image" type="text" formControlName="image">
+          </div>
+          <div class="form-group">
+            <label for="replicas">Replicas</label>
+            <input class="form-control" placeholder="1" name="replicas" type="text" formControlName="replicas">
+          </div>
         </div>
-        <div class="form-group">
-          <label for="replicas">Replicas</label>
-          <input class="form-control" placeholder="1" name="replicas" type="text" formControlName="replicas">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create</button>
-      </div>
-    </div>
     </form>
   </div>
 </div>

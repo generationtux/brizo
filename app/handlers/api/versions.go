@@ -212,8 +212,5 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// @todo return some sort of content?
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	return
+	jsonResponse(w, version, 200)
 }
