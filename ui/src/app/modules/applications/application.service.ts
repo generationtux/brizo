@@ -18,13 +18,13 @@ export class ApplicationService {
   getApplications(): Observable<Application[]> {
     return this.http.get(this.applicationsIndexUrl, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .catch(this.handleError);
   }
 
   getApplication(uuid: string): Observable<Application> {
     return this.http.get(this.applicationsGetUrl + uuid, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .catch(this.handleError);
   }
 
   createApplication(name: string): Observable<Application> {
@@ -36,7 +36,7 @@ export class ApplicationService {
 
     return this.http.post(this.applicationsCreateUrl, { name }, options)
       .map((res: Response) => res.json() || {})
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .catch(this.handleError);
   }
 
   editApplication(application: Application): Observable<Application> {
@@ -50,6 +50,10 @@ export class ApplicationService {
 
     return this.http.patch(this.applicationsUpdateUrl + application.uuid, data, options)
       .map((res: Response) => res.json() || {})
-      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+      .catch(this.handleError);
+  }
+
+  handleError(error: any) {
+    return Observable.throw(error || "Server error")
   }
 }

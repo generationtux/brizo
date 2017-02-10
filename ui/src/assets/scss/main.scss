@@ -3,7 +3,7 @@
 @import "~font-awesome/css/font-awesome.css";
 
 // annoying blue outline on links
-a:focus, button:focus { outline: none; }
+a:focus, a.btn:focus, button:focus { outline: none; }
 
 // masthead
 #masthead {
@@ -28,5 +28,30 @@ a:focus, button:focus { outline: none; }
   margin-top: 200px;
   .logo {
     margin-bottom: 20px;
+  }
+}
+
+// modals
+.modal {
+  .modal-footer {
+    border-top: none;
+  }
+}
+
+// application list
+.app-list {
+  .app {
+    a.panel {
+      text-align: center;
+      display: block;
+      color: $gray;
+      &:hover {
+        text-decoration: none;
+        & .panel-heading {
+          background: $brand-primary;
+          color: #fff;
+        }
+      }
+    }
   }
 }
