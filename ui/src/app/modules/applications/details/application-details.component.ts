@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Rx';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -14,7 +14,6 @@ import { Pod } from '../../pod.model';
 @Component({
   selector:    'application-details',
   templateUrl: './application-details.html',
-  providers:   [ ApplicationService ],
 })
 
 export class ApplicationDetailsComponent implements OnInit {
@@ -24,7 +23,13 @@ export class ApplicationDetailsComponent implements OnInit {
   private environments: Environment[];
   public submitted: boolean;
 
-  constructor(private applicationService: ApplicationService, private route: ActivatedRoute, private http: Http, private environmentService: EnvironmentService) {}
+  constructor(
+    private applicationService: ApplicationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private http: Http,
+    private environmentService: EnvironmentService
+  ) {}
 
   ngOnInit() {
     this.route.params
@@ -45,14 +50,19 @@ export class ApplicationDetailsComponent implements OnInit {
     });
   }
 
-  save() {
+  createEnvironment() {
     return this.environmentService.createEnvironment(this.createEnvironmentForm.controls['name'].value, this.application.id).subscribe(
+      (response) => (this.onCreateEnvironment(response)),
       err => console.error('There was an error: ' + err),
-      () => (this._complete()),
     )
   }
 
-  update() {
+  onCreateEnvironment(response: any) {
+    (<any>$('#environment-create-modal')).modal('hide');
+    this.router.navigate(['environments', response.uuid]);
+  }
+
+  updateApp() {
     const application = new Application(
       this.application.id,
       this.application.id,
@@ -63,16 +73,14 @@ export class ApplicationDetailsComponent implements OnInit {
     );
 
     this.applicationService.editApplication(application).subscribe(
-      data => {
-        this.application = data;
-      },
+      (response: any) => (this.onUpdateApp(response)),
       err => console.error('There was an error: ' + err),
-      () => (this._complete()),
     )
   }
 
-  _complete() {
-    (<any>$('#environment-create-modal')).modal('hide');
+  onUpdateApp(response: any) {
     (<any>$('#appliction-edit-modal')).modal('hide');
+    this.application = response
   }
+
 }

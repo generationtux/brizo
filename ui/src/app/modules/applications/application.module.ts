@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared.module';
 
-import { ApplicationCreationComponent } from './creation/application-creation.component';
 import { ApplicationDetailsComponent } from './details/application-details.component';
 import { ApplicationListingComponent } from './listing/application-listing.component';
 import { AuthGuard } from '../auth/auth.guard';
@@ -23,13 +22,11 @@ const applicationRoutes: Routes = [
     SharedModule,
   ],
   declarations: [
-    ApplicationCreationComponent,
     ApplicationDetailsComponent,
     ApplicationListingComponent,
   ],
   providers: [ EnvironmentService ],
   exports: [
-    ApplicationCreationComponent,
     ApplicationDetailsComponent,
     ApplicationListingComponent,
     RouterModule,

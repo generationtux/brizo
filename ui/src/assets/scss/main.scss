@@ -5,6 +5,22 @@
 // annoying blue outline on links
 a:focus, a.btn:focus, button:focus { outline: none; }
 
+// type
+.text-default { color: $text-color; }
+
+// page headers
+.page-header {
+  .title-settings {
+    color: $gray-light;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-left: -10px;
+  }
+  .breadcrumb-previous a {
+    color: $gray-light;
+  }
+}
+
 // masthead
 #masthead {
   .navbar {

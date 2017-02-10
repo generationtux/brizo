@@ -13,8 +13,8 @@ import (
 type Environment struct {
 	database.Model
 	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null;unique_index" json:"name"`
-	Slug          string      `gorm:"not null;unique_index" json:"slug"`
+	Name          string      `gorm:"not null" json:"name"`
+	Slug          string      `gorm:"not null" json:"slug"`
 	ApplicationID uint64      `json:"application_id,string"`
 	Application   Application `json:"application,array"`
 	Versions      []Version   `json:"versions,array"`

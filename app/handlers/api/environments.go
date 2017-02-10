@@ -112,10 +112,7 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// @todo return some sort of content?
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	return
+	jsonResponse(w, environment, 200)
 }
 
 // EnvironmentEdit edits an Environment

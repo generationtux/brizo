@@ -1,54 +1,45 @@
 <masthead></masthead>
-<div class="application-details">
-  <div class="contiainer-fluid">
-    <div class="col-md-12">
-      <p><a href="/app">&laquo; Back to Dashboard</a></p>
-    </div>
-    <div class="col-md-6">
-      <h3><a href="">{{ application?.name }}</a></h3>
-      <h4>{{ application?.uuid }}</h4>
-    </div>
-    <div class="col-md-6">
-      <div class="btn-group pull-right" role="group" aria-label="...">
-        <button class="btn btn-default" data-toggle="modal" data-target="#appliction-edit-modal">Edit Application</button>
-        <button class="btn btn-default" data-toggle="modal" data-target="#environment-create-modal">Create Environment</button>
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
+      {{ application?.name }}
+      <a class="btn btn-link title-settings" href="#" data-toggle="modal" data-target="#appliction-edit-modal"><i class="fa fa-cog"></i></a>
+    </h2>
+  </div>
+
+  <div *ngIf="application?.environments.length==0" class="col-md-4 col-md-offset-4 text-center">
+    <h2>No environments yet...</h2>
+    <p>Environments allow you to deploy versions of your app with different configuration.</p>
+    <a class="btn btn-lg btn-default" href="#" data-toggle="modal" data-target="#environment-create-modal">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+
+  <div *ngIf="application?.environments.length>0">
+    <a href="#" class="btn btn-success btn-outline pull-right" data-toggle="modal" data-target="#environment-create-modal">
+      <i class="fa fa-plus"></i> New Environment
+    </a>
+    <h4>Environments</h4>
+    <br>
+
+    <div class="panel panel-default" *ngFor="let environment of application?.environments">
+      <div class="panel-heading">{{ environment.name}}</div>
+      <div class="panel-body">
+        <a [routerLink]="['/environments/', environment.uuid]">
+          Manage environment &gt;
+        </a>
       </div>
-    </div>
-    <div class="col-md-12">
-      <h5>Environments</h5>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th># of Pods</th>
-            <th>Created At</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let environment of environments">
-            <td><a [routerLink]="['/environments/', environment.uuid]">{{ environment.name }}</a></td>
-            <td>n/a</td>
-            <td>{{ environment.created_at | date:'medium' }}</td>
-            <td>{{ environment.updated_at | date:'medium' }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </div>
 
 <div class="modal fade" id="environment-create-modal" tabindex="-1" role="dialog" aria-labelledby="create-environment-model">
   <div class="modal-dialog" role="document">
-    <form [formGroup]="createEnvironmentForm" novalidate (ngSubmit)="save(createEnvironmentForm.name)">
+    <form [formGroup]="createEnvironmentForm" novalidate (ngSubmit)="createEnvironment(createEnvironmentForm.name)">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Create Environment</h4>
-      </div>
       <div class="modal-body">
-          <label for="name">Name</label>
-          <input class="form-control" placeholder="Environment name" name="name" type="text" formControlName="name">
+          <input class="form-control input-lg" placeholder="Production" name="name" type="text" formControlName="name">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -61,19 +52,17 @@
 
 <div class="modal fade" id="appliction-edit-modal" tabindex="-1" role="dialog" aria-labelledby="edit-application-model">
   <div class="modal-dialog" role="document">
-    <form [formGroup]="editApplicationForm" validate (ngSubmit)="update(editApplicationForm.name, editApplicationForm.uuid)">
+    <form [formGroup]="editApplicationForm" validate (ngSubmit)="updateApp(editApplicationForm.name, editApplicationForm.uuid)">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Edit Application</h4>
-      </div>
       <div class="modal-body">
-          <label for="name">Name</label>
-          <input class="form-control" name="name" type="text" formControlName="name" value="{{ application?.name }}">
+          <div class="form-group">
+            <label for="name" class="control-label">Name</label>
+            <input class="form-control input-lg" name="name" type="text" formControlName="name" value="{{ application?.name }}">
+          </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary">Save</button>
       </div>
     </div>
     </form>
