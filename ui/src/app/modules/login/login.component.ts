@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector:       'login',
-    styleUrls:      ['./login.css'],
     templateUrl:    './login.html'
 })
 
