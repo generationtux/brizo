@@ -18,6 +18,7 @@ export class MastheadComponent implements OnInit {
   public createAppForm: FormGroup;
   public submitted: boolean;
   public modalActions: EventEmitter<string>;
+  public user: any;
 
   constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder, private auth: AuthService) {
     this.modalActions = new EventEmitter<string>();
@@ -27,6 +28,7 @@ export class MastheadComponent implements OnInit {
     this.createAppForm = new FormGroup({
         name: new FormControl('', [<any>Validators.required])
     });
+    this.user = this.auth.user();
   }
 
   save() {

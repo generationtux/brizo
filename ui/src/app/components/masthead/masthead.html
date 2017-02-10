@@ -1,5 +1,5 @@
 <div id="masthead">
-  <nav class="navbar navbar-default navbar-inverse navbar-static-top">
+  <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
@@ -17,9 +17,26 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/app/users/invite">Invite User</a></li>
-          <li><a href="" data-toggle="modal" data-target="#create-application-modal">Create Application</a></li>
-          <li><a href="#" (click)="this.logout($event)">Logout</a></li>
+          <li>
+            <a href="" class="active" data-toggle="modal" data-target="#create-application-modal">Apps</a>
+          </li>
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              System <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/app/users/invite">Invite User</a></li>
+            </ul>
+          </li>
+          <li>
+            <a class="dropdown-toggle user-menu" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              <img src="{{ this.user.image() }}">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li class="dropdown-header">{{ this.user.name }}</li>
+              <li><a href="#" (click)="this.logout($event)">Logout</a></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
