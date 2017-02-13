@@ -1,6 +1,24 @@
+<style>
+.previous-versions .version:first-of-type {
+  padding-left: 0
+}
+
+.previous-versions .version:nth-child(3n+1) {
+  padding-left: 0
+}
+</style>
+
 <masthead></masthead>
 <div class="container-fluid">
   <div class="page-header">
+    <div class="btn-group pull-right" role="group" aria-label="...">
+      <a href="#" class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">
+        <i class="fa fa-plus"></i> Config
+      </a>
+      <a href="#" class="btn btn-success btn-outline" data-toggle="modal" data-target="#version-create-modal">
+        <i class="fa fa-plus"></i> New Version
+      </a>
+    </div>
     <h2>
       <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
       <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
@@ -32,36 +50,45 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <h5>Versions</h5>
-      <p *ngIf="versions?.length == 0">
+    <div *ngIf="versions?.length == 0" class="col-md-12">
+      <p>
         <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
       </p>
-      <table *ngIf="versions?.length > 0" class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Replicas</th>
-            <th>Created At</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let version of versions">
-            <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
-            <td>{{ version.image }}</td>
-            <td>{{ version.replicas }}</td>
-            <td>{{ version.created_at | date:'medium'}}</td>
-            <td>{{ version.updated_at | date:'medium'}}</td>
-          </tr>
-        </tbody>
-      </table>
+    </div>
+    <div class="col-md-4">
+      <h3>Current Version</h3>
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a href="">Version Name <i class="fa fa-external-link-square" aria-hidden="true"></i></a>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-6">Image: nginx</div>
+            <div class="col-md-6">Replicas: 5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <h3>Previous Versions</h3>
+      <div *ngIf="versions?.length > 0" class="previous-versions">
+        <div *ngFor="let version of versions" class="version">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a>
+              <span>{{ version.created_at }}</span>
+              <button class="btn btn-xs btn-primary pull-right">Make Current</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="version-create-modal" tabindex="-1" role="dialog" aria-labelledby="create-environment-model">
+<div class="modal fade" id="version-create-modal" tabindex="-1" role="dialog" aria-labelledby="version-create-modal">
   <div class="modal-dialog" role="document">
     <form [formGroup]="createVersionForm" novalidate (ngSubmit)="createVersion(createVersionForm.name, createVersionForm.image, createVersionForm.replicas)">
       <div class="modal-content">
