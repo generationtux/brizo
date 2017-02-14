@@ -1,6 +1,7 @@
 package resources
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -55,6 +56,13 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 		return false, err
 	}
 
+	spec, err := json.Marshal(deployment)
+	if err != nil {
+		client.DeleteDeployment(deployment)
+		return false, err
+	}
+
+	version.Spec = string(spec)
 	persist := db.Create(&version)
 
 	return persist.RowsAffected == 1, persist.Error
@@ -70,7 +78,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		version.Slug,
 	)
 
-	return &v1beta1.Deployment{
+	deployment := &v1beta1.Deployment{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
 			Namespace: "brizo",
@@ -108,6 +116,9 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 			},
 		},
 	}
+
+	v1beta1.SetObjectDefaults_Deployment(deployment)
+	return deployment
 }
 
 // UpdateVersion will update an existing Version
