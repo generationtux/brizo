@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared.module';
 
 import { AuthGuard } from '../auth/auth.guard';
+import { VersionService } from './version.service';
 import { VersionDetailsComponent } from './details/version-details.component';
 import { VersionCreateComponent } from './create/version-create.component';
 
@@ -30,6 +31,9 @@ const versionRoutes: Routes = [
   declarations: [
     VersionDetailsComponent,
     VersionCreateComponent,
+  ],
+  providers: [
+    VersionService,
   ],
   exports: [
     VersionDetailsComponent,
