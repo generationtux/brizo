@@ -6,9 +6,17 @@ import { SharedModule } from '../shared.module';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { VersionDetailsComponent } from './details/version-details.component';
+import { VersionCreateComponent } from './create/version-create.component';
 
 const versionRoutes: Routes = [
-  { path: 'environments/:environment-uuid/versions/:version-uuid', component: VersionDetailsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'environments/:environment-uuid',
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'versions/create', component: VersionCreateComponent, canActivate: [AuthGuard] },
+      { path: 'versions/:version-uuid', component: VersionDetailsComponent, canActivate: [AuthGuard] },
+    ]
+  }
 ];
 
 @NgModule({
@@ -21,9 +29,11 @@ const versionRoutes: Routes = [
   ],
   declarations: [
     VersionDetailsComponent,
+    VersionCreateComponent,
   ],
   exports: [
     VersionDetailsComponent,
+    VersionCreateComponent,
     RouterModule,
   ],
 })
