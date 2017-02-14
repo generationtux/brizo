@@ -24,6 +24,7 @@ type Version struct {
 	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
 	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
 	Environment   Environment `gorm:"not null" json:"environment"`
+	Spec          string      `gorm:"type:json" json:"-"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
