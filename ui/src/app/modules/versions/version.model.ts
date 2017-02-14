@@ -1,3 +1,5 @@
+import { Volume } from '../volumes/volume.model';
+
 export class Version {
   constructor(
     public id:             number,
@@ -7,5 +9,6 @@ export class Version {
     public image:          string,
     public replicas:       number,
     public environment_id: number,
+    public volumes?:        Volume[],
   ){}
 }

@@ -1,0 +1,26 @@
+<form [formGroup]="volumesForm" novalidate (ngSubmit)="save(volumesForm)">
+  <div class="row">
+    <div class="col-sm-12">
+      <p class="text-muted" *ngIf="volumesForm.controls.volumes.length === 0">No volumes for this version</p>
+      <div formArrayName="volumes">
+        <div *ngFor="let volume of volumesForm.controls.volumes.controls; let i=index">
+          <div [formGroupName]="i">
+            <div class="row">
+              <div class="col-sm-11">
+                <volume-form [group]="volumesForm.controls.volumes.controls[i]"></volume-form>
+              </div>
+              <div class="col-sm-1">
+                <button type="button" class="close pull-right" aria-label="Remove" (click)="removeVolume(i)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-default" type="submit">Save Volumes</button>
+      <span>&nbsp;</span>
+      <span class="text-info" role="button" (click)="addVolume()">Add a volume <i class="fa fa-plus"></i></span>
+    </div>
+  </div>
+</form>

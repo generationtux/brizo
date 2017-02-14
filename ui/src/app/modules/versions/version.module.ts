@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared.module';
+import { VolumeModule } from '../volumes/volume.module';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { VersionDetailsComponent } from './details/version-details.component';
@@ -18,6 +19,7 @@ const versionRoutes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(versionRoutes),
     SharedModule,
+    VolumeModule,
   ],
   declarations: [
     VersionDetailsComponent,
