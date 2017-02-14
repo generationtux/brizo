@@ -12,8 +12,8 @@
 <div class="container-fluid">
   <div class="page-header">
     <div class="btn-group pull-right" role="group" aria-label="...">
-      <a href="#" class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">
-        <i class="fa fa-plus"></i> Config
+      <a [routerLink]="['/environments/', environment.uuid, 'configuration']" class="btn btn-default">
+        <i class="fa fa-pencil"></i> Configuration
       </a>
       <a href="#" class="btn btn-success btn-outline" data-toggle="modal" data-target="#version-create-modal">
         <i class="fa fa-plus"></i> New Version

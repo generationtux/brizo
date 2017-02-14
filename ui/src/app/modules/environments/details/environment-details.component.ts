@@ -19,7 +19,7 @@ export class EnvironmentDetailsComponent implements OnInit {
   private editForm: FormGroup;
   private createVersionForm: FormGroup;
   private editing = false;
-  private environment: any;
+  private environment: any = {};
   private application: any = {};
   private versions: Version[];
 

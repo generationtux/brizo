@@ -6,9 +6,11 @@ import { SharedModule } from '../shared.module';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { EnvironmentDetailsComponent } from './details/environment-details.component';
+import { ConfigurationComponent } from './configuration/configuration.component';
 
 const environmentRoutes: Routes = [
   { path: 'environments/:uuid', component: EnvironmentDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'environments/:uuid/configuration', component: ConfigurationComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({
@@ -21,6 +23,7 @@ const environmentRoutes: Routes = [
   ],
   declarations: [
     EnvironmentDetailsComponent,
+    ConfigurationComponent,
   ],
   exports: [
     EnvironmentDetailsComponent,
