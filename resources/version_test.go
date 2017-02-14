@@ -2,6 +2,7 @@ package resources
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"testing"
 
@@ -31,6 +32,7 @@ func TestCanCreateAVersion(t *testing.T) {
 	id := uuid.New()
 	version := Version{
 		Name: "foobar",
+		Slug: "foobar",
 		UUID: id,
 	}
 
@@ -48,10 +50,15 @@ func TestCanCreateAVersion(t *testing.T) {
 	})
 
 	CreateVersion(db, mockClient, &version)
-	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\") VALUES (?,?,?,?,?,?,?)"
+	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\",\"spec\") VALUES (?,?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
+
+	deployment := versionDeploymentDefinition(&version)
+	expectSpec, err := json.Marshal(deployment)
+	assert.Nil(t, err)
+	assert.Equal(t, string(expectSpec), args[7])
 }
 
 func TestVersionDeploymentDefinition(t *testing.T) {
