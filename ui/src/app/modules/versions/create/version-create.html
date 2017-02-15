@@ -3,10 +3,40 @@
 <div class="container-fluid">
   <div class="page-header">
     <h2>
-      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
       <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
       <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
       Deploy new version
     </h2>
   </div>
+
+  <form [formGroup]="versionForm" novalidate (ngSubmit)="createVersion()">
+    <div class="row">
+        <div class="col-sm-5">
+          <h4>Containers</h4>
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" formControlName="name" placeholder="app">
+          </div>
+
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input type="text" name="image" formControlName="image" class="form-control" placeholder="image:latest">
+          </div>
+
+          <div class="form-group">
+            <label for="replicas">Replicas</label>
+            <input type="number" name="replicas" formControlName="replicas" class="form-control">
+          </div>
+
+        </div>
+        <div class="col-sm-4">
+          <h4>Volumes</h4>
+        </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success">Create version</button>
+    </div>
+  </form>
 </div>

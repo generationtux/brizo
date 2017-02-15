@@ -17,6 +17,7 @@ import { VersionService } from '../version.service';
 export class VersionCreateComponent implements OnInit {
   private application: any = {}
   private environment: any = {}
+  private versionForm: FormGroup;
 
   constructor(
     private versionService: VersionService,
@@ -33,10 +34,35 @@ export class VersionCreateComponent implements OnInit {
       data => this.handleEnvironmentData(data),
       err => console.error('There was an error: ' + err)
     );
+
+    this.versionForm = this.formBuilder.group({
+      name: new FormControl('', Validators.required),
+      image: new FormControl('', Validators.required),
+      replicas: new FormControl(1, Validators.required),
+    });
   }
 
   private handleEnvironmentData(data: any) {
     this.environment = data;
     this.application = data.application || {};
+  }
+
+  private createVersion() {
+    let create = this.versionService.createVersion(
+      this.versionForm.controls['name'].value,
+      this.versionForm.controls['image'].value,
+      parseInt(this.versionForm.controls['replicas'].value),
+      this.environment.id,
+      this.environment.uuid
+    );
+
+    create.subscribe(
+      () => (this.onCreateVersion()),
+      err => console.error('There was an error: ' + err)
+    );
+  }
+
+  private onCreateVersion() {
+    this.router.navigate(['/environments', this.environment.uuid]);
   }
 }
