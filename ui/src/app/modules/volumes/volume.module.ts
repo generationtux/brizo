@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared.module';
 
 import { AuthGuard } from '../auth/auth.guard';
-import { VolumeFormComponent } from './form/volume-form.component';
+import { VolumeFormComponent } from './volume-form.component'
 import { VolumeFormGroupComponent } from './form/volume-form-group.component';
 
 const volumeRoutes: Routes = [{
@@ -24,7 +24,7 @@ const volumeRoutes: Routes = [{
     SharedModule,
   ],
   declarations: [
-    VolumeFormComponent,
+    // VolumeFormComponent,
     VolumeFormGroupComponent,
   ],
   exports: [

@@ -2,7 +2,7 @@ import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params } from '@angular/router'
 import { Component, EventEmitter, OnInit } from '@angular/core'
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
 import { Environment } from '../environment.model';
 import { EnvironmentService } from '../environment.service';
@@ -37,6 +37,7 @@ export class EnvironmentDetailsComponent implements OnInit {
       name: new FormControl('', Validators.required),
       image: new FormControl('', Validators.required),
       replicas: new FormControl(0, Validators.required),
+      volumes: this.formBuilder.array([]),
     });
 
     this.route.params
@@ -98,6 +99,7 @@ export class EnvironmentDetailsComponent implements OnInit {
   }
 
   private createVersion() {
+    console.log(this.createVersionForm)
     return this.versionService.createVersion(this.createVersionForm.controls['name'].value,
                                              this.createVersionForm.controls['image'].value,
                                              parseInt(this.createVersionForm.controls['replicas'].value),
@@ -111,5 +113,23 @@ export class EnvironmentDetailsComponent implements OnInit {
   private onCreateVersion(response: any) {
     (<any>$('#create-environment-model')).modal('hide');
     this.versions.push(response);
+  }
+
+  initVolume() {
+    return this.formBuilder.group({
+      name: new FormControl('', Validators.required),
+      type: new FormControl('', Validators.required),
+      source: new FormControl('', Validators.required),
+    });
+  }
+
+  addVolume() {
+    const control = <FormArray>this.createVersionForm.controls['volumes'];
+    control.push(this.initVolume());
+  }
+
+  removeVolume(i: number) {
+    const control = <FormArray>this.createVersionForm.controls['volumes'];
+    control.removeAt(i);
   }
 }

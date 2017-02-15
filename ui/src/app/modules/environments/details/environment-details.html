@@ -33,30 +33,39 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h5>Versions</h5>
-      <p *ngIf="versions?.length == 0">
-        <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
-      </p>
-      <table *ngIf="versions?.length > 0" class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Replicas</th>
-            <th>Created At</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let version of versions">
-            <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
-            <td>{{ version.image }}</td>
-            <td>{{ version.replicas }}</td>
-            <td>{{ version.created_at | date:'medium'}}</td>
-            <td>{{ version.updated_at | date:'medium'}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="versions?.length == 0" class="col-md-4 col-md-offset-4 text-center">
+        <h2>No versions yet...</h2>
+        <p>Version create a deployment of your app with a specific configuration.</p>
+        <a class="btn btn-lg btn-default" href="#" data-toggle="modal" data-target="#version-create-modal">
+          <i class="fa fa-plus"></i>
+        </a>
+      </div>
+      <div *ngIf="versions?.length > 0">
+        <a href="#" class="btn btn-success btn-outline pull-right" data-toggle="modal" data-target="#version-create-modal">
+          <i class="fa fa-plus"></i> New Version
+        </a>
+        <h5>Versions</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Replicas</th>
+              <th>Created At</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let version of versions">
+              <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
+              <td>{{ version.image }}</td>
+              <td>{{ version.replicas }}</td>
+              <td>{{ version.created_at | date:'medium'}}</td>
+              <td>{{ version.updated_at | date:'medium'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -81,6 +90,9 @@
           <div class="form-group">
             <label for="replicas">Replicas</label>
             <input class="form-control" placeholder="1" name="replicas" type="text" formControlName="replicas">
+          </div>
+          <div [formGroupName]="i">
+            <volume [group]="createVersionForm.controls.versions.controls[i]"></volume>
           </div>
         </div>
         <div class="modal-footer">
