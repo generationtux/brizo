@@ -8,8 +8,7 @@ import { EnvironmentService } from '../environment.service'
 
 @Component({
   selector: 'configuration',
-  templateUrl: './configuration.html',
-  providers: [ EnvironmentService ]
+  templateUrl: './configuration.html'
 })
 
 export class ConfigurationComponent {
@@ -33,7 +32,6 @@ export class ConfigurationComponent {
   
   ngAfterViewInit() {
     var i = 1;
-    console.log(i)
     $(".add-btn").click(function() {
       console.log(i)
       $('.addr' + i).html("<td><input name='key" + i + "' type='text' placeholder='KEY' class='form-control' /></td><td><input name='value" + i + "' type='text' placeholder='VALUE' class='form-control' /></td>");

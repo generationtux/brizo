@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCanCreateConfiguration(t *testing.T) {
-	config := Configuration{
+func TestCanCreateEnvironmentConfig(t *testing.T) {
+	config := EnvironmentConfig{
 		Name:          "foo",
 		Value:         "bar",
 		EnvironmentID: 1,
@@ -25,8 +25,8 @@ func TestCanCreateConfiguration(t *testing.T) {
 		return driver.ResultNoRows, nil
 	})
 
-	CreateConfiguration(db, &config)
-	expectQuery := "INSERT INTO \"configurations\" (\"created_at\",\"updated_at\",\"name\",\"value\",\"environment_id\") VALUES (?,?,?,?,?)"
+	CreateEnvironmentConfig(db, &config)
+	expectQuery := "INSERT INTO \"environment_configs\" (\"created_at\",\"updated_at\",\"name\",\"value\",\"environment_id\") VALUES (?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, "foo", args[2])
 	assert.Equal(t, "bar", args[3])
