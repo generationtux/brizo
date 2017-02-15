@@ -10,7 +10,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <form [formGroup]="createConfigForm" novalidate (ngSubmit)="createNewConfig(createConfigForm.name, createConfigForm.value)">
+      <form class="config-form" [formGroup]="createConfigForm" novalidate (ngSubmit)="createNewConfig(createConfigForm.name, createConfigForm.value)">
       <table class="table config-table">
         <thead>
           <tr>

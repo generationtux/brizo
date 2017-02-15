@@ -55,6 +55,20 @@ export class ConfigurationComponent {
   }
   
   createNewConfig() {
+    console.log();
+    
+    var data = $('.config-form').serializeArray();
+    
+    for(var i=0; i < data.length; i++) {
+      console.log(data);
+    }
+    
+    /*
+    $($('.config-form').serializeArray()).each(function(index, obj) {
+      console.log(obj.name);
+      console.log(obj.value);
+    });
+    */
     return this.configService.createConfiguration(this.createConfigForm.controls['name'].value, this.createConfigForm.controls['value'].value, this.environment.id, this.environment.uuid).subscribe(
       response => console.log('configuration created'),
       err => console.error(err),
