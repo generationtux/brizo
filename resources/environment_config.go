@@ -10,7 +10,7 @@ type EnvironmentConfig struct {
 	database.Model
 	Name          string      `gorm:"not null" json:"name"`
 	Value         string      `gorm:"not null" json:"value"`
-	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
+	EnvironmentID uint64      `gorm:"not null" json:"environment_id"`
 	Environment   Environment `gorm:"not null" json:"environment"`
 }
 
