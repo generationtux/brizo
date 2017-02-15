@@ -35,7 +35,7 @@
     <div class="col-md-12">
       <h5>Versions</h5>
       <p *ngIf="versions?.length == 0">
-        <button class="btn btn-default" data-toggle="modal" data-target="#version-create-modal">Create Version</button>
+        <a class="btn btn-default" [routerLink]="['/environments', environment.uuid, 'versions', 'create']">Create Version</a>
       </p>
       <table *ngIf="versions?.length > 0" class="table">
         <thead>

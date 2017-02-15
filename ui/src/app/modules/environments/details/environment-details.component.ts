@@ -17,7 +17,7 @@ import { VersionService } from '../../versions/version.service';
 export class EnvironmentDetailsComponent implements OnInit {
   private editForm: FormGroup;
   private editing = false;
-  private environment: any;
+  private environment: any = {};
   private application: any = {};
   private versions: Version[];
 
