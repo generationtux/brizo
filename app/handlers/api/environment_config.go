@@ -10,6 +10,7 @@ import (
 	"github.com/generationtux/brizo/resources"
 )
 
+// EnvironmentConfigCreate endpoint for creating config entry
 func EnvironmentConfigCreate(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
