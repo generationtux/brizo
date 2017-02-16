@@ -160,7 +160,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	client, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
-		http.Error(w, "unable to reach Kubernetes", http.StatusInternalServerError)
+		jsonErrorResponse(w, "Kube connection error", http.StatusInternalServerError)
 		return
 	}
 
@@ -168,31 +168,28 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
-		return
-	}
-
-	var createForm struct {
-		Name     string
-		Image    string
-		Replicas int
-	}
-	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&createForm)
-	defer r.Body.Close()
-	if err != nil {
-		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jsonErrorResponse(w, "Database connection error", http.StatusInternalServerError)
 		return
 	}
 
 	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
 	if err != nil {
-		log.Printf("Error when retrieving environment: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when retrieving environment")
-		jsonutil.RespondJSONError(w, jre)
+		jsonErrorResponse(w, "Environment not found", http.StatusNotFound)
+		return
+	}
+
+	var createForm struct {
+		Name         string
+		Image        string
+		Replicas     int
+		Args         []string
+		PullPolicy   string
+		Ports        []map[string]interface{}
+		VolumeMounts []map[string]string
+	}
+	err = jsonRequest(r, &createForm)
+	if err != nil {
+		jsonErrorResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -203,6 +200,10 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		Replicas:      createForm.Replicas,
 		EnvironmentID: environment.ID,
 		Environment:   *environment,
+		PullPolicy:    createForm.PullPolicy,
+		Args:          createForm.Args,
+		Ports:         createForm.Ports,
+		VolumeMounts:  createForm.VolumeMounts,
 	}
 	_, err = resources.CreateVersion(db, client, &version)
 	// @todo handle failed save w/out error?

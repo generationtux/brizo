@@ -18,14 +18,18 @@ import (
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null" json:"name"`
-	Slug          string      `gorm:"not null" json:"slug"`
-	Image         string      `gorm:"not null" json:"image"`
-	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
-	Environment   Environment `gorm:"not null" json:"environment"`
-	Spec          string      `gorm:"type:json" json:"-"`
+	UUID          string                   `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name          string                   `gorm:"not null" json:"name"`
+	Slug          string                   `gorm:"not null" json:"slug"`
+	Image         string                   `gorm:"not null" json:"image"`
+	Replicas      int                      `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
+	EnvironmentID uint                     `gorm:"not null" json:"environment_id"`
+	Environment   Environment              `gorm:"not null" json:"environment"`
+	Spec          string                   `gorm:"type:json" json:"-"`
+	VolumeMounts  []map[string]string      `gorm:"-"`
+	PullPolicy    string                   `gorm:"-"`
+	Args          []string                 `gorm:"-"`
+	Ports         []map[string]interface{} `gorm:"-"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -78,6 +82,16 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		version.Slug,
 	)
 
+	var policy v1.PullPolicy
+	switch version.PullPolicy {
+	case "Always":
+		policy = v1.PullAlways
+	case "IfNotPresent":
+		policy = v1.PullIfNotPresent
+	case "Never":
+		policy = v1.PullNever
+	}
+
 	deployment := &v1beta1.Deployment{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,
@@ -108,8 +122,9 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{
 						v1.Container{
-							Name:  "app",
-							Image: version.Image,
+							Name:            "app",
+							Image:           version.Image,
+							ImagePullPolicy: policy,
 						},
 					},
 				},
