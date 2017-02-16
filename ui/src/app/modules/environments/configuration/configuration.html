@@ -11,24 +11,36 @@
   <div class="row">
     <div class="col-md-12">
       <form class="config-form" [formGroup]="createConfigForm" novalidate (ngSubmit)="createNewConfig(createConfigForm.name, createConfigForm.value)">
-      <table class="table config-table">
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="addr0">
-            <td><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" /></td>
-            <td><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></td>
-          </tr>
-          <tr class="addr1"></tr>
-        </tbody>
-      </table>
-      <button class="btn btn-default add-btn"><i class="fa fa-plus"></i> Add Row</button>
-      <button class="btn btn-default del-btn"><i class="fa fa-minus"></i> Delete Row</button>
-      <button class="btn btn-primary pull-right" type="submit">Save</button>
+      <div class="form-group">
+        <table class="table config-table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody *ngIf="configuration.length == 0">
+            <tr class="addr0">
+              <td><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" /></td>
+              <td><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></td>
+              <td><button class="btn btn-danger" type="button"><i class="fa fa-times"></i></button></td>
+            </tr>
+            <tr class="addr1"></tr>
+          </tbody>
+          <tbody *ngIf="configuration.length > 0">
+            <tr *ngFor="let config of configuration; let i = index;" class="addr{{i}}">
+              <td><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" value="{{ config.name }}" /></td>
+              <td><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" value="{{ config.value }}" /></td>
+              <td><button class="btn btn-danger" type="button"><i class="fa fa-times"></i></button></td>
+            </tr>
+            <tr class="addr{{ configuration.length }}"></tr>
+          </tbody>
+        </table>
+        <button class="btn btn-default add-btn" type="button"><i class="fa fa-plus"></i> Add Row</button>
+        <button class="btn btn-default del-btn" type="button"><i class="fa fa-minus"></i> Delete Row</button>
+        <button class="btn btn-primary pull-right" type="submit">Save</button>
+      </div>
       </form>
     </div>
   </div>

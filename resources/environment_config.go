@@ -8,10 +8,10 @@ import (
 // EnvironmentConfig as defined by Brizo.
 type EnvironmentConfig struct {
 	database.Model
-	Name          string      `gorm:"not null" json:"name"`
-	Value         string      `gorm:"not null" json:"value"`
-	EnvironmentID uint64      `gorm:"not null" json:"environment_id"`
-	Environment   Environment `gorm:"not null" json:"environment"`
+	Name            string      `gorm:"not null" json:"name"`
+	Value           string      `gorm:"not null" json:"value"`
+	EnvironmentUUID string      `gorm:"not null" json:"environment_uuid"`
+	Environment     Environment `gorm:"not null" json:"environment"`
 }
 
 // CreateEnvironmentConfig will persist a new configuration into database
@@ -24,7 +24,7 @@ func CreateEnvironmentConfig(db *gorm.DB, config *EnvironmentConfig) (bool, erro
 func GetEnvironmentConfig(db *gorm.DB, uuid string) (*[]EnvironmentConfig, error) {
 	var config []EnvironmentConfig
 
-	if err := db.Preload("Configuaration.Environment").Where("environment_uuid = ?", uuid).Find(&config).Error; err != nil {
+	if err := db.Where("environment_uuid = ?", uuid).Find(&config).Error; err != nil {
 		return &config, err
 	}
 

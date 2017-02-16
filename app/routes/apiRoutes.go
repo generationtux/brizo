@@ -35,7 +35,8 @@ func authAPIRoutes() *bone.Mux {
 	router.PatchFunc("/environments/:environment-uuid/versions/:version-uuid", api.VersionUpdate)
 
 	// environment config
-	router.PostFunc("/environments/:environment-uuid/configuration", api.EnvironmentConfigCreate)
+	router.GetFunc("/environments/:environment-uuid/configuration", api.GetEnvironmentConfig)
+	router.PostFunc("/environments/:environment-uuid/configuration", api.CreateEnvironmentConfig)
 
 	return router
 }

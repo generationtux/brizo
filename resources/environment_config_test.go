@@ -11,9 +11,9 @@ import (
 
 func TestCanCreateEnvironmentConfig(t *testing.T) {
 	config := EnvironmentConfig{
-		Name:          "foo",
-		Value:         "bar",
-		EnvironmentID: 1,
+		Name:            "foo",
+		Value:           "bar",
+		EnvironmentUUID: "1",
 	}
 	db, _ := gorm.Open("testdb", "")
 	var query string

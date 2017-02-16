@@ -4,14 +4,41 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
+	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
 	"github.com/generationtux/brizo/resources"
+	"github.com/go-zoo/bone"
 )
 
-// EnvironmentConfigCreate endpoint for creating config entry
-func EnvironmentConfigCreate(w http.ResponseWriter, r *http.Request) {
+// GetEnvironmentConfig endpoint for getting configuration
+func GetEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	id := bone.GetValue(r, "environment-uuid")
+	config, err := resources.GetEnvironmentConfig(db, id)
+	if err != nil {
+		log.Printf("Error when retrieving configuration: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving configuration")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	w.Header().Set("content-type", "application/json")
+	json.NewEncoder(w).Encode(config)
+}
+
+// CreateEnvironmentConfig endpoint for creating config entry
+func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -21,9 +48,9 @@ func EnvironmentConfigCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var createForm struct {
-		Name          string
-		Value         string
-		EnvironmentID string
+		Name            string
+		Value           string
+		EnvironmentUUID string
 	}
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&createForm)
@@ -34,11 +61,11 @@ func EnvironmentConfigCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	envID, _ := strconv.ParseUint(createForm.EnvironmentID, 10, 0)
+	//envID, _ := strconv.ParseUint(createForm.EnvironmentID, 10, 0)
 	envConfg := resources.EnvironmentConfig{
-		Name:          createForm.Name,
-		Value:         createForm.Value,
-		EnvironmentID: envID,
+		Name:            createForm.Name,
+		Value:           createForm.Value,
+		EnvironmentUUID: createForm.EnvironmentUUID,
 	}
 
 	_, err = resources.CreateEnvironmentConfig(db, &envConfg)
