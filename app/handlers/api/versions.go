@@ -2,15 +2,16 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
-	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
+	"github.com/mholt/binding"
 )
 
 // VersionIndex provides a listing of all Versions
@@ -155,30 +156,39 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+type VersionCreateJson struct {
+	Name     string `json:"name"`
+	Image    string `json:"image"`
+	Replicas int    `json:"replicas"`
+	Volumes  []struct {
+		Name   string `json:"name"`
+		Type   string `json:"type"`
+		Source string `json:"source"`
+	} `json:"volumes"`
+	EnvironmentID string `json:"environment_id"`
+}
+
+func (vc *VersionCreateJson) FieldMap(r *http.Request) binding.FieldMap {
+	return binding.FieldMap{
+		&vc.Name:          "name",
+		&vc.Image:         "image",
+		&vc.Replicas:      "replicas",
+		&vc.EnvironmentID: "environment_id",
+	}
+}
+
 // VersionCreate creates a new Version
 func VersionCreate(w http.ResponseWriter, r *http.Request) {
-	client, err := kube.New()
-	if err != nil {
-		log.Printf("Kube client error: '%s'\n", err)
-		http.Error(w, "unable to reach Kubernetes", http.StatusInternalServerError)
-		return
-	}
-
-	db, err := database.Connect()
-	defer db.Close()
-	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
-		return
-	}
-
+	fmt.Fprintf(w, "%#v\n", r.Body)
 	var createForm struct {
-		Name     string
-		Image    string
-		Replicas int
+		EnvironmentID int
+		Name          string
+		Image         string
+		Replicas      int
+		Volumes       []string
 	}
 	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&createForm)
+	err := decoder.Decode(&createForm)
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
@@ -186,31 +196,62 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
-	if err != nil {
-		log.Printf("Error when retrieving environment: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when retrieving environment")
-		jsonutil.RespondJSONError(w, jre)
-		return
-	}
+	fmt.Fprintf(w, "%#v\n", createForm)
 
-	version := resources.Version{
-		Name:          createForm.Name,
-		Slug:          slugify.Slugify(createForm.Name),
-		Image:         createForm.Image,
-		Replicas:      createForm.Replicas,
-		EnvironmentID: environment.ID,
-		Environment:   *environment,
-	}
-	_, err = resources.CreateVersion(db, client, &version)
-	// @todo handle failed save w/out error?
-	if err != nil {
-		log.Printf("Error when retrieving version: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving version", http.StatusInternalServerError)
-		return
-	}
-
-	jsonResponse(w, version, 200)
+	// client, err := kube.New()
+	// if err != nil {
+	// 	log.Printf("Kube client error: '%s'\n", err)
+	// 	http.Error(w, "unable to reach Kubernetes", http.StatusInternalServerError)
+	// 	return
+	// }
+	//
+	// db, err := database.Connect()
+	// defer db.Close()
+	// if err != nil {
+	// 	log.Printf("Database error: '%s'\n", err)
+	// 	http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+	// 	return
+	// }
+	//
+	// var createForm struct {
+	// 	Name     string
+	// 	Image    string
+	// 	Replicas int
+	// }
+	// decoder := json.NewDecoder(r.Body)
+	// err = decoder.Decode(&createForm)
+	// defer r.Body.Close()
+	// if err != nil {
+	// 	log.Printf("decoding error: '%s'\n", err)
+	// 	http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+	// 	return
+	// }
+	//
+	// environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
+	// if err != nil {
+	// 	log.Printf("Error when retrieving environment: '%s'\n", err)
+	// 	jre := jsonutil.NewJSONResponseError(
+	// 		http.StatusInternalServerError,
+	// 		"there was an error when retrieving environment")
+	// 	jsonutil.RespondJSONError(w, jre)
+	// 	return
+	// }
+	//
+	// version := resources.Version{
+	// 	Name:          createForm.Name,
+	// 	Slug:          slugify.Slugify(createForm.Name),
+	// 	Image:         createForm.Image,
+	// 	Replicas:      createForm.Replicas,
+	// 	EnvironmentID: environment.ID,
+	// 	Environment:   *environment,
+	// }
+	// _, err = resources.CreateVersion(db, client, &version)
+	// // @todo handle failed save w/out error?
+	// if err != nil {
+	// 	log.Printf("Error when retrieving version: '%s'\n", err)
+	// 	http.Error(w, "there was an error when retrieving version", http.StatusInternalServerError)
+	// 	return
+	// }
+	//
+	// jsonResponse(w, version, 200)
 }

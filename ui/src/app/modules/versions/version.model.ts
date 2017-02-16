@@ -1,4 +1,4 @@
-import { Volume } from '../volumes/volume.model';
+import { Volume } from './volume.model';
 
 export class Version {
   constructor(
@@ -9,6 +9,6 @@ export class Version {
     public image:          string,
     public replicas:       number,
     public environment_id: number,
-    public volumes?:        Volume[],
+    public volumes?:       Volume,
   ){}
 }

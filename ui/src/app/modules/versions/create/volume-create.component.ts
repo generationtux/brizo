@@ -3,10 +3,9 @@ import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'volume',
-    templateUrl: 'volume-form.html',
+    templateUrl: 'volume-create.html',
 })
-export class VolumeFormComponent {
+export class VolumeCreateComponent {
     @Input('group')
-
     public volumeForm: FormGroup;
 }

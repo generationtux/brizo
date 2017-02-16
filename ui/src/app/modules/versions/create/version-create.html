@@ -1,0 +1,62 @@
+<masthead></masthead>
+
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
+      Deploy new version
+    </h2>
+  </div>
+
+  <form [formGroup]="versionForm" novalidate (ngSubmit)="createVersion(versionForm)">
+    <div class="row">
+        <div class="col-sm-6">
+          <h4>Containers</h4>
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" formControlName="name" placeholder="app">
+          </div>
+
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input type="text" name="image" formControlName="image" class="form-control" placeholder="image:latest">
+          </div>
+
+          <div class="form-group">
+            <label for="replicas">Replicas</label>
+            <input type="number" name="replicas" formControlName="replicas" class="form-control">
+          </div>
+
+        </div>
+        <!-- volume form creation -->
+        <div class="col-sm-6">
+          <h4>Volumes</h4>
+          <div formArrayName="volumes">
+            <div *ngFor="let volume of versionForm.controls.volumes.controls; let i=index">
+              <div>
+                <div class="row">
+                  <div class="col-sm-11" [formGroupName]="i">
+                    <volume [group]="versionForm.controls.volumes.controls[i]"></volume>
+                  </div>
+                  <div class="col-sm-1">
+                    <button type="button" class="close pull-right" aria-label="Remove" (click)="removeVolume(i)">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="text-info" role="button" (click)="addVolume()">Add a volume <i class="fa fa-plus"></i></span>
+        </div>
+    </div>
+
+    <pre>{{versionForm.value | json}}</pre>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success">Create version</button>
+    </div>
+  </form>
+</div>

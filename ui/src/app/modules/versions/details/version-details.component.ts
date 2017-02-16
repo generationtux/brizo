@@ -12,7 +12,6 @@ import { VersionService } from '../version.service';
 @Component({
   selector:    'version',
   templateUrl: './version-details.html',
-  providers:   [ EnvironmentService, VersionService ],
 })
 
 export class VersionDetailsComponent implements OnInit {
