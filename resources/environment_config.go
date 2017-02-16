@@ -16,6 +16,9 @@ type EnvironmentConfig struct {
 
 // CreateEnvironmentConfig will persist a new configuration into database
 func CreateEnvironmentConfig(db *gorm.DB, config *EnvironmentConfig) (bool, error) {
+	// @TODO We need to handle duplicates. Adding a unique_index between the name,
+	// value, and environment_uuid columns or doing a lookup before insert are two
+	// possibilities.
 	persist := db.Create(&config)
 	return persist.RowsAffected == 1, persist.Error
 }

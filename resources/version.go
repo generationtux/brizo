@@ -47,8 +47,8 @@ func AllVersions(db *gorm.DB) ([]Version, error) {
 }
 
 // CreateVersion will deploy a new version Brizo
-func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
-	deployment := versionDeploymentDefinition(version)
+func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version, config *[]EnvironmentConfig) (bool, error) {
+	deployment := versionDeploymentDefinition(version, *config)
 	err := client.CreateDeployment(deployment)
 	if err != nil {
 		return false, err
@@ -59,8 +59,15 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 	return persist.RowsAffected == 1, persist.Error
 }
 
+func buildEnvironmentConfig(config EnvironmentConfig) v1.EnvVar {
+	return v1.EnvVar{
+		Name:  config.Name,
+		Value: config.Value,
+	}
+}
+
 // versionDeploymentDefinition builds a deployment spec for the provided version
-func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
+func versionDeploymentDefinition(version *Version, configs []EnvironmentConfig) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v-%v",
@@ -68,6 +75,11 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		version.Environment.Slug,
 		version.Slug,
 	)
+
+	var envVars []v1.EnvVar
+	for index := 0; index < len(configs); index++ {
+		envVars = append(envVars, buildEnvironmentConfig(configs[index]))
+	}
 
 	return &v1beta1.Deployment{
 		ObjectMeta: v1.ObjectMeta{
@@ -101,6 +113,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 						v1.Container{
 							Name:  "app",
 							Image: version.Image,
+							Env:   envVars,
 						},
 					},
 				},
