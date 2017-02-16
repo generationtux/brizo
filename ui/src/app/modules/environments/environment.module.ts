@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared.module';
-import { VolumeModule } from '../volumes/volume.module';
 
 import { AuthGuard } from '../auth/auth.guard';
 import { EnvironmentDetailsComponent } from './details/environment-details.component';

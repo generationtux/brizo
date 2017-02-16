@@ -124,8 +124,6 @@ func versionDeploymentDefinition(version *Version, volumes []Volume) *v1beta1.De
 		k8sVolumes = append(k8sVolumes, convertVolume(volumes[index]))
 	}
 
-	fmt.Printf("\n\n\nVolumes:\n%#v\n\n\n", k8sVolumes)
-
 	deployment := &v1beta1.Deployment{
 		ObjectMeta: v1.ObjectMeta{
 			Name:      name,

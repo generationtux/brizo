@@ -44,7 +44,6 @@ func New() *Application {
 		&resources.Application{},
 		&resources.Environment{},
 		&resources.Version{},
-		&resources.Volume{},
 	}
 
 	return brizo
