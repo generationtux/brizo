@@ -37,26 +37,31 @@
       <p *ngIf="versions?.length == 0">
         <a class="btn btn-default" [routerLink]="['/environments', environment.uuid, 'versions', 'create']">Create Version</a>
       </p>
-      <table *ngIf="versions?.length > 0" class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Replicas</th>
-            <th>Created At</th>
-            <th>Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let version of versions">
-            <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
-            <td>{{ version.image }}</td>
-            <td>{{ version.replicas }}</td>
-            <td>{{ version.created_at | date:'medium'}}</td>
-            <td>{{ version.updated_at | date:'medium'}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="versions?.length > 0">
+        <a href="#" class="btn btn-success btn-outline pull-right" [routerLink]="['/environments', environment.uuid, 'versions', 'create']">
+          <i class="fa fa-plus"></i> Create Version
+        </a>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Image</th>
+              <th>Replicas</th>
+              <th>Created At</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let version of versions">
+              <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
+              <td>{{ version.image }}</td>
+              <td>{{ version.replicas }}</td>
+              <td>{{ version.created_at | date:'medium'}}</td>
+              <td>{{ version.updated_at | date:'medium'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
