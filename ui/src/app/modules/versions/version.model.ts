@@ -1,3 +1,5 @@
+import { Volume } from './volume.model';
+
 export class Version {
   public uuid: string;
   public name: string;
@@ -8,6 +10,7 @@ export class Version {
   public ports: VersionPort[];
   public pullPolicy: string;
   public environment_uuid: string;
+  public volumes: Volume[];
 
   constructor(props: any = {}) {
     Object.assign(this, props);

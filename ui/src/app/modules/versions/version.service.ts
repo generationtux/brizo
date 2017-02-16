@@ -25,7 +25,8 @@ export class VersionService {
     let data = {
       name: version.name,
       image: version.image,
-      replicas: version.replicas
+      replicas: version.replicas,
+      volumes: version.volumes,
     }
 
     return this.http.post(url, data, options)
