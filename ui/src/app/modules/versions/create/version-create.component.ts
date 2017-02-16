@@ -39,6 +39,9 @@ export class VersionCreateComponent implements OnInit {
       name: new FormControl('', Validators.required),
       image: new FormControl('', Validators.required),
       replicas: new FormControl(1, Validators.required),
+      pullPolicy: new FormControl('', Validators.required),
+      args: new FormControl(),
+      ports: new FormControl(),
     });
   }
 
@@ -48,15 +51,14 @@ export class VersionCreateComponent implements OnInit {
   }
 
   private createVersion() {
-    let create = this.versionService.createVersion(
-      this.versionForm.controls['name'].value,
-      this.versionForm.controls['image'].value,
-      parseInt(this.versionForm.controls['replicas'].value),
-      this.environment.id,
-      this.environment.uuid
-    );
+    let version = new Version({
+      name: this.versionForm.controls['name'].value,
+      image: this.versionForm.controls['image'].value,
+      replicas: parseInt(this.versionForm.controls['replicas'].value),
+      environment_uuid: this.environment.uuid,
+    });
 
-    create.subscribe(
+    this.versionService.createVersion(version).subscribe(
       () => (this.onCreateVersion()),
       err => console.error('There was an error: ' + err)
     );

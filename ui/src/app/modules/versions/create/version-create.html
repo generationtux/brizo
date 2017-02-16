@@ -11,13 +11,27 @@
 
   <form [formGroup]="versionForm" novalidate (ngSubmit)="createVersion()">
     <div class="row">
-        <div class="col-sm-5">
-          <h4>Containers</h4>
+      <div class="col-sm-5">
+          <h4>Configure</h4>
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" name="name" class="form-control" formControlName="name" placeholder="app">
+            <input type="text" name="name" class="form-control" formControlName="name" placeholder="1.2">
           </div>
+
+          <div class="form-group">
+            <label for="replicas">Replicas</label>
+            <input type="number" name="replicas" formControlName="replicas" class="form-control">
+          </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-5">
+          <h4>Containers</h4>
+
 
           <div class="form-group">
             <label for="image">Image</label>
@@ -25,8 +39,26 @@
           </div>
 
           <div class="form-group">
-            <label for="replicas">Replicas</label>
-            <input type="number" name="replicas" formControlName="replicas" class="form-control">
+            <label for="image">Pull policy</label>
+            <select class="form-control" name="pullPolicy" formControlName="pullPolicy">
+              <option value="Always" selected>Always</option>
+              <option value="NotPresent">If not present</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="args">
+              Args <small>"arg1", "arg2", ...</small>
+            </label>
+            <input type="text" name="args" formControlName="args" class="form-control" placeholder="">
+          </div>
+
+          <div class="form-group">
+            <label for="ports">Ports</label>
+          </div>
+
+          <div class="form-group">
+            <label for="ports">Mount volumes</label>
           </div>
 
         </div>
