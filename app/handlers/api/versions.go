@@ -11,6 +11,7 @@ import (
 	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
+	"github.com/mholt/binding"
 )
 
 // VersionIndex provides a listing of all Versions
@@ -155,8 +156,31 @@ func VersionUpdate(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+type versionCreateJSON struct {
+	Name          string `json:"name"`
+	Image         string `json:"image"`
+	Replicas      int    `json:"replicas"`
+	Volumes       []resources.Volume
+	EnvironmentID string `json:"environment_id"`
+}
+
+func (vc *versionCreateJSON) FieldMap(r *http.Request) binding.FieldMap {
+	return binding.FieldMap{
+		&vc.Name:          "name",
+		&vc.Image:         "image",
+		&vc.Replicas:      "replicas",
+		&vc.EnvironmentID: "environment_id",
+	}
+}
+
 // VersionCreate creates a new Version
 func VersionCreate(w http.ResponseWriter, r *http.Request) {
+	createVersionJSON := new(versionCreateJSON)
+	errs := binding.Bind(r, createVersionJSON)
+	if errs.Handle(w) {
+		return
+	}
+
 	client, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
@@ -172,20 +196,6 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var createForm struct {
-		Name     string
-		Image    string
-		Replicas int
-	}
-	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&createForm)
-	defer r.Body.Close()
-	if err != nil {
-		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
-		return
-	}
-
 	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
 	if err != nil {
 		log.Printf("Error when retrieving environment: '%s'\n", err)
@@ -197,14 +207,14 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	version := resources.Version{
-		Name:          createForm.Name,
-		Slug:          slugify.Slugify(createForm.Name),
-		Image:         createForm.Image,
-		Replicas:      createForm.Replicas,
+		Name:          createVersionJSON.Name,
+		Slug:          slugify.Slugify(createVersionJSON.Name),
+		Image:         createVersionJSON.Image,
+		Replicas:      createVersionJSON.Replicas,
 		EnvironmentID: environment.ID,
 		Environment:   *environment,
 	}
-	_, err = resources.CreateVersion(db, client, &version)
+	_, err = resources.CreateVersion(db, client, &version, createVersionJSON.Volumes)
 	// @todo handle failed save w/out error?
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)

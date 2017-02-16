@@ -15,6 +15,13 @@ import (
 	metav1 "k8s.io/client-go/pkg/apis/meta/v1"
 )
 
+// Volume as defined by Brizo.
+type Volume struct {
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	Source string `json:"source"`
+}
+
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
@@ -49,8 +56,14 @@ func AllVersions(db *gorm.DB) ([]Version, error) {
 }
 
 // CreateVersion will deploy a new version Brizo
-func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
-	deployment := versionDeploymentDefinition(version)
+func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version, volumes []Volume) (bool, error) {
+	deployment := versionDeploymentDefinition(version, volumes)
+	//
+	// fmt.Printf("\n\nDeployment:\n%v\n\n", deployment)
+	// fmt.Printf("\n\nDeployment:\n%v\n\n", volumes)
+	//
+	// return false, nil
+
 	err := client.CreateDeployment(deployment)
 	if err != nil {
 		return false, err
@@ -68,8 +81,36 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 	return persist.RowsAffected == 1, persist.Error
 }
 
+func convertVolume(volume Volume) v1.Volume {
+	var k8sVol v1.Volume
+	switch volume.Type {
+	case "Empty Directory":
+		k8sVol = v1.Volume{
+			Name: volume.Name,
+			VolumeSource: v1.VolumeSource{
+				EmptyDir: &v1.EmptyDirVolumeSource{
+					Medium: v1.StorageMediumDefault,
+				},
+			},
+		}
+	case "Secret":
+		k8sVol = v1.Volume{
+			Name: volume.Name,
+			VolumeSource: v1.VolumeSource{
+				Secret: &v1.SecretVolumeSource{
+					SecretName: volume.Source,
+				},
+			},
+		}
+	default:
+		// @TODO unsupported volume type
+	}
+
+	return k8sVol
+}
+
 // versionDeploymentDefinition builds a deployment spec for the provided version
-func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
+func versionDeploymentDefinition(version *Version, volumes []Volume) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v-%v",
@@ -77,6 +118,11 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		version.Environment.Slug,
 		version.Slug,
 	)
+
+	var k8sVolumes []v1.Volume
+	for index := 0; index < len(volumes); index++ {
+		k8sVolumes = append(k8sVolumes, convertVolume(volumes[index]))
+	}
 
 	deployment := &v1beta1.Deployment{
 		ObjectMeta: v1.ObjectMeta{
@@ -112,6 +158,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 							Image: version.Image,
 						},
 					},
+					Volumes: k8sVolumes,
 				},
 			},
 		},
