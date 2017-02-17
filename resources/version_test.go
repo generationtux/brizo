@@ -17,12 +17,11 @@ import (
 
 func TestCreateVersionDoesNotStoreWhenKubeFails(t *testing.T) {
 	version := &Version{Name: "foo"}
-	nilConfig := &[]EnvironmentConfig{}
 	mockClient := new(mockKubeClient)
 	mockClient.On("CreateDeployment", mock.Anything).Return(errors.New("foo error"))
 
 	db, _ := gorm.Open("testdb", "")
-	result, err := CreateVersion(db, mockClient, version, nilConfig)
+	result, err := CreateVersion(db, mockClient, version)
 	assert.False(t, result)
 	assert.Equal(t, "foo error", err.Error())
 
@@ -37,7 +36,6 @@ func TestCanCreateAVersion(t *testing.T) {
 		UUID: id,
 	}
 
-	nilConfig := []EnvironmentConfig{}
 	mockClient := new(mockKubeClient)
 	mockClient.On("CreateDeployment", mock.Anything).Return(nil)
 
@@ -64,7 +62,6 @@ func TestCanCreateAVersion(t *testing.T) {
 }
 
 func TestVersionDeploymentDefinition(t *testing.T) {
-	nilConfig := []EnvironmentConfig{}
 	app := Application{Slug: "my-app", UUID: "app-uuid123"}
 	environment := Environment{Slug: "dev", UUID: "env-uuid123"}
 	environment.Application = app
