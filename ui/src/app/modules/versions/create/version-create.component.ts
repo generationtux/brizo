@@ -17,6 +17,7 @@ export class VersionCreateComponent implements OnInit {
   public version: Version;
   private application: any = {}
   private environment: any = {}
+  private selectedVolumeMount: string;
 
   constructor(
     private versionService: VersionService,
@@ -77,7 +78,22 @@ export class VersionCreateComponent implements OnInit {
     this.version.ports.splice(i, 1);
   }
 
-  private addVolumeMount(name: string) {
-    this.version.volumeMounts.push(new VolumeMount({name}));
+  private addArg() {
+    this.version.args.push("");
+  }
+
+  private removeArg(i: number) {
+    this.version.args.splice(i, 1);
+  }
+
+  private addVolumeMount() {
+    let mount = new VolumeMount({
+      name: this.selectedVolumeMount,
+    });
+    this.version.volumeMounts.push(mount);
+  }
+
+  private removeVolumeMount(i: number) {
+    this.version.volumeMounts.splice(i, 1);
   }
 }
