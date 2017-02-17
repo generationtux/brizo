@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
@@ -61,7 +62,6 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//envID, _ := strconv.ParseUint(createForm.EnvironmentID, 10, 0)
 	envConfg := resources.EnvironmentConfig{
 		Name:            createForm.Name,
 		Value:           createForm.Value,
@@ -77,4 +77,33 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonResponse(w, envConfg, 200)
+}
+
+// DeleteEnvironmentConfig endpoint for deleting config entry
+func DeleteEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		return
+	}
+
+	var deleteForm struct {
+		configID string
+	}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&deleteForm)
+	defer r.Body.Close()
+	if err != nil {
+		log.Printf("decoding error: '%s'\n", err)
+		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		return
+	}
+
+	configID, _ := strconv.ParseUint(deleteForm.configID, 10, 0)
+
+	resources.DeleteEnvironmentConfig(db, configID)
+
+	jsonResponse(w, deleteForm, 204)
 }

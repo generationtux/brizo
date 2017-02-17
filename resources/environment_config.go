@@ -33,3 +33,15 @@ func GetEnvironmentConfig(db *gorm.DB, uuid string) (*[]EnvironmentConfig, error
 
 	return &config, nil
 }
+
+// DeleteEnvironmentConfig will delete specified configuration
+func DeleteEnvironmentConfig(db *gorm.DB, id uint64) error {
+	// @TODO add delete for specific configuration entry
+	var config struct {
+		ID uint64
+	}
+
+	config.ID = id
+
+	return db.Delete(&config).Error
+}

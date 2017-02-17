@@ -36,4 +36,16 @@ export class ConfigurationService {
       .map((res: Response) => res.json() || {})
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
+  
+  deleteConfiguration(environmentId: number, environmentUuid: string): Observable<any> {
+    const options = new RequestOptions({ headers: this.getHeaders() });
+    
+    const url = this.url + environmentUuid + '/configuration/' + environmentId;
+    
+    console.log(environmentUuid);
+    
+    return this.http.delete(url, options)
+      .map((res: Response) => res.json() || {})
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
 }

@@ -10,6 +10,7 @@ import { ConfigurationService } from './configuration.service'
 @Component({
   selector: 'configuration',
   templateUrl: './configuration.html',
+  styleUrls: ['./configuration.style.css'],
   providers: [ConfigurationService]
 })
 
@@ -23,11 +24,7 @@ export class ConfigurationComponent {
   constructor(private configService: ConfigurationService,
               private environmentService: EnvironmentService,
               private route: ActivatedRoute) {}
-  
-  ngAfterViewChecked() {
-    this.lastIndex = this.configuration.length;
-  }
-  
+    
   ngOnInit() {
     this.createConfigForm = new FormGroup({
         name: new FormControl('', [<any>Validators.required]),
@@ -55,17 +52,29 @@ export class ConfigurationComponent {
   }
   
   ngAfterViewInit() {
-    var i = $('tr[class^="addr"]').length;
-    $(".add-btn").click(function() {
-      $('.addr' + i).html("<td><input name='key' type='text' placeholder='KEY' class='form-control' /></td><td><input name='value' type='text' placeholder='VALUE' class='form-control' /></td><td><button class='btn btn-danger' type='button'><i class='fa fa-times'></i></button></td>");
-      $('.config-table').append("<tr class='addr" + (i + 1) + "'></tr>");
-      i++;
-    });
-    $(".del-btn").click(function() {
-      if(i > 1) {
-        $(".addr" + (i-1)).html('');
-        i--;
-		  }
+    $(document).ready(function() {
+      /* @TODO remove inputs and remove from db */
+      $('.del-btn').click(function() {
+        var id = $(this).parent().parent().data('config-id');
+        
+        /* @TODO finish out deleteConfiguration part of service
+        this.configService.deleteConfiguration(parseInt(id), this.environment.uuid).subscribe(
+          response => console.log('configuration deleted'),
+          err => console.error(err),
+        );
+        */
+      });
+      
+      $('.add-btn').on('click', function() {
+        var i = $('ul.config-entry').length;
+        $('.configs').append(''+
+          '<ul class="list-inline config-entry clearfix addr' + (i + 1) + '">'+
+          '<li class="config-name"><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" /></li>'+
+          '<li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></li>'+
+          '<li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>'+
+          '</ul>');
+        //$('.configs').append('<ul class="list-inline config-entry clearfix addr' + (i + 1) + '"></ul>');
+      });
     });
   }
   
