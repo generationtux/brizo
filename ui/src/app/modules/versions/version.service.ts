@@ -27,6 +27,10 @@ export class VersionService {
       image: version.image,
       replicas: version.replicas,
       volumes: version.volumes,
+      pullPolicy: version.pullPolicy,
+      args: version.args,
+      ports: version.ports,
+      volumeMounts: version.volumeMounts,
     }
 
     return this.http.post(url, data, options)

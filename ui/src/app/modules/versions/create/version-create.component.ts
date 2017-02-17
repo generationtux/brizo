@@ -49,13 +49,12 @@ export class VersionCreateComponent implements OnInit {
 
   private createVersion(e: any) {
     e.preventDefault();
-    console.log(this.version);
-    // let version = new Version({});
-    //
-    // this.versionService.createVersion(version).subscribe(
-    //   () => (this.onCreateVersion()),
-    //   err => console.error('There was an error: ' + err)
-    // );
+    this.version.environment_uuid = this.environment.uuid;
+
+    this.versionService.createVersion(this.version).subscribe(
+      () => (this.onCreateVersion()),
+      err => console.error('There was an error: ' + err)
+    );
   }
 
   private onCreateVersion() {
