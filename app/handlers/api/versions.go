@@ -86,6 +86,22 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 
 // VersionCreate creates a new Version
 func VersionCreate(w http.ResponseWriter, r *http.Request) {
+	var createForm struct {
+		Name         string                           `json:"name"`
+		Image        string                           `json:"image"`
+		Replicas     int                              `json:"replicas"`
+		Args         []string                         `json:"args"`
+		PullPolicy   string                           `json:"pullPolicy"`
+		Ports        []resources.ContainerPort        `json:"ports"`
+		VolumeMounts []resources.ContainerVolumeMount `json:"volumeMounts"`
+		Volumes      []resources.Volume               `json:"volumes"`
+	}
+	err := jsonRequest(r, &createForm)
+	if err != nil {
+		jsonErrorResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
@@ -97,22 +113,6 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
 	if err != nil {
 		jsonErrorResponse(w, "Environment not found", http.StatusNotFound)
-		return
-	}
-
-	var createForm struct {
-		Name         string
-		Image        string
-		Replicas     int
-		Args         []string
-		PullPolicy   string
-		Ports        []map[string]interface{}
-		VolumeMounts []map[string]string
-		Volumes      []resources.Volume
-	}
-	err = jsonRequest(r, &createForm)
-	if err != nil {
-		jsonErrorResponse(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -128,6 +128,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		Slug:          slugify.Slugify(createForm.Name),
 		Image:         createForm.Image,
 		Replicas:      createForm.Replicas,
+		Volumes:       createForm.Volumes,
 		EnvironmentID: environment.ID,
 		Environment:   *environment,
 		PullPolicy:    createForm.PullPolicy,
@@ -136,10 +137,10 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		VolumeMounts:  createForm.VolumeMounts,
 	}
 
-	_, err = resources.CreateVersion(db, client, &version, createForm.Volumes)
+	_, err = resources.CreateVersion(db, client, &version)
 	if err != nil {
-		log.Printf("Error when retrieving version: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving version", http.StatusInternalServerError)
+		log.Printf("Error creating version: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to create version", http.StatusInternalServerError)
 		return
 	}
 
