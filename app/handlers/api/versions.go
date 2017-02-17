@@ -123,16 +123,6 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	configs, err := resources.GetEnvironmentConfig(db, environment.UUID)
-	if err != nil {
-		log.Printf("Error when retrieving environment config: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when retrieving environment config")
-		jsonutil.RespondJSONError(w, jre)
-		return
-	}
-
 	version := resources.Version{
 		Name:          createForm.Name,
 		Slug:          slugify.Slugify(createForm.Name),
