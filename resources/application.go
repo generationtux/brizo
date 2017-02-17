@@ -48,10 +48,24 @@ func UpdateApplication(db *gorm.DB, app *Application) (bool, error) {
 	return result.RowsAffected == 1, result.Error
 }
 
-// GetApplication will get an existing Application by name
+// GetApplication will get an existing Application by uuid
 func GetApplication(db *gorm.DB, client kube.APIInterface, id string) (*Application, error) {
 	app := new(Application)
 	if err := db.Where("uuid = ?", id).Preload("Environments").First(&app).Error; err != nil {
+		return app, err
+	}
+
+	if app.ID == 0 {
+		return new(Application), errors.New("not-found")
+	}
+
+	return app, nil
+}
+
+// GetApplicationByID will get an existing Application by id
+func GetApplicationByID(db *gorm.DB, id string) (*Application, error) {
+	app := new(Application)
+	if err := db.Where("id = ?", id).Preload("Environments").First(&app).Error; err != nil {
 		return app, err
 	}
 

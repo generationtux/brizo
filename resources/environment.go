@@ -2,9 +2,13 @@ package resources
 
 import (
 	"errors"
+	"fmt"
+
+	"k8s.io/client-go/pkg/api/v1"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
 )
@@ -41,10 +45,44 @@ func AllEnvironments(db *gorm.DB) ([]Environment, error) {
 }
 
 // CreateEnvironment will add a new Environment to Brizo
-func CreateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
+func CreateEnvironment(db *gorm.DB, client kube.APIInterface, environment *Environment, application *Application) (bool, error) {
 	result := db.Create(&environment)
+	service := environmentServiceDefinition(environment, application)
+	err := client.CreateService(service)
+	if err != nil {
+		// @TODO need a better way to handle some of this upstream
+		DeleteEnvironment(db, environment.Name)
+		return false, err
+	}
 
 	return result.RowsAffected == 1, result.Error
+}
+
+func environmentServiceDefinition(environment *Environment, application *Application) *v1.Service {
+	name := fmt.Sprintf(
+		"%v-%v",
+		application.Slug,
+		environment.Slug,
+	)
+	return &v1.Service{
+		ObjectMeta: v1.ObjectMeta{
+			Name:      name,
+			Namespace: "brizo",
+			Labels: map[string]string{
+				"brizoManaged": "true",
+				"appUUID":      application.UUID,
+				"envUUID":      environment.UUID,
+			},
+		},
+		Spec: v1.ServiceSpec{
+			Ports: []v1.ServicePort{
+				v1.ServicePort{
+					Protocol: v1.ProtocolTCP,
+					Port:     int32(80),
+				},
+			},
+		},
+	}
 }
 
 // UpdateEnvironment will update an existing Environment

@@ -116,3 +116,12 @@ func (m *mockKubeClient) DeleteDeployment(deployment *v1beta1.Deployment) error 
 func (m *mockKubeClient) FindDeploymentByName(namespace, name string) (*v1beta1.Deployment, error) {
 	return &v1beta1.Deployment{}, nil
 }
+
+func (m *mockKubeClient) GetServices(name string, options v1.ListOptions) ([]v1.Service, error) {
+	return []v1.Service{}, nil
+}
+
+func (m *mockKubeClient) CreateService(service *v1.Service) error {
+	args := m.Called(service)
+	return args.Error(0)
+}
