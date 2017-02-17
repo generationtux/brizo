@@ -77,8 +77,8 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 		Replicas:    3,
 	}
 
-	deployment := versionDeploymentDefinition(version, nilConfig)
-	assert.Equal(t, "my-app-dev-version-1", deployment.Name)
+	deployment := versionDeploymentDefinition(version)
+	assert.Equal(t, "my-app-dev", deployment.Name)
 	assert.Equal(t, "brizo", deployment.Namespace)
 	assert.Equal(t, int32(version.Replicas), *deployment.Spec.Replicas)
 	assert.Equal(t, "foo:latest", deployment.Spec.Template.Spec.Containers[0].Image)

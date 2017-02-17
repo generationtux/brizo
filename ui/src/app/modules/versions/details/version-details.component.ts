@@ -12,7 +12,6 @@ import { VersionService } from '../version.service';
 @Component({
   selector:    'version',
   templateUrl: './version-details.html',
-  providers:   [ EnvironmentService, VersionService ],
 })
 
 export class VersionDetailsComponent implements OnInit {
@@ -55,26 +54,5 @@ export class VersionDetailsComponent implements OnInit {
   private cancelEditing() {
     this.resetVersionForm(this.version);
     this.editing = false;
-  }
-
-  private saveVersion() {
-    const form = (<FormGroup>this.editForm).value;
-    const version = new Version(
-      this.version.id,
-      this.version.uuid,
-      form.name,
-      form.name,
-      this.version.image,
-      this.version.replicas,
-      this.version.environment_id,
-    );
-    this.versionService.updateVersion(this.route.params['environment-uuid'], version.uuid, version.name)
-      .subscribe(
-        data => {
-          this.version = data;
-          this.cancelEditing()
-        },
-        err => console.error('There was an error: ' + err)
-      );
   }
 }
