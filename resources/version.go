@@ -112,7 +112,7 @@ func convertVolume(volume Volume) v1.Volume {
 }
 
 // versionDeploymentDefinition builds a deployment spec for the provided version
-func versionDeploymentDefinition(version *Version, configs []EnvironmentConfig) *v1beta1.Deployment {
+func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v",
