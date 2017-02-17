@@ -39,10 +39,7 @@ export class ConfigurationService {
   
   deleteConfiguration(environmentId: number, environmentUuid: string): Observable<any> {
     const options = new RequestOptions({ headers: this.getHeaders() });
-    
     const url = this.url + environmentUuid + '/configuration/' + environmentId;
-    
-    console.log(environmentUuid);
     
     return this.http.delete(url, options)
       .map((res: Response) => res.json() || {})

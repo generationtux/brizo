@@ -73,7 +73,6 @@ export class ConfigurationComponent {
           '<li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></li>'+
           '<li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>'+
           '</ul>');
-        //$('.configs').append('<ul class="list-inline config-entry clearfix addr' + (i + 1) + '"></ul>');
       });
     });
   }
