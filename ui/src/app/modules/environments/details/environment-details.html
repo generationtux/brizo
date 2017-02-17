@@ -1,6 +1,24 @@
+<style>
+.previous-versions .version:first-of-type {
+  padding-left: 0
+}
+
+.previous-versions .version:nth-child(3n+1) {
+  padding-left: 0
+}
+</style>
+
 <masthead></masthead>
 <div class="container-fluid">
   <div class="page-header">
+    <div class="btn-group pull-right" role="group" aria-label="...">
+      <a [routerLink]="['/environments/', environment.uuid, 'configuration']" class="btn btn-default">
+        <i class="fa fa-pencil"></i> Configuration
+      </a>
+      <a href="#" class="btn btn-success btn-outline" data-toggle="modal" data-target="#version-create-modal">
+        <i class="fa fa-plus"></i> New Version
+      </a>
+    </div>
     <h2>
       <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
       <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>

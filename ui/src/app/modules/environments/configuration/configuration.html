@@ -1,0 +1,35 @@
+<masthead></masthead>
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
+      Configuration
+    </h2>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <form class="config-form" [formGroup]="createConfigForm" novalidate (ngSubmit)="createNewConfig(createConfigForm.name, createConfigForm.value)">
+        <div class="form-group">
+          <div class="configs" *ngIf="configuration.length == 0">
+            <ul class="list-inline config-entry clearfix addr1">
+              <li class="config-name"><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" /></li>
+              <li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></li>
+              <li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>
+            </ul>
+          </div>
+          <div class="configs" *ngIf="configuration.length > 0">
+            <ul *ngFor="let config of configuration; let i = index;" class="list-inline config-entry clearfix addr{{i + 1}}" [attr.data-config-id]="config.id">
+              <li class="config-name"><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" value="{{ config.name }}" /></li>
+              <li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" value="{{ config.value }}" /></li>
+              <li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>
+            </ul>
+          </div>
+          <button class="btn btn-default add-btn" type="button"><i class="fa fa-plus"></i> Add Row</button>
+          <button class="btn btn-primary pull-right" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
