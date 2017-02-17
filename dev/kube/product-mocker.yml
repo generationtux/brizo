@@ -26,3 +26,16 @@ spec:
               containerPort: 8000
       restartPolicy: Always
       dnsPolicy: ClusterFirst
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: product-mocker
+    namespace: brizo
+    labels:
+        brizoManaged: "true"
+        appUUID: abc123
+spec:
+    ports:
+      - protocol: TCP
+        port: 80

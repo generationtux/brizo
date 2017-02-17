@@ -8,14 +8,19 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pborman/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCanCreateAnEnvironment(t *testing.T) {
 	id := uuid.New()
-	app := Environment{
+	env := Environment{
 		Name: "foobar",
 		UUID: id,
 	}
+
+	mockClient := new(mockKubeClient)
+	mockClient.On("CreateService", mock.Anything).Return(nil)
+
 	db, _ := gorm.Open("testdb", "")
 	var query string
 	var args []driver.Value
@@ -26,7 +31,10 @@ func TestCanCreateAnEnvironment(t *testing.T) {
 		return driver.ResultNoRows, nil
 	})
 
-	CreateEnvironment(db, &app)
+	CreateEnvironment(db, mockClient, &env, &Application{
+		Slug: "foo",
+		UUID: "abc-abc-abc-abc",
+	})
 	expectQuery := "INSERT INTO \"environments\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"application_id\") VALUES (?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
