@@ -74,6 +74,7 @@ func environmentServiceDefinition(environment *Environment, application *Applica
 				"envUUID":      environment.UUID,
 			},
 		},
+		//@TODO allow for multiple ports creations
 		Spec: v1.ServiceSpec{
 			Ports: []v1.ServicePort{
 				v1.ServicePort{
