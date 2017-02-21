@@ -5,7 +5,8 @@ import { Component, EventEmitter, OnInit } from '@angular/core'
 
 import { Environment } from '../../environments/environment.model';
 import { EnvironmentService } from '../../environments/environment.service';
-import { Version, Volume, VolumeMount, ContainerPort } from '../version.model';
+import { Version, Volume } from '../version.model';
+import { Container } from '../containers/container.model';
 import { VersionService } from '../version.service';
 
 @Component({
@@ -17,7 +18,6 @@ export class VersionCreateComponent implements OnInit {
   public version: Version;
   private application: any = {}
   private environment: any = {}
-  private selectedVolumeMount: string;
 
   constructor(
     private versionService: VersionService,
@@ -26,10 +26,8 @@ export class VersionCreateComponent implements OnInit {
     private router: Router,
   ) {
     this.version = new Version({
+      containers: [new Container({args: ["foo", "bar"]})],
       volumes: [],
-      args: [],
-      ports: [],
-      volumeMounts: [],
     });
   }
 
@@ -61,38 +59,19 @@ export class VersionCreateComponent implements OnInit {
     this.router.navigate(['/environments', this.environment.uuid]);
   }
 
+  private addContainer() {
+    this.version.containers.push(new Container());
+  }
+
+  private removeContainer(i: number) {
+    this.version.containers.splice(i, 1);
+  }
+
   private addVolume() {
     this.version.volumes.push(new Volume());
   }
 
   private removeVolume(i: number) {
     this.version.volumes.splice(i, 1);
-  }
-
-  private addPort() {
-    this.version.ports.push(new ContainerPort());
-  }
-
-  private removePort(i: number) {
-    this.version.ports.splice(i, 1);
-  }
-
-  private addArg() {
-    this.version.args.push("");
-  }
-
-  private removeArg(i: number) {
-    this.version.args.splice(i, 1);
-  }
-
-  private addVolumeMount() {
-    let mount = new VolumeMount({
-      name: this.selectedVolumeMount,
-    });
-    this.version.volumeMounts.push(mount);
-  }
-
-  private removeVolumeMount(i: number) {
-    this.version.volumeMounts.splice(i, 1);
   }
 }

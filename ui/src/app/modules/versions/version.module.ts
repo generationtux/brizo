@@ -9,6 +9,7 @@ import { VersionService } from './version.service';
 import { VersionDetailsComponent } from './details/version-details.component';
 import { VersionCreateComponent } from './create/version-create.component';
 import { VolumeCreateComponent } from './create/volume-create.component';
+import { ContainerFormComponent } from './containers/container-form.component';
 
 const versionRoutes: Routes = [
   {
@@ -33,6 +34,7 @@ const versionRoutes: Routes = [
     VersionDetailsComponent,
     VersionCreateComponent,
     VolumeCreateComponent,
+    ContainerFormComponent,
   ],
   exports: [
     VersionDetailsComponent,

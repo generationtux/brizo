@@ -31,94 +31,15 @@
     <div class="row">
         <div class="col-sm-5">
           <h4>Containers</h4>
-
-          <div class="form-group">
-            <label for="image">Image</label>
-            <input type="text" name="image" [(ngModel)]="version.image" class="form-control" placeholder="image:latest">
+          <span class="text-info" role="button" (click)="addContainer()"><i class="fa fa-plus"></i></span>
+          <div *ngFor="let container of version.containers; let i=index">
+            <button type="button" class="close pull-right" aria-label="Remove" (click)="removeContainer(i)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <container-form [container]="container" [containerIndex]="i" [availableVolumes]="version.volumes"></container-form>
           </div>
-
-          <div class="form-group">
-            <label for="image">Pull policy</label>
-            <select class="form-control" name="pullPolicy" [(ngModel)]="version.pullPolicy">
-              <option value="Always">Always</option>
-              <option value="IfNotPresent">If not present</option>
-              <option value="Never">Never</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="args">
-              Args
-              <span class="text-info" role="button" (click)="addArg()"><i class="fa fa-plus"></i></span>
-            </label>
-            <div *ngFor="let arg of version.args; let i=index" class="form-group">
-              <div class="input-group">
-                <input type="text" name="container-argument-{{ i }}" class="form-control" [(ngModel)]="version.args[i]">
-                <span class="input-group-addon">
-                  <span class="text-danger" role="button" (click)="removeArg(i)">&times;</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="ports">
-              Ports
-              <span class="text-info" role="button" (click)="addPort()"><i class="fa fa-plus"></i></span>
-            </label>
-            <div *ngFor="let port of version.ports; let i=index">
-              <div class="row form-group">
-                <div class="col-sm-2">
-                  <select name="port-protocol-{{ i }}" [(ngModel)]="port.protocol" class="form-control">
-                    <option value="TCP">TCP</option>
-                    <option value="UDP">UDP</option>
-                  </select>
-                </div>
-
-                <div class="col-sm-2">
-                  <input type="number" [(ngModel)]="port.port" name="port-number-{{ i }}" class="form-control">
-                </div>
-
-                <div class="col-sm-1">
-                  <button type="button" class="close pull-right" aria-label="Remove" (click)="removePort(i)">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group" *ngIf="version.volumes.length > 0">
-            <label for="ports">Mount volumes</label>
-
-            <div class="row form-group">
-              <div class="col-sm-4">
-                <select name="available-volumes" class="form-control" [(ngModel)]="selectedVolumeMount">
-                  <option value="" disabled selected>Select available</option>
-                  <option *ngFor="let volume of version.volumes" (click)="this.addVolumeMount(volume.name)">{{ volume.name }}</option>
-                </select>
-              </div>
-              <div class="col-sm-2">
-                <button type="button" class="btn btn-sm btn-default" (click)="this.addVolumeMount()">Add</button>
-              </div>
-            </div>
-
-            <div class="row form-group" *ngFor="let mount of version.volumeMounts">
-              <div class="col-sm-2">
-                {{ mount.name }}
-              </div>
-              <div class="col-sm-4">
-                <input type="text" name="volume-mount-path-{{ i }}" [(ngModel)]="mount.path" class="form-control" placeholder="/path">
-              </div>
-              <div class="col-sm-1">
-                <button type="button" class="close pull-right" aria-label="Remove" (click)="removeVolumeMount(i)">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
         </div>
+
         <div class="col-sm-4">
           <h4>Volumes</h4>
           <span class="text-info" role="button" (click)="addVolume()"><i class="fa fa-plus"></i></span>
