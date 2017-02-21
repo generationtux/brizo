@@ -87,14 +87,10 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 // VersionCreate creates a new Version
 func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	var createForm struct {
-		Name         string                           `json:"name"`
-		Image        string                           `json:"image"`
-		Replicas     int                              `json:"replicas"`
-		Args         []string                         `json:"args"`
-		PullPolicy   string                           `json:"pullPolicy"`
-		Ports        []resources.ContainerPort        `json:"ports"`
-		VolumeMounts []resources.ContainerVolumeMount `json:"volumeMounts"`
-		Volumes      []resources.Volume               `json:"volumes"`
+		Name       string                `json:"name"`
+		Replicas   int                   `json:"replicas"`
+		Containers []resources.Container `json:"containers"`
+		Volumes    []resources.Volume    `json:"volumes"`
 	}
 	err := jsonRequest(r, &createForm)
 	if err != nil {
@@ -126,15 +122,11 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	version := resources.Version{
 		Name:          createForm.Name,
 		Slug:          slugify.Slugify(createForm.Name),
-		Image:         createForm.Image,
+		Containers:    createForm.Containers,
 		Replicas:      createForm.Replicas,
 		Volumes:       createForm.Volumes,
 		EnvironmentID: environment.ID,
 		Environment:   *environment,
-		PullPolicy:    createForm.PullPolicy,
-		Args:          createForm.Args,
-		Ports:         createForm.Ports,
-		VolumeMounts:  createForm.VolumeMounts,
 	}
 
 	_, err = resources.CreateVersion(db, client, &version)

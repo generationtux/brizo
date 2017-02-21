@@ -50,7 +50,7 @@ func TestCanCreateAVersion(t *testing.T) {
 	})
 
 	CreateVersion(db, mockClient, &version)
-	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\",\"spec\") VALUES (?,?,?,?,?,?,?,?)"
+	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"environment_id\",\"spec\") VALUES (?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
@@ -58,7 +58,7 @@ func TestCanCreateAVersion(t *testing.T) {
 	deployment := versionDeploymentDefinition(&version)
 	expectSpec, err := json.Marshal(deployment)
 	assert.Nil(t, err)
-	assert.Equal(t, string(expectSpec), args[7])
+	assert.Equal(t, string(expectSpec), args[6])
 }
 
 func TestVersionDeploymentDefinition(t *testing.T) {
@@ -69,15 +69,21 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 		Environment: environment,
 		Name:        "version 1",
 		Slug:        "version-1",
-		Image:       "foo:latest",
 		UUID:        "version-uuid123",
 		Replicas:    3,
+		Containers: []Container{
+			Container{
+				Name:  "app",
+				Image: "foo:latest",
+			},
+		},
 	}
 
 	deployment := versionDeploymentDefinition(version)
 	assert.Equal(t, "my-app-dev", deployment.Name)
 	assert.Equal(t, "brizo", deployment.Namespace)
 	assert.Equal(t, int32(version.Replicas), *deployment.Spec.Replicas)
+	assert.Equal(t, "app", deployment.Spec.Template.Spec.Containers[0].Name)
 	assert.Equal(t, "foo:latest", deployment.Spec.Template.Spec.Containers[0].Image)
 
 	expectDeploymentLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123"}

@@ -21,6 +21,16 @@ type Volume struct {
 	Type string `json:"type"`
 }
 
+// Container individual container for a version
+type Container struct {
+	Name         string                 `gorm:"not null" json:"name"`
+	Image        string                 `gorm:"not null" json:"image"`
+	PullPolicy   string                 `gorm:"-" json:"pullPolicy"`
+	Args         []string               `gorm:"-" json:"args"`
+	VolumeMounts []ContainerVolumeMount `gorm:"-" json:"volumeMounts"`
+	Ports        []ContainerPort        `gorm:"-" json:"port"`
+}
+
 // ContainerPort exposed container port
 type ContainerPort struct {
 	Protocol string `json:"protocol"`
@@ -36,19 +46,15 @@ type ContainerVolumeMount struct {
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID          string                 `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string                 `gorm:"not null" json:"name"`
-	Slug          string                 `gorm:"not null" json:"slug"`
-	Image         string                 `gorm:"not null" json:"image"`
-	Replicas      int                    `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	EnvironmentID uint                   `gorm:"not null" json:"environment_id"`
-	Environment   Environment            `gorm:"not null" json:"environment"`
-	Volumes       []Volume               `gorm:"-" json:"volumes"`
-	VolumeMounts  []ContainerVolumeMount `gorm:"-" json:"volumeMounts"`
-	PullPolicy    string                 `gorm:"-" json:"pullPolicy"`
-	Args          []string               `gorm:"-" json:"args"`
-	Ports         []ContainerPort        `gorm:"-" json:"port"`
-	Spec          string                 `gorm:"type:json" json:"-"`
+	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name          string      `gorm:"not null" json:"name"`
+	Slug          string      `gorm:"not null" json:"slug"`
+	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
+	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
+	Environment   Environment `gorm:"not null" json:"environment"`
+	Volumes       []Volume    `gorm:"-" json:"volumes"`
+	Containers    []Container `gorm:"-" json:"containers"`
+	Spec          string      `gorm:"type:json" json:"-"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -111,17 +117,9 @@ func convertVolume(volume Volume) v1.Volume {
 	return k8sVol
 }
 
-// versionDeploymentDefinition builds a deployment spec for the provided version
-func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
-	replicas := int32(version.Replicas)
-	name := fmt.Sprintf(
-		"%v-%v",
-		version.Environment.Application.Slug,
-		version.Environment.Slug,
-	)
-
+func createContainerSpec(container Container) v1.Container {
 	var policy v1.PullPolicy
-	switch version.PullPolicy {
+	switch container.PullPolicy {
 	case "Always":
 		policy = v1.PullAlways
 	case "IfNotPresent":
@@ -132,13 +130,8 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		policy = v1.PullAlways
 	}
 
-	var k8sVolumes []v1.Volume
-	for index := 0; index < len(version.Volumes); index++ {
-		k8sVolumes = append(k8sVolumes, convertVolume(version.Volumes[index]))
-	}
-
-	k8sPorts := make([]v1.ContainerPort, len(version.Ports))
-	for i, port := range version.Ports {
+	k8sPorts := make([]v1.ContainerPort, len(container.Ports))
+	for i, port := range container.Ports {
 		protocol := v1.ProtocolTCP
 		if port.Protocol == "UDP" {
 			protocol = v1.ProtocolUDP
@@ -149,12 +142,41 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		}
 	}
 
-	k8sVolumeMounts := make([]v1.VolumeMount, len(version.VolumeMounts))
-	for i, mount := range version.VolumeMounts {
+	k8sVolumeMounts := make([]v1.VolumeMount, len(container.VolumeMounts))
+	for i, mount := range container.VolumeMounts {
 		k8sVolumeMounts[i] = v1.VolumeMount{
 			Name:      mount.Name,
 			MountPath: mount.Path,
 		}
+	}
+
+	return v1.Container{
+		Name:            "app",
+		Image:           container.Image,
+		ImagePullPolicy: policy,
+		Args:            container.Args,
+		Ports:           k8sPorts,
+		VolumeMounts:    k8sVolumeMounts,
+	}
+}
+
+// versionDeploymentDefinition builds a deployment spec for the provided version
+func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
+	replicas := int32(version.Replicas)
+	name := fmt.Sprintf(
+		"%v-%v",
+		version.Environment.Application.Slug,
+		version.Environment.Slug,
+	)
+
+	var k8sVolumes []v1.Volume
+	for index := 0; index < len(version.Volumes); index++ {
+		k8sVolumes = append(k8sVolumes, convertVolume(version.Volumes[index]))
+	}
+
+	k8sContainers := make([]v1.Container, len(version.Containers))
+	for i, container := range version.Containers {
+		k8sContainers[i] = createContainerSpec(container)
 	}
 
 	deployment := &v1beta1.Deployment{
@@ -185,17 +207,8 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 					},
 				},
 				Spec: v1.PodSpec{
-					Volumes: k8sVolumes,
-					Containers: []v1.Container{
-						v1.Container{
-							Name:            "app",
-							Image:           version.Image,
-							ImagePullPolicy: policy,
-							Args:            version.Args,
-							Ports:           k8sPorts,
-							VolumeMounts:    k8sVolumeMounts,
-						},
-					},
+					Volumes:    k8sVolumes,
+					Containers: k8sContainers,
 				},
 			},
 		},
