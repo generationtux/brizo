@@ -18,7 +18,8 @@ import (
 func TestCreateVersionDoesNotStoreWhenKubeFails(t *testing.T) {
 	version := &Version{Name: "foo"}
 	mockClient := new(mockKubeClient)
-	mockClient.On("CreateDeployment", mock.Anything).Return(errors.New("foo error"))
+	expectedError := errors.New("foo error")
+	mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(expectedError)
 
 	db, _ := gorm.Open("testdb", "")
 	result, err := CreateVersion(db, mockClient, version)
@@ -37,7 +38,7 @@ func TestCanCreateAVersion(t *testing.T) {
 	}
 
 	mockClient := new(mockKubeClient)
-	mockClient.On("CreateDeployment", mock.Anything).Return(nil)
+	mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(nil)
 
 	db, _ := gorm.Open("testdb", "")
 	var query string
@@ -117,6 +118,11 @@ func (m *mockKubeClient) CreateDeployment(deployment *v1beta1.Deployment) error 
 
 func (m *mockKubeClient) DeleteDeployment(deployment *v1beta1.Deployment) error {
 	return nil
+}
+
+func (m *mockKubeClient) CreateOrUpdateDeployment(deployment *v1beta1.Deployment) error {
+	args := m.Called(deployment)
+	return args.Error(0)
 }
 
 func (m *mockKubeClient) FindDeploymentByName(namespace, name string) (*v1beta1.Deployment, error) {

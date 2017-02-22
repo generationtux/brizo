@@ -30,7 +30,7 @@ func (c *Client) DeleteDeployment(deployment *v1beta1.Deployment) error {
 // CreateOrUpdateDeployment will gracefully apply updates to an existing
 // deployment or create a fresh deployment
 func (c *Client) CreateOrUpdateDeployment(deployment *v1beta1.Deployment) error {
-	existingDeployment, err := c.k8sClient.Deployments(deployment.Namespace).Get(deployment.Name)
+	existingDeployment, err := c.FindDeploymentByName(deployment.Name, deployment.Namespace)
 
 	if err != nil {
 		return c.CreateDeployment(deployment)
