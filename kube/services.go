@@ -1,10 +1,6 @@
 package kube
 
-import (
-	"fmt"
-
-	"k8s.io/client-go/pkg/api/v1"
-)
+import "k8s.io/client-go/pkg/api/v1"
 
 // GetServices retrieves services in the k8s cluster
 func (c *Client) GetServices(namespace string, options v1.ListOptions) ([]v1.Service, error) {
@@ -25,7 +21,7 @@ func (c *Client) UpdateService(service *v1.Service) error {
 	s, err := c.k8sClient.Services(service.Namespace).Get(service.Name)
 
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	s.Spec.Ports = service.Spec.Ports
