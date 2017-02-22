@@ -1,6 +1,11 @@
 <hr>
 
 <div class="form-group">
+  <label for="name">Name</label>
+  <input type="text" name="container-name-{{ containerIndex }}" [(ngModel)]="container.name" class="form-control">
+</div>
+
+<div class="form-group">
   <label for="image">Image</label>
   <input type="text" name="container-image-{{ containerIndex }}" [(ngModel)]="container.image" class="form-control" placeholder="image:latest">
 </div>

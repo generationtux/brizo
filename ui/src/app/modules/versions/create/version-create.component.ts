@@ -26,7 +26,7 @@ export class VersionCreateComponent implements OnInit {
     private router: Router,
   ) {
     this.version = new Version({
-      containers: [new Container({args: ["foo", "bar"]})],
+      containers: [new Container()],
       volumes: [],
     });
   }
@@ -48,6 +48,7 @@ export class VersionCreateComponent implements OnInit {
   private createVersion(e: any) {
     e.preventDefault();
     this.version.environment_uuid = this.environment.uuid;
+    console.log(this.version);
 
     this.versionService.createVersion(this.version).subscribe(
       () => (this.onCreateVersion()),

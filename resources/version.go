@@ -23,12 +23,12 @@ type Volume struct {
 
 // Container individual container for a version
 type Container struct {
-	Name         string                 `gorm:"not null" json:"name"`
-	Image        string                 `gorm:"not null" json:"image"`
-	PullPolicy   string                 `gorm:"-" json:"pullPolicy"`
-	Args         []string               `gorm:"-" json:"args"`
-	VolumeMounts []ContainerVolumeMount `gorm:"-" json:"volumeMounts"`
-	Ports        []ContainerPort        `gorm:"-" json:"port"`
+	Name         string                 `json:"name"`
+	Image        string                 `json:"image"`
+	PullPolicy   string                 `json:"pullPolicy"`
+	Args         []string               `json:"args"`
+	VolumeMounts []ContainerVolumeMount `json:"volumeMounts"`
+	Ports        []ContainerPort        `json:"port"`
 }
 
 // ContainerPort exposed container port
@@ -151,7 +151,7 @@ func createContainerSpec(container Container) v1.Container {
 	}
 
 	return v1.Container{
-		Name:            "app",
+		Name:            container.Name,
 		Image:           container.Image,
 		ImagePullPolicy: policy,
 		Args:            container.Args,
@@ -174,9 +174,9 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		k8sVolumes = append(k8sVolumes, convertVolume(version.Volumes[index]))
 	}
 
-	k8sContainers := make([]v1.Container, len(version.Containers))
-	for i, container := range version.Containers {
-		k8sContainers[i] = createContainerSpec(container)
+	var k8sContainers []v1.Container
+	for index := 0; index < len(version.Containers); index++ {
+		k8sContainers = append(k8sContainers, createContainerSpec(version.Containers[index]))
 	}
 
 	deployment := &v1beta1.Deployment{
