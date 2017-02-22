@@ -117,7 +117,6 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 		svcPorts[index] = sp
 	}
 
-	// k8s requires that services with multiple ports that each port have a name
 	name := fmt.Sprintf(
 		"%v-%v",
 		environment.Application.Slug,
