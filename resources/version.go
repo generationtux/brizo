@@ -79,7 +79,7 @@ func AllVersions(db *gorm.DB) ([]Version, error) {
 func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
 	deployment := versionDeploymentDefinition(version)
 
-	err := client.CreateDeployment(deployment)
+	err := client.CreateOrUpdateDeployment(deployment)
 	if err != nil {
 		return false, err
 	}
