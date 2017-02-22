@@ -24,13 +24,9 @@ export class VersionService {
     let url = this.url + version.environment_uuid + '/versions';
     let data = {
       name: version.name,
-      image: version.image,
       replicas: version.replicas,
       volumes: version.volumes,
-      pullPolicy: version.pullPolicy,
-      args: version.args,
-      ports: version.ports,
-      volumeMounts: version.volumeMounts,
+      containers: version.containers,
     }
 
     return this.http.post(url, data, options)
