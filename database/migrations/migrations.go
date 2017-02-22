@@ -1,6 +1,8 @@
 package migrations
 
 import (
+	"log"
+
 	"github.com/generationtux/brizo/database"
 	"github.com/rubenv/sql-migrate"
 )
@@ -25,10 +27,30 @@ func Run() error {
 	}
 
 	m := &migrate.MemoryMigrationSource{Migrations: All()}
-	_, err = migrate.Exec(conn.DB(), "mysql", m, migrate.Up)
+	n, err := migrate.Exec(conn.DB(), "mysql", m, migrate.Up)
 	if err != nil {
 		return err
 	}
+
+	log.Printf("%v migrations applied", n)
+
+	return nil
+}
+
+// RunDown execute migrations backwards
+func RunDown() error {
+	conn, err := database.Connect()
+	if err != nil {
+		return err
+	}
+
+	m := &migrate.MemoryMigrationSource{Migrations: All()}
+	n, err := migrate.Exec(conn.DB(), "mysql", m, migrate.Down)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("%v migrations rolled back", n)
 
 	return nil
 }
