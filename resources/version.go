@@ -87,6 +87,9 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 	version.Spec = string(spec)
 	persist := db.Create(&version)
 
+	// update environment service
+	UpdateEnvironmentService(db, client, &version.Environment, version.Ports)
+
 	return persist.RowsAffected == 1, persist.Error
 }
 

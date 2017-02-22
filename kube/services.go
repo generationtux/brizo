@@ -15,3 +15,22 @@ func (c *Client) CreateService(service *v1.Service) error {
 
 	return err
 }
+
+// UpdateService will update an existing service
+func (c *Client) UpdateService(service *v1.Service) error {
+	var gracePeriod int64
+	gracePeriod = int64(0)
+	delOptions := v1.DeleteOptions{
+		GracePeriodSeconds: &gracePeriod,
+	}
+
+	err := c.k8sClient.Services(service.Namespace).Delete(service.Name, &delOptions)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = c.k8sClient.Services(service.Namespace).Create(service)
+
+	return err
+}

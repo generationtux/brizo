@@ -125,3 +125,8 @@ func (m *mockKubeClient) CreateService(service *v1.Service) error {
 	args := m.Called(service)
 	return args.Error(0)
 }
+
+func (m *mockKubeClient) UpdateService(service *v1.Service) error {
+	args := m.Called(service)
+	return args.Error(0)
+}
