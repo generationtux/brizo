@@ -1,6 +1,10 @@
 package kube
 
-import "k8s.io/client-go/pkg/api/v1"
+import (
+	"fmt"
+
+	"k8s.io/client-go/pkg/api/v1"
+)
 
 // GetServices retrieves services in the k8s cluster
 func (c *Client) GetServices(namespace string, options v1.ListOptions) ([]v1.Service, error) {
@@ -18,19 +22,19 @@ func (c *Client) CreateService(service *v1.Service) error {
 
 // UpdateService will update an existing service
 func (c *Client) UpdateService(service *v1.Service) error {
-	var gracePeriod int64
-	gracePeriod = int64(0)
-	delOptions := v1.DeleteOptions{
-		GracePeriodSeconds: &gracePeriod,
+	s, err := c.k8sClient.Services(service.Namespace).Get(service.Name)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	err := c.k8sClient.Services(service.Namespace).Delete(service.Name, &delOptions)
+	s.Spec.Ports = service.Spec.Ports
+
+	_, err = c.k8sClient.Services(service.Namespace).Update(s)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = c.k8sClient.Services(service.Namespace).Create(service)
-
-	return err
+	return nil
 }
