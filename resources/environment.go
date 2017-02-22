@@ -100,11 +100,14 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 	var svcPorts = make([]v1.ServicePort, len(ports))
 	var protocol = v1.ProtocolTCP
 
+	// build svcPorts (service ports)
 	for index, element := range ports {
 		if element.Protocol == "UDP" {
 			protocol = v1.ProtocolUDP
 		}
 
+		// Name is required because k8s requires each port have a name for
+		// services with multiple ports
 		var sp = v1.ServicePort{
 			Name:     slugify.Slugify(fmt.Sprintf("%v-%v", element.Protocol, element.Port)),
 			Protocol: protocol,
@@ -114,30 +117,22 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 		svcPorts[index] = sp
 	}
 
+	// k8s requires that services with multiple ports that each port have a name
 	name := fmt.Sprintf(
 		"%v-%v",
 		environment.Application.Slug,
 		environment.Slug,
 	)
 
-	// update environment service
-	service := &v1.Service{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      name,
-			Namespace: "brizo",
-			Labels: map[string]string{
-				"brizoManaged": "true",
-				"appUUID":      environment.Application.UUID,
-				"envUUID":      environment.UUID,
-			},
-		},
-		//@TODO allow for multiple ports creations
-		Spec: v1.ServiceSpec{
-			Ports: svcPorts,
-		},
+	service, err := client.GetService("brizo", name)
+
+	if err != nil {
+		return false, err
 	}
 
-	err := client.UpdateService(service)
+	service.Spec.Ports = svcPorts
+
+	err = client.UpdateService(service)
 
 	if err != nil {
 		return false, err
