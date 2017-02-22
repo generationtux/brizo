@@ -48,7 +48,6 @@ export class VersionCreateComponent implements OnInit {
   private createVersion(e: any) {
     e.preventDefault();
     this.version.environment_uuid = this.environment.uuid;
-    console.log(this.version);
 
     this.versionService.createVersion(this.version).subscribe(
       () => (this.onCreateVersion()),
