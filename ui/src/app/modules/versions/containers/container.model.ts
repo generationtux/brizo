@@ -2,13 +2,12 @@ export class Container {
   public name: string;
   public image: string;
   public args: string[];
-  public pullPolicy: string;
+  public alwaysPull: boolean = true;
   public ports: ContainerPort[];
   public volumeMounts: VolumeMount[];
 
   constructor(props: any = {}) {
     Object.assign(this, props);
-    this.pullPolicy = this.pullPolicy || "Always";
     this.args = this.args || [];
     this.ports = this.ports || [];
     this.volumeMounts = this.volumeMounts || [];
