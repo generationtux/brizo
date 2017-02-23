@@ -8,6 +8,7 @@ import (
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
+	"github.com/go-zoo/bone"
 	"github.com/mholt/binding"
 )
 
@@ -97,4 +98,40 @@ func AuthGetInvitees(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(invitees)
+}
+
+// AuthDeleteInvitees deletes an unaccepted invite
+func AuthDeleteInvitees(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+	id := bone.GetValue(r, "id")
+	success, err := auth.DeleteInvitedUser(db, id)
+	if err != nil {
+		log.Printf("Error when deleting invitee: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	if !success {
+		log.Printf("Unsuccesful when attempting to delete invitee: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to delete the invitee")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusNoContent)
 }
