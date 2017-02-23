@@ -6,9 +6,8 @@ import (
 	"os"
 
 	"github.com/generationtux/brizo/app/routes"
-	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
-	"github.com/generationtux/brizo/resources"
+	"github.com/generationtux/brizo/database/migrations"
 )
 
 // Server is a function that starts an HTTP listener and handles requests using the provided handler
@@ -18,7 +17,7 @@ type Server func(string, http.Handler) error
 type ChecksHealth func() error
 
 // RunsMigrations interface for running migrations
-type RunsMigrations func(...interface{}) error
+type RunsMigrations func() error
 
 // Application top level properties and methods for running Brizo
 type Application struct {
@@ -37,15 +36,7 @@ func New() *Application {
 	brizo.healthChecks = []ChecksHealth{
 		database.Health,
 	}
-	brizo.migrator = database.Migrate
-	brizo.shouldMigrate = []interface{}{
-		&auth.User{},
-		&resources.AccessToken{},
-		&resources.Application{},
-		&resources.Environment{},
-		&resources.Version{},
-		&resources.EnvironmentConfig{},
-	}
+	brizo.migrator = migrations.Run
 
 	return brizo
 }
@@ -67,7 +58,7 @@ func (app *Application) Initialize() error {
 	}
 
 	log.Println("Running database migrations...")
-	return app.migrator(app.shouldMigrate...)
+	return app.migrator()
 }
 
 // getAddress gets the port the app should listen on

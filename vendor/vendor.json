@@ -3,6 +3,10 @@
 	"ignore": "",
 	"package": [
 		{
+			"path": "appengine/cloudsql",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "ZLRh6zW4/DnVsGpgtt+ZiIaEFKc=",
 			"path": "cloud.google.com/go/compute/metadata",
 			"revision": "c43de3e27e4bcd73216ba7dd4209c7eed33c6e90",
@@ -299,6 +303,18 @@
 			"revisionTime": "2016-01-05T22:08:40Z"
 		},
 		{
+			"checksumSHA1": "eTz++ji2klS8MmZwI26eIyCB9MQ=",
+			"path": "github.com/lib/pq",
+			"revision": "ba5d4f7a35561e22fbdf7a39aa0070f4d460cfc0",
+			"revisionTime": "2017-02-13T22:10:49Z"
+		},
+		{
+			"checksumSHA1": "xppHi82MLqVx1eyQmbhTesAEjx8=",
+			"path": "github.com/lib/pq/oid",
+			"revision": "ba5d4f7a35561e22fbdf7a39aa0070f4d460cfc0",
+			"revisionTime": "2017-02-13T22:10:49Z"
+		},
+		{
 			"checksumSHA1": "urY45++NYCue4nh4k8OjUFnIGfU=",
 			"path": "github.com/mailru/easyjson/buffer",
 			"revision": "159cdb893c982e3d1bc6450322fedd514f9c9de3",
@@ -315,6 +331,18 @@
 			"path": "github.com/mailru/easyjson/jwriter",
 			"revision": "159cdb893c982e3d1bc6450322fedd514f9c9de3",
 			"revisionTime": "2016-11-03T14:18:12Z"
+		},
+		{
+			"checksumSHA1": "qum3DAh5YaOGmE1B7+qtyqDhnEY=",
+			"path": "github.com/mattn/go-sqlite3",
+			"revision": "2acfafad5870400156f6fceb12852c281cbba4d5",
+			"revisionTime": "2017-02-16T06:57:29Z"
+		},
+		{
+			"checksumSHA1": "vUcHzx0aV5Vid+r3FyGE1Y7QkHs=",
+			"path": "github.com/mattn/go-sqlite3/sqlite3_test",
+			"revision": "2acfafad5870400156f6fceb12852c281cbba4d5",
+			"revisionTime": "2017-02-16T06:57:29Z"
 		},
 		{
 			"checksumSHA1": "EF+Ii5CiWMHGZhaU7KA6EhOD1hk=",
@@ -353,6 +381,18 @@
 			"path": "github.com/ricardolonga/jsongo",
 			"revision": "459112a8028dfbecd765e6ee2bd775f4652f270c",
 			"revisionTime": "2016-12-15T11:09:33Z"
+		},
+		{
+			"checksumSHA1": "6D1Kg+XcYGojBj8jXEP8+y7ynDM=",
+			"path": "github.com/rubenv/sql-migrate",
+			"revision": "f64b6080c334adaf843209164107439e92bb170b",
+			"revisionTime": "2017-02-07T10:19:24Z"
+		},
+		{
+			"checksumSHA1": "hN9NEKuvwPPUGCuP1MFF58ELK9k=",
+			"path": "github.com/rubenv/sql-migrate/sqlparse",
+			"revision": "f64b6080c334adaf843209164107439e92bb170b",
+			"revisionTime": "2017-02-07T10:19:24Z"
 		},
 		{
 			"checksumSHA1": "x6WnPggr3ijX7c/7g5q8hIePN+s=",
@@ -449,6 +489,24 @@
 			"path": "github.com/urfave/negroni",
 			"revision": "cd9734011043904139c24dbad9a71b21f1586f36",
 			"revisionTime": "2016-11-27T19:24:14Z"
+		},
+		{
+			"checksumSHA1": "1dNj4jyScMo5xXBvksvT9w7THrk=",
+			"path": "github.com/ziutek/mymysql/godrv",
+			"revision": "0582bcf675f52c0c2045c027fd135bd726048f45",
+			"revisionTime": "2017-02-06T13:45:17Z"
+		},
+		{
+			"checksumSHA1": "bUu5bkjPfoU/pqcmrY/FnS+ozjs=",
+			"path": "github.com/ziutek/mymysql/mysql",
+			"revision": "0582bcf675f52c0c2045c027fd135bd726048f45",
+			"revisionTime": "2017-02-06T13:45:17Z"
+		},
+		{
+			"checksumSHA1": "DczaOq8tCV9lVRPzCjGsvgpyD9I=",
+			"path": "github.com/ziutek/mymysql/native",
+			"revision": "0582bcf675f52c0c2045c027fd135bd726048f45",
+			"revisionTime": "2017-02-06T13:45:17Z"
 		},
 		{
 			"checksumSHA1": "9C4Av3ypK5pi173F76ogJT/d8x4=",
@@ -713,6 +771,18 @@
 			"path": "gopkg.in/DATA-DOG/go-sqlmock.v1",
 			"revision": "d4cd2ca2ad1cc2130bba385aab072218f131f636",
 			"revisionTime": "2016-11-02T12:49:59Z"
+		},
+		{
+			"checksumSHA1": "538I8ghUdvZa25NxgMUDpq14Qic=",
+			"path": "gopkg.in/check.v1",
+			"revision": "20d25e2804050c1cd24a7eea1e7a6447dd0e74ec",
+			"revisionTime": "2016-12-08T18:13:25Z"
+		},
+		{
+			"checksumSHA1": "f1z0dCkGzUUHunwrLaoZGXbmudw=",
+			"path": "gopkg.in/gorp.v1",
+			"revision": "c87af80f3cc5036b55b83d77171e156791085e2e",
+			"revisionTime": "2015-02-04T08:55:30Z"
 		},
 		{
 			"checksumSHA1": "6f8MEU31llHM1sLM/GGH4/Qxu0A=",

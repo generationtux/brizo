@@ -14,13 +14,22 @@ The example file will have all of the required config with sensible defaults.
 
 #### Local database
 
-A test database is provided using Docker. The `.env.example` file provided is configured to connect to this database by default. To start the database [install Docker] for 
+A test database is provided using Docker. The `.env.example` file provided is configured to connect to this database by default. To start the database [install Docker] for
 your machine and run
 ```sh
 $ docker-compose up -d
 ```
 
 This will start a database listening on `localhost:33062` with the username `root` and password `secret`. It will also setup a database named `brizo`.
+
+#### Database migrations
+
+Migrations will run against the database when Brizo starts up. If the app is running in development mode (`BRIZO_DEV=true`) a subcommand is provided to control migrations.
+```sh
+$ go build
+$ ./brizo migrate
+$ ./brizo migrate --down
+```
 
 #### Local Kubernetes
 

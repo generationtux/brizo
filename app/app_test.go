@@ -15,7 +15,6 @@ func TestNewApplication(t *testing.T) {
 	assert.NotEmpty(t, app.serverHandler)
 	assert.NotEmpty(t, app.healthChecks)
 	assert.NotEmpty(t, app.migrator)
-	assert.NotEmpty(t, app.shouldMigrate)
 }
 
 func TestAppServer(t *testing.T) {
@@ -37,17 +36,13 @@ type mockHandler struct{}
 func (m mockHandler) ServeHTTP(http.ResponseWriter, *http.Request) {}
 
 func TestAppInitMigrations(t *testing.T) {
-	mockMigrator := func(values ...interface{}) error {
-		if values[0] != "stub" {
-			t.Fatal("migrator should receive app.shouldMigrate")
-		}
+	mockMigrator := func() error {
 		return errors.New("custom-migrator-error")
 	}
 
 	app := &Application{
-		healthChecks:  []ChecksHealth{},
-		migrator:      mockMigrator,
-		shouldMigrate: []interface{}{"stub"},
+		healthChecks: []ChecksHealth{},
+		migrator:     mockMigrator,
 	}
 
 	err := app.Initialize()
@@ -55,7 +50,7 @@ func TestAppInitMigrations(t *testing.T) {
 }
 
 func TestAppInitHealth(t *testing.T) {
-	mockMigrator := func(values ...interface{}) error { return nil }
+	mockMigrator := func() error { return nil }
 	app := &Application{healthChecks: []ChecksHealth{}, migrator: mockMigrator}
 	assert.Nil(t, app.Initialize())
 
