@@ -19,6 +19,9 @@ export class VersionCreateComponent implements OnInit {
   private application: any = {}
   private environment: any = {}
 
+  private newVolumeType: string = "temp";
+  private newVolumeName: string;
+
   constructor(
     private versionService: VersionService,
     private environmentService: EnvironmentService,
@@ -26,7 +29,8 @@ export class VersionCreateComponent implements OnInit {
     private router: Router,
   ) {
     this.version = new Version({
-      containers: [new Container()],
+      replicas: 1,
+      containers: [new Container({name: 'container-1'})],
       volumes: [],
     });
   }
@@ -60,15 +64,23 @@ export class VersionCreateComponent implements OnInit {
   }
 
   private addContainer() {
-    this.version.containers.push(new Container());
+    this.version.containers.push(new Container({
+      name: 'container-' + (this.version.containers.length + 1)
+    }));
   }
 
   private removeContainer(i: number) {
     this.version.containers.splice(i, 1);
   }
 
-  private addVolume() {
-    this.version.volumes.push(new Volume());
+  private addVolume(e: any) {
+    e.preventDefault();
+    this.version.volumes.push(new Volume({
+      name: this.newVolumeName,
+      type: this.newVolumeType,
+    }));
+
+    this.newVolumeName = "";
   }
 
   private removeVolume(i: number) {

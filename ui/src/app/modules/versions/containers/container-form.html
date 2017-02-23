@@ -1,92 +1,94 @@
-<hr>
-
-<div class="form-group">
-  <label for="name">Name</label>
-  <input type="text" name="container-name-{{ containerIndex }}" [(ngModel)]="container.name" class="form-control">
-</div>
-
-<div class="form-group">
-  <label for="image">Image</label>
-  <input type="text" name="container-image-{{ containerIndex }}" [(ngModel)]="container.image" class="form-control" placeholder="image:latest">
-</div>
-
-<div class="form-group">
-  <label for="image">Pull policy</label>
-  <select class="form-control" name="container-pullPolicy-{{ containerIndex }}" [(ngModel)]="container.pullPolicy">
-    <option value="Always">Always</option>
-    <option value="IfNotPresent">If not present</option>
-    <option value="Never">Never</option>
-  </select>
-</div>
-
-<div class="form-group">
-  <label for="args">
-    Args
-    <span class="text-info" role="button" (click)="addArg()"><i class="fa fa-plus"></i></span>
-  </label>
-  <div *ngFor="let arg of container?.args; let i=index" class="form-group">
-    <div class="input-group">
-      <input type="text" name="container-argument-{{ containerIndex}}-{{ i }}" class="form-control" [(ngModel)]="container.args[i]">
-      <span class="input-group-addon">
-        <span class="text-danger" role="button" (click)="removeArg(i)">&times;</span>
-      </span>
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="ports">
-    Ports
-    <span class="text-info" role="button" (click)="addPort()"><i class="fa fa-plus"></i></span>
-  </label>
-  <div *ngFor="let port of container.ports; let i=index">
-    <div class="row form-group">
-      <div class="col-sm-2">
-        <select name="port-protocol-{{ containerIndex }}-{{ i }}" [(ngModel)]="port.protocol" class="form-control">
-          <option value="TCP">TCP</option>
-          <option value="UDP">UDP</option>
-        </select>
-      </div>
-
-      <div class="col-sm-2">
-        <input type="number" [(ngModel)]="port.port" name="port-number-{{ containerIndex }}-{{ i }}" class="form-control">
-      </div>
-
-      <div class="col-sm-1">
-        <button type="button" class="close pull-right" aria-label="Remove" (click)="removePort(i)">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="form-group" *ngIf="availableVolumes.length > 0">
-  <label for="ports">Mount volumes</label>
-
-  <div class="row form-group">
-    <div class="col-sm-4">
-      <select name="available-volumes" class="form-control" [(ngModel)]="selectedVolumeMount">
-        <option value="" disabled selected>Select available</option>
-        <option *ngFor="let volume of availableVolumes" (click)="this.addVolumeMount(volume.name)">{{ volume.name }}</option>
-      </select>
-    </div>
-    <div class="col-sm-2">
-      <button type="button" class="btn btn-sm btn-default" (click)="this.addVolumeMount()">Add</button>
-    </div>
-  </div>
-
-  <div class="row form-group" *ngFor="let mount of container.volumeMounts">
-    <div class="col-sm-2">
-      {{ mount.name }}
-    </div>
-    <div class="col-sm-4">
-      <input type="text" name="volume-path-{{ containerIndex }}-{{ i }}" [(ngModel)]="mount.path" class="form-control" placeholder="/path">
-    </div>
-    <div class="col-sm-1">
-      <button type="button" class="close pull-right" aria-label="Remove" (click)="removeVolumeMount(i)">
-        <span aria-hidden="true">&times;</span>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+      {{ container.name }}
+      <button type="button" class="pull-right btn-link panel-link" (click)="onDelete(containerIndex)">
+        <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
-    </div>
   </div>
-</div>
+
+  <div class="panel-body">
+
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="text" name="container-image-{{ containerIndex }}" [(ngModel)]="container.image" class="form-control" placeholder="image:latest" required>
+    </div>
+
+    <div class="row">
+
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label>Always pull?</label>
+          <input type="checkbox" name="container-pull-{{ containerIndex }}" [(ngModel)]="container.alwaysPull">
+          <div class="text-help">
+            If unchecked the image will only be pulled if it's not already present
+          </div>
+        </div>
+      </div><!-- col-sm-5 -->
+
+      <div class="col-sm-7">
+        <form (ngSubmit)="addPort($event)">
+          <div class="form-group">
+            <label for="ports">Expose ports</label>
+            <div class="form-inline">
+              <select name="port-protocol-{{ containerIndex }}" [(ngModel)]="newPortProtocol" class="form-control">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+              </select>
+              <input type="number" style="width:100px;" [(ngModel)]="newPortNumber" name="port-number-{{ containerIndex }}" class="form-control" placeholder="8080" required>
+              <button type="submit" class="btn btn-default btn-info">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <br>
+            <span class="text-muted" *ngIf="container.ports.length == 0"><em>No ports exposed yet</em></span>
+            <table class="table table-hover table-condensed">
+              <tr *ngFor="let port of container.ports; let i=index">
+                <td>
+                  <button type="button" class="btn btn-link" aria-label="Remove" (click)="removePort(i)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </td>
+                <td><strong>{{ port.protocol }}:{{ port.port }}</strong></td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div><!-- col-sm-7 -->
+
+    </div><!-- row -->
+
+    <div class="form-group">
+      <label for="args">Container args</label>
+      <input type="text" class="form-control" placeholder='"arg1", "arg2", ...'>
+    </div>
+
+    <div class="form-group" *ngIf="availableVolumes.length > 0">
+      <label for="ports">Mount volumes</label>
+      <form class="form-inline" (ngSubmit)="addVolumeMount($event)">
+        <select name="available-volumes" class="form-control" [(ngModel)]="newVolumeMountName">
+          <option *ngFor="let volume of availableVolumes" (click)="this.addVolumeMount(volume.name)">{{ volume.name }}</option>
+        </select>
+        <input type="text" name="volume-mount-path-{{ containerIndex }}" [(ngModel)]="newVolumeMountPath" class="form-control" placeholder="/etc/mountPath">
+        <button type="submit" class="btn btn-info">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </form>
+
+      <br>
+      <span class="text-muted" *ngIf="container.volumeMounts.length == 0"><em>No volumes mounted yet</em></span>
+      <table class="table table-condensed table-hover">
+        <tr *ngFor="let mount of container.volumeMounts; let i=index">
+          <td>
+            <button type="button" class="btn btn-link" aria-label="Remove" (click)="removeVolumeMount(i)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </td>
+          <td><strong>{{ mount.name }}</strong> <small>(temporary)</small></td>
+          <td>{{ mount.path }}</td>
+        </tr>
+      </table>
+    </div><!-- form-group -->
+
+  </div><!-- panel-body -->
+</div><!-- panel -->

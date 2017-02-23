@@ -7,17 +7,53 @@ a:focus, a.btn:focus, button:focus { outline: none; }
 
 // type
 .text-default { color: $text-color; }
+.text-help {
+  font-size: 11px;
+  color: $gray-light;
+}
+
+// forms
+.form-group {
+  margin-bottom: 35px;
+}
+
+label {
+  font-size: 12px;
+  color: lighten($gray-light, 5%);
+}
 
 // page headers
 .page-header {
+  border: none;
+  margin-bottom: 75px;
   .title-settings {
     color: $gray-light;
     font-size: 12px;
     margin-top: -5px;
     margin-left: -10px;
   }
+  small {
+    font-size: 13px;
+    color: lighten($gray-light, 10%);
+    margin-bottom: 8px;
+  }
   .breadcrumb-previous a {
     color: $gray-light;
+    font-size: 12px;
+    &:hover {
+      text-decoration: none;
+      color: $gray-lighter;
+    }
+  }
+}
+
+// panels
+.panel-primary {
+  .panel-link {
+    color: $gray-lighter;
+  }
+  .panel-heading button {
+    padding:0;
   }
 }
 

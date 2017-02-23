@@ -25,7 +25,7 @@ type Volume struct {
 type Container struct {
 	Name         string                 `json:"name"`
 	Image        string                 `json:"image"`
-	PullPolicy   string                 `json:"pullPolicy"`
+	AlwaysPull   bool                   `json:"alwaysPull"`
 	Args         []string               `json:"args"`
 	VolumeMounts []ContainerVolumeMount `json:"volumeMounts"`
 	Ports        []ContainerPort        `json:"ports"`
@@ -130,16 +130,9 @@ func convertVolume(volume Volume) v1.Volume {
 }
 
 func createContainerSpec(container Container) v1.Container {
-	var policy v1.PullPolicy
-	switch container.PullPolicy {
-	case "Always":
-		policy = v1.PullAlways
-	case "IfNotPresent":
+	policy := v1.PullAlways
+	if !container.AlwaysPull {
 		policy = v1.PullIfNotPresent
-	case "Never":
-		policy = v1.PullNever
-	default:
-		policy = v1.PullAlways
 	}
 
 	k8sPorts := make([]v1.ContainerPort, len(container.Ports))
