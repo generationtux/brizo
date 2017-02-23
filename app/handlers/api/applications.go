@@ -52,7 +52,9 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"unable to connect to database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
@@ -60,7 +62,9 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	kubeClient, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to Kubernetes")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusServiceUnavailable,
+			"unable to connect to Kubernetes")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
@@ -90,7 +94,10 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -102,14 +109,19 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
 	kubeClient, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to Kubernetes")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusServiceUnavailable,
+			"unable to connect to Kubernetes")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
@@ -131,7 +143,10 @@ func ApplicationUpdate(w http.ResponseWriter, r *http.Request) {
 	_, err = resources.UpdateApplication(db, application)
 	if err != nil {
 		log.Printf("Error when updating application: '%s'\n", err)
-		http.Error(w, "there was an error when updating application", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when updating application")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -147,7 +162,10 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -160,7 +178,10 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -172,7 +193,10 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 	// @todo handle failed save w/out error?
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving application", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving application")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 

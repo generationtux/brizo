@@ -46,7 +46,9 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"unable to connect to database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
@@ -94,7 +96,10 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	err := jsonRequest(r, &createForm)
 	if err != nil {
-		jsonErrorResponse(w, err.Error(), http.StatusBadRequest)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusBadRequest,
+			err.Error())
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -102,20 +107,29 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jsonErrorResponse(w, "Database connection error", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"Database connection error")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
 	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
 	if err != nil {
-		jsonErrorResponse(w, "Environment not found", http.StatusNotFound)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusNotFound,
+			"Environment not found")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
 	client, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
-		jsonErrorResponse(w, "Kube connection error", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusServiceUnavailable,
+			"Kube connection error")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -132,7 +146,10 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	_, err = resources.CreateVersion(db, client, &version)
 	if err != nil {
 		log.Printf("Error creating version: '%s'\n", err)
-		jsonErrorResponse(w, "Unable to create version", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"Unable to create version")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
