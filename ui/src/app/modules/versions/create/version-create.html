@@ -62,6 +62,7 @@
         </form>
 
         <br>
+        <span class="text-muted" *ngIf="version.volumes.length == 0"><em>No volumes provisioned yet</em></span>
 
         <table class="table table-condensed table-hover">
           <tr *ngFor="let volume of version.volumes; let i=index">

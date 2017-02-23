@@ -41,6 +41,7 @@
             </div>
 
             <br>
+            <span class="text-muted" *ngIf="container.ports.length == 0"><em>No ports exposed yet</em></span>
             <table class="table table-hover table-condensed">
               <tr *ngFor="let port of container.ports; let i=index">
                 <td>
@@ -75,6 +76,7 @@
       </form>
 
       <br>
+      <span class="text-muted" *ngIf="container.volumeMounts.length == 0"><em>No volumes mounted yet</em></span>
       <table class="table table-condensed table-hover">
         <tr *ngFor="let mount of container.volumeMounts; let i=index">
           <td>
