@@ -127,7 +127,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
+			http.StatusServiceUnavailable,
 			"Kube connection error")
 		jsonutil.RespondJSONError(w, jre)
 		return

@@ -83,7 +83,7 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
+			http.StatusServiceUnavailable,
 			"unable to reach Kubernetes")
 		jsonutil.RespondJSONError(w, jre)
 		return
