@@ -46,7 +46,9 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"unable to connect to database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}

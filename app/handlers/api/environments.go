@@ -82,7 +82,10 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	client, err := kube.New()
 	if err != nil {
 		log.Printf("Kube client error: '%s'\n", err)
-		http.Error(w, "unable to reach Kubernetes", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"unable to reach Kubernetes")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -90,7 +93,10 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -103,7 +109,10 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 	// @todo
@@ -127,7 +136,10 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	// @todo handle failed save w/out error?
 	if err != nil {
 		log.Printf("Error when retrieving environment: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving environment", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving environment")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -155,7 +167,10 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -175,7 +190,10 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	_, err = resources.UpdateEnvironment(db, environment)
 	if err != nil {
 		log.Printf("Error when updating environment: '%s'\n", err)
-		http.Error(w, "there was an error when updating environment", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when updating environment")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 

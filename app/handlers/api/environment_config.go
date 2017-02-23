@@ -18,7 +18,9 @@ func GetEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(http.StatusInternalServerError, "unable to connect to database")
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"unable to connect to database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
@@ -44,7 +46,10 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -58,7 +63,10 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -72,7 +80,10 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	// @todo handle failed save w/out error?
 	if err != nil {
 		log.Printf("Error when retrieving environment config: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving environment config", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving environment config")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -85,7 +96,10 @@ func DeleteEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -97,7 +111,10 @@ func DeleteEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
