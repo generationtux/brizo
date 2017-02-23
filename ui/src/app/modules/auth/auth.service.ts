@@ -23,9 +23,13 @@ export class AuthService {
     return new RequestOptions({headers})
   }
 
-  user() :User {
-    let token = this.jwt.decodeToken(this.getToken());
-    return new User(token);
+  user() :User | null {
+    const token = this.getToken();
+    if (token === null) {
+      return null;
+    }
+
+    return new User(this.jwt.decodeToken(token));
   }
 }
 

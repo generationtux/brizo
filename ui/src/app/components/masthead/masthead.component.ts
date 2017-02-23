@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../modules/auth/auth.service';
+import { AuthService, User } from '../../modules/auth/auth.service';
 
 @Component({
     selector:       'masthead',
@@ -9,9 +9,13 @@ import { AuthService } from '../../modules/auth/auth.service';
 })
 
 export class MastheadComponent {
-  public user: any;
+  public user: User | null;
 
   constructor(private router: Router, private auth: AuthService) {
+    this.loadUser();
+  }
+
+  loadUser(): void {
     this.user = this.auth.user();
   }
 
