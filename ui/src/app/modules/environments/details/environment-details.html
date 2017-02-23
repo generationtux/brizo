@@ -63,14 +63,16 @@
           <thead>
             <tr>
               <th>Name</th>
+              <th>Active</th>
               <th>Replicas</th>
               <th>Created At</th>
               <th>Last Updated</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let version of versions">
+            <tr *ngFor="let version of versions; let l = last">
               <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
+              <td><i class="fa fa-check" aria-hidden="true" *ngIf="l"></i></td>
               <td>{{ version.replicas }}</td>
               <td>{{ version.created_at | date:'medium'}}</td>
               <td>{{ version.updated_at | date:'medium'}}</td>
