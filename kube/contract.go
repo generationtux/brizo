@@ -15,4 +15,6 @@ type APIInterface interface {
 	FindDeploymentByName(string, string) (*v1beta1.Deployment, error)
 	CreateService(*v1.Service) error
 	GetServices(string, v1.ListOptions) ([]v1.Service, error)
+	GetService(string, string) (*v1.Service, error)
+	UpdateService(*v1.Service) error
 }

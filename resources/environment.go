@@ -74,6 +74,7 @@ func environmentServiceDefinition(environment *Environment, application *Applica
 				"envUUID":      environment.UUID,
 			},
 		},
+		//@TODO allow for multiple ports creations
 		Spec: v1.ServiceSpec{
 			Ports: []v1.ServicePort{
 				v1.ServicePort{
@@ -92,6 +93,51 @@ func UpdateEnvironment(db *gorm.DB, environment *Environment) (bool, error) {
 		UpdateColumns(environment)
 
 	return result.RowsAffected == 1, result.Error
+}
+
+// UpdateEnvironmentService will update an existing Environment's service in K8s
+func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment *Environment, ports []ContainerPort) (bool, error) {
+	var svcPorts = make([]v1.ServicePort, len(ports))
+	var protocol = v1.ProtocolTCP
+
+	// build svcPorts (service ports)
+	for index, element := range ports {
+		if element.Protocol == "UDP" {
+			protocol = v1.ProtocolUDP
+		}
+
+		// Name is required because k8s requires each port have a name for
+		// services with multiple ports
+		var sp = v1.ServicePort{
+			Name:     slugify.Slugify(fmt.Sprintf("%v-%v", element.Protocol, element.Port)),
+			Protocol: protocol,
+			Port:     int32(element.Port),
+		}
+
+		svcPorts[index] = sp
+	}
+
+	name := fmt.Sprintf(
+		"%v-%v",
+		environment.Application.Slug,
+		environment.Slug,
+	)
+
+	service, err := client.GetService("brizo", name)
+
+	if err != nil {
+		return false, err
+	}
+
+	service.Spec.Ports = svcPorts
+
+	err = client.UpdateService(service)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, err
 }
 
 // GetEnvironment will get an existing Environment by id

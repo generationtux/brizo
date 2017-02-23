@@ -133,7 +133,15 @@ func (m *mockKubeClient) GetServices(name string, options v1.ListOptions) ([]v1.
 	return []v1.Service{}, nil
 }
 
+func (m *mockKubeClient) GetService(namespace string, name string) (*v1.Service, error) {
+	return &v1.Service{}, nil
+}
+
 func (m *mockKubeClient) CreateService(service *v1.Service) error {
 	args := m.Called(service)
 	return args.Error(0)
+}
+
+func (m *mockKubeClient) UpdateService(service *v1.Service) error {
+	return nil
 }
