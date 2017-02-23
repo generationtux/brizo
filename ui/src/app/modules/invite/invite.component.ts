@@ -12,7 +12,8 @@ import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class InviteComponent {
-  private invitesGetUrl = '/api/v1/users/invites'
+  private invitesGetUrl = '/api/v1/users/invites';
+  private invitesDeleteUrl = '/api/v1/users/invites';
   private invitePostUrl = '/api/v1/users';
   public form: FormGroup;
   public invitees: Observable<Invitee[]>;
@@ -40,6 +41,21 @@ export class InviteComponent {
     )
   }
 
+  deleteInvite(i: number) {
+    this.invitees.subscribe(
+      invitees => this.submitDelete(invitees[i].id),
+      err => console.error('There was an error: ' + err)
+    );
+  }
+
+  submitDelete(id: number) {
+    this.http.delete(this.invitesDeleteUrl + '/' + id, this.auth.jwtRequestOptions()).subscribe(
+      (res: Response) => {
+        this.hydrateInvitees();
+      }
+    )
+  }
+
   getInvitees(): Observable<Invitee[]> {
     return this.http.get(this.invitesGetUrl, this.auth.jwtRequestOptions())
       .map((res: Response) => res.json())
@@ -58,5 +74,7 @@ export class InviteComponent {
 export class Invitee {
     constructor(
         public username: string,
+        public github_username?: string,
+        public id?: number,
     ){}
 }

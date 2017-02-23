@@ -60,3 +60,16 @@ func GetInvitedUsers(db *gorm.DB) ([]User, error) {
 
 	return invitees, result.Error
 }
+
+// DeleteInvitedUser will delete an existing invitee based on his/her github
+// username
+func DeleteInvitedUser(db *gorm.DB, id string) (bool, error) {
+	var user User
+	result := db.Model(user).Where("id = ?", id).Where("github_token = \"\"").First(&user)
+
+	if result.RowsAffected == 1 {
+		result = db.Delete(&user)
+	}
+
+	return result.RowsAffected == 1, result.Error
+}
