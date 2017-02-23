@@ -38,7 +38,7 @@ const routes: Routes = [];
       VersionModule,
     ],
     providers:    [ AuthGuard ],
-    declarations: [ AppComponent],
+    declarations: [ AppComponent ],
     bootstrap:    [ AppComponent ]
 })
 

@@ -19,7 +19,6 @@ const applicationRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(applicationRoutes),
-    SharedModule,
   ],
   declarations: [
     ApplicationDetailsComponent,
