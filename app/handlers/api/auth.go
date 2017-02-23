@@ -49,20 +49,27 @@ func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // ValidateToken validates the provided JWT token
-func ValidateToken(rw http.ResponseWriter, request *http.Request) {
+func ValidateToken(w http.ResponseWriter, r *http.Request) {
 	tokenRequest := new(auth.ValidateJWTForm)
-	errs := binding.Bind(request, tokenRequest)
-	if errs.Handle(rw) {
+	errs := binding.Bind(r, tokenRequest)
+	if errs != nil {
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusBadRequest,
+			errs.Error())
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
 	if !auth.ValidateJWTToken(tokenRequest.Token) {
-		rw.Write([]byte("invalid token"))
-		rw.WriteHeader(401)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusUnauthorized,
+			"invalid token")
+		jsonutil.RespondJSONError(w, jre)
+		return
 	}
 
-	rw.Write([]byte("ok"))
-	rw.WriteHeader(200)
+	w.Write([]byte("ok"))
+	w.WriteHeader(200)
 }
 
 // AuthGetInvitees provides a listing of users who have not yet accepted their
