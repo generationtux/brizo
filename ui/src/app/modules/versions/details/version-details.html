@@ -7,21 +7,28 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <form [formGroup]="editForm" novalidate>
-          <div class="form-group-lg">
-              <h3>
-                <span *ngIf="!editing">{{ version?.name }}</span>
-                <input type="text" class="form-control" *ngIf="editing" formControlName="name">
-              </h3>
-          </div>
-          <h4>{{ version?.uuid }}</h4>
-          <h5>{{ version?.slug}}</h5>
-          <p>Image: {{ version?.image }}</p>
-          <p>Replicas: {{ version?.replicas }}</p>
-          <p>Created at: {{ version?.created_at | date:'medium'}}</p>
-          <p>Last Updated: {{ version?.updated_at | date:'medium'}}</p>
+          <h3>
+            <span *ngIf="!editing">{{ version?.name }}</span>
+            <input type="text" class="form-control" *ngIf="editing" formControlName="name">
+            <small>{{ version?.uuid }}</small>
+          </h3>
+          <p><b>Replicas:</b> {{ version?.replicas }}</p>
+          <p><b>Created:</b> {{ version?.created_at | date:'medium'}}</p>
+          <p><b>Last Updated:</b> {{ version?.updated_at | date:'medium'}}</p>
         </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">Containers</div>
+          <div class="panel-body">
+            <!-- <container-form-group></container-form-group> -->
+          </div>
+        </div>
       </div>
       <div class="col-sm-6">
         <div class="panel panel-default">

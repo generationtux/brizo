@@ -28,7 +28,7 @@ type Container struct {
 	PullPolicy   string                 `json:"pullPolicy"`
 	Args         []string               `json:"args"`
 	VolumeMounts []ContainerVolumeMount `json:"volumeMounts"`
-	Ports        []ContainerPort        `json:"port"`
+	Ports        []ContainerPort        `json:"ports"`
 }
 
 // ContainerPort exposed container port
@@ -94,9 +94,18 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 	persist := db.Create(&version)
 
 	// update environment service
-	UpdateEnvironmentService(db, client, &version.Environment, version.Ports)
+	ports := gatherContainerPorts(version.Containers)
+	UpdateEnvironmentService(db, client, &version.Environment, ports)
 
 	return persist.RowsAffected == 1, persist.Error
+}
+
+func gatherContainerPorts(containers []Container) []ContainerPort {
+	ports := make([]ContainerPort, 0)
+	for _, container := range containers {
+		ports = append(ports, container.Ports...)
+	}
+	return ports
 }
 
 func convertVolume(volume Volume) v1.Volume {

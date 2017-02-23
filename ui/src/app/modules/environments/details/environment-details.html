@@ -63,7 +63,6 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>Image</th>
               <th>Replicas</th>
               <th>Created At</th>
               <th>Last Updated</th>
@@ -72,7 +71,6 @@
           <tbody>
             <tr *ngFor="let version of versions">
               <td><a [routerLink]="['/environments/', environment.uuid, 'versions', version.uuid]">{{ version.name }}</a></td>
-              <td>{{ version.image }}</td>
               <td>{{ version.replicas }}</td>
               <td>{{ version.created_at | date:'medium'}}</td>
               <td>{{ version.updated_at | date:'medium'}}</td>
