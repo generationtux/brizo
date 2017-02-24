@@ -53,7 +53,17 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"))
+	client, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusServiceUnavailable,
+			"unable to reach Kubernetes")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"), client)
 	// @todo this could be a 404, so we need to update this error to handle this
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)

@@ -57,6 +57,13 @@ type Version struct {
 	Spec          string      `gorm:"type:json" json:"-"`
 }
 
+type Spec struct {
+	Name              string
+	Labels            []string
+	Namespace         string
+	creationTimestamp string
+}
+
 // BeforeCreate is a hook that runs before inserting a new record into the
 // database
 func (version *Version) BeforeCreate() (err error) {
@@ -233,7 +240,7 @@ func UpdateVersion(db *gorm.DB, version *Version) (bool, error) {
 }
 
 // GetVersion will get an existing Version by id
-func GetVersion(db *gorm.DB, id string) (*Version, error) {
+func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 	version := new(Version)
 	if err := db.Preload("Environment.Application").Where("uuid = ?", id).First(version).Error; err != nil {
 		return version, err
@@ -242,6 +249,49 @@ func GetVersion(db *gorm.DB, id string) (*Version, error) {
 	if version.ID == 0 {
 		return new(Version), errors.New("not-found")
 	}
+
+	var spec map[string]map[string]interface{}
+	err := json.Unmarshal([]byte(version.Spec), &spec)
+	if err != nil {
+		return new(Version), err
+	}
+	fmt.Println(spec["metadata"]["name"])
+
+	specName := spec["metadata"]["name"].(string)
+	specNS := spec["metadata"]["namespace"].(string)
+
+	deployment, err := client.FindDeploymentByName(specName, specNS)
+	if err != nil {
+		return new(Version), err
+	}
+
+	pods, err := client.GetPodsForDeployment(deployment)
+	if err != nil {
+		return new(Version), err
+	}
+
+	fmt.Println(pods)
+
+	/*
+		var spec map[string]map[string]*json.RawMessage
+		err := json.Unmarshal([]byte(version.Spec), &spec)
+		if err != nil {
+			return new(Version), err
+		}
+
+		spec["metadata"]["name"].UnmarshalJSON(data)
+
+		fmt.Println(data)
+	*/
+	/*
+		spec := make([]byte, 0)
+		err := json.Unmarshal([]byte(version.Spec), &spec)
+		if err != nil {
+			return new(Version), errors.New("not-found")
+		}
+	*/
+
+	//fmt.Println(version.Spec)
 
 	return version, nil
 }
