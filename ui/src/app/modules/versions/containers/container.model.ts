@@ -2,7 +2,7 @@ export class Container {
   public name: string;
   public image: string;
   public args: string[];
-  public argString: string;
+  public argString: string = "";
   public alwaysPull: boolean = true;
   public ports: ContainerPort[];
   public volumeMounts: VolumeMount[];
@@ -16,7 +16,7 @@ export class Container {
 
   // convert args string into individual array of args
   public parseArgString() {
-    if (this.args.length !== 0) {
+    if (this.args.length !== 0 || this.argString == "") {
       return;
     }
 
