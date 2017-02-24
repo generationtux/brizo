@@ -2,6 +2,14 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 @import "~font-awesome/css/font-awesome.css";
 
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin: 0 0 60px; /* bottom = footer height */
+}
+
 // annoying blue outline on links
 a:focus, a.btn:focus, button:focus { outline: none; }
 
@@ -57,6 +65,11 @@ label {
   }
 }
 
+app > .content:after {
+  content: "";
+  display: block;
+}
+
 app > .footer {
   position: absolute;
   bottom: 0;
@@ -68,6 +81,7 @@ app > .footer {
     display: inline-block;
     vertical-align: middle;
     float: none;
+    margin-bottom: 0;
   }
 }
 
