@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
@@ -129,7 +130,7 @@ func convertVolume(volume Volume) v1.Volume {
 	return k8sVol
 }
 
-func createContainerSpec(container Container) v1.Container {
+func createContainerSpec(container Container, environmentUUID string) v1.Container {
 	policy := v1.PullAlways
 	if !container.AlwaysPull {
 		policy = v1.PullIfNotPresent
@@ -155,6 +156,24 @@ func createContainerSpec(container Container) v1.Container {
 		}
 	}
 
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+	}
+	environmentVars, err := GetEnvironmentConfig(db, environmentUUID)
+	if err != nil {
+		log.Printf("Error retrieving environment configs: '%s'\n", err)
+	}
+
+	var k8sEnvVars []v1.EnvVar
+	for _, environmentVar := range *environmentVars {
+		k8sEnvVars = append(k8sEnvVars, v1.EnvVar{
+			Name:  environmentVar.Name,
+			Value: environmentVar.Value,
+		})
+	}
+
 	return v1.Container{
 		Name:            container.Name,
 		Image:           container.Image,
@@ -162,6 +181,7 @@ func createContainerSpec(container Container) v1.Container {
 		Args:            container.Args,
 		Ports:           k8sPorts,
 		VolumeMounts:    k8sVolumeMounts,
+		Env:             k8sEnvVars,
 	}
 }
 
@@ -181,7 +201,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 
 	var k8sContainers []v1.Container
 	for index := 0; index < len(version.Containers); index++ {
-		k8sContainers = append(k8sContainers, createContainerSpec(version.Containers[index]))
+		k8sContainers = append(k8sContainers, createContainerSpec(version.Containers[index], version.Environment.UUID))
 	}
 
 	deployment := &v1beta1.Deployment{
