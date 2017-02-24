@@ -60,7 +60,7 @@
 
     <div class="form-group">
       <label for="args">Container args</label>
-      <input type="text" class="form-control" placeholder='"arg1", "arg2", ...'>
+      <input type="text" class="form-control" name="container-args-{{ containerIndex }}" placeholder='"arg1", "arg2", ...' [(ngModel)]="container.argString">
     </div>
 
     <div class="form-group" *ngIf="availableVolumes.length > 0">
