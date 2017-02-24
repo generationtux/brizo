@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap'
 import { Observable } from 'rxjs/Rx'
-import { ActivatedRoute, Params } from '@angular/router'
+import { Router, ActivatedRoute, Params } from '@angular/router'
 import { Component, EventEmitter, OnInit, AfterViewInit } from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
@@ -23,7 +23,8 @@ export class ConfigurationComponent {
   
   constructor(private configService: ConfigurationService,
               private environmentService: EnvironmentService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private router: Router) {}
     
   ngOnInit() {
     this.createConfigForm = new FormGroup({
@@ -97,9 +98,13 @@ export class ConfigurationComponent {
       var name  = key;
       var value = config[key];
       this.configService.createConfiguration(name, value, this.environment.uuid).subscribe(
-        response => console.log('configuration created'),
+        () => this.onCreateVersion(),
         err => console.error(err),
       )
     }
+  }
+  
+  private onCreateVersion() {
+    this.router.navigate(['/environments', this.environment.uuid]);
   }
 }
