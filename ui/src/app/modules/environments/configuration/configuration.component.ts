@@ -98,7 +98,7 @@ export class ConfigurationComponent {
       var name  = key;
       var value = config[key];
       this.configService.createConfiguration(name, value, this.environment.uuid).subscribe(
-        () => (this.onCreateVersion()),
+        () => this.onCreateVersion(),
         err => console.error(err),
       )
     }
