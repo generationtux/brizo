@@ -27,6 +27,22 @@
           <div class="panel-body">
             <!-- <container-form-group></container-form-group> -->
             <!--<p *ngFor="let container of versions.containers | async">{{ container.name }}</p>-->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Image</th>
+                  <th>Always Pull?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let container of version?.containers">
+                  <td>{{ container.name }}</td>
+                  <td>{{ container.image }}</td>
+                  <td><i class="fa fa-check" *ngIf="container.alwaysPull"></i> </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -35,7 +51,7 @@
           <!-- Default panel contents -->
           <div class="panel-heading">Volumes</div>
           <div class="panel-body">
-            <!-- <volume-form-group></volume-form-group> -->
+            <p *ngFor="let volume of version?.volumes">{{ volume.name }}</p>
           </div>
         </div>
       </div>

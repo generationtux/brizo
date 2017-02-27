@@ -255,7 +255,6 @@ func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 	if err != nil {
 		return new(Version), err
 	}
-	fmt.Println(spec["metadata"]["name"])
 
 	specName := spec["metadata"]["name"].(string)
 	specNS := spec["metadata"]["namespace"].(string)
@@ -265,33 +264,30 @@ func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 		return new(Version), err
 	}
 
-	pods, err := client.GetPodsForDeployment(deployment)
-	if err != nil {
-		return new(Version), err
+	// gather container information
+	for i := 0; i < len(deployment.Spec.Template.Spec.Containers); i++ {
+		// determine pull policy
+		pullPolicy := true
+		if deployment.Spec.Template.Spec.Containers[i].ImagePullPolicy != "Always" {
+			pullPolicy = false
+		}
+
+		container := Container{
+			Name:       deployment.Spec.Template.Spec.Containers[i].Name,
+			Image:      deployment.Spec.Template.Spec.Containers[i].Image,
+			AlwaysPull: pullPolicy,
+			Args:       deployment.Spec.Template.Spec.Containers[i].Args,
+		}
+		version.Containers = append(version.Containers, container)
 	}
 
-	fmt.Println(pods)
-
-	/*
-		var spec map[string]map[string]*json.RawMessage
-		err := json.Unmarshal([]byte(version.Spec), &spec)
-		if err != nil {
-			return new(Version), err
+	// gather volumes information
+	for i := 0; i < len(deployment.Spec.Template.Spec.Volumes); i++ {
+		volume := Volume{
+			Name: deployment.Spec.Template.Spec.Volumes[i].Name,
 		}
-
-		spec["metadata"]["name"].UnmarshalJSON(data)
-
-		fmt.Println(data)
-	*/
-	/*
-		spec := make([]byte, 0)
-		err := json.Unmarshal([]byte(version.Spec), &spec)
-		if err != nil {
-			return new(Version), errors.New("not-found")
-		}
-	*/
-
-	//fmt.Println(version.Spec)
+		version.Volumes = append(version.Volumes, volume)
+	}
 
 	return version, nil
 }
