@@ -9,7 +9,8 @@ import (
 
 // GetOAuthStateString provides a randomized string to prevent csrf
 func GetOAuthStateString() (oauthStateString string) {
-	return GenerateRandomString(64)
+	// @todo handle persistent random state
+	return "yoKBV7eUR2cVYjx4fsYs3ZPkLwbMfBHg"
 }
 
 // BuildUserFromGithubUser handles the checks needed to build a brizo user from
