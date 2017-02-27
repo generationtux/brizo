@@ -75,6 +75,14 @@ func GetAccessToken(db *gorm.DB, token string) (*AccessToken, error) {
 	return accessToken, nil
 }
 
+// AllAccessTokens will get existing access tokens
+func AllAccessTokens(db *gorm.DB) ([]AccessToken, error) {
+	var tokens []AccessToken
+	result := db.Find(&tokens)
+
+	return tokens, result.Error
+}
+
 // HasAccessToken will return the existance of an access token in the database.
 // Errors that occur on the passed db instance will not be returned, so the
 // caller should check for any errors if desired.
