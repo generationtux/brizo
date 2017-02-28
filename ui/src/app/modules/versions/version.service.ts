@@ -22,6 +22,13 @@ export class VersionService {
   createVersion(version: Version): Observable<Version> {
     let options = new RequestOptions({ headers: this.getHeaders() });
     let url = this.url + version.environment_uuid + '/versions';
+
+    version.containers.forEach((container) => {
+      if (container.argString != "") {
+        container.parseArgString();
+      }
+    });
+
     let data = {
       name: version.name,
       replicas: version.replicas,

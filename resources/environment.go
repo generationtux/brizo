@@ -20,8 +20,8 @@ type Environment struct {
 	Name          string      `gorm:"not null" json:"name"`
 	Slug          string      `gorm:"not null" json:"slug"`
 	ApplicationID uint64      `json:"application_id,string"`
-	Application   Application `json:"application,array"`
-	Versions      []Version   `json:"versions,array"`
+	Application   Application `json:"application,array,omitempty"`
+	Versions      []Version   `json:"versions,array,omitempty"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -39,7 +39,7 @@ func (environment *Environment) BeforeCreate() (err error) {
 // AllEnvironments will return all of the Environments
 func AllEnvironments(db *gorm.DB) ([]Environment, error) {
 	var environments []Environment
-	result := db.Find(&environments)
+	result := db.Preload("Application").Find(&environments)
 
 	return environments, result.Error
 }
@@ -74,8 +74,11 @@ func environmentServiceDefinition(environment *Environment, application *Applica
 				"envUUID":      environment.UUID,
 			},
 		},
-		//@TODO allow for multiple ports creations
 		Spec: v1.ServiceSpec{
+			Selector: map[string]string{
+				"appUUID": application.UUID,
+				"envUUID": environment.UUID,
+			},
 			Ports: []v1.ServicePort{
 				v1.ServicePort{
 					Protocol: v1.ProtocolTCP,
@@ -143,7 +146,7 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 // GetEnvironment will get an existing Environment by id
 func GetEnvironment(db *gorm.DB, id string) (*Environment, error) {
 	environment := new(Environment)
-	if err := db.Preload("Application").Where("uuid = ?", id).First(&environment).Error; err != nil {
+	if err := db.Preload("Application").Preload("Versions").Where("uuid = ?", id).First(&environment).Error; err != nil {
 		return environment, err
 	}
 

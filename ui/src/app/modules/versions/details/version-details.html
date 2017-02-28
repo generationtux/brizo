@@ -1,23 +1,19 @@
-<div class="version-details">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <p><a href="/app">&laquo; Back to Dashboard</a></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <form [formGroup]="editForm" novalidate>
-          <h3>
-            <span *ngIf="!editing">{{ version?.name }}</span>
-            <input type="text" class="form-control" *ngIf="editing" formControlName="name">
-            <small>{{ version?.uuid }}</small>
-          </h3>
-          <p><b>Replicas:</b> {{ version?.replicas }}</p>
-          <p><b>Created:</b> {{ version?.created_at | date:'medium'}}</p>
-          <p><b>Last Updated:</b> {{ version?.updated_at | date:'medium'}}</p>
-        </form>
-      </div>
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', environment.application.uuid]">{{ environment?.application.name }}</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
+      <br>
+      {{ version?.name }}
+    </h2>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <p><b>Replicas:</b> {{ version?.replicas }}</p>
+      <p><b>Created:</b> {{ version?.created_at | date:'medium'}}</p>
+      <p><b>Last Updated:</b> {{ version?.updated_at | date:'medium'}}</p>
     </div>
     <div class="row">
       <div class="col-sm-6">

@@ -13,31 +13,10 @@
     <h2>
       <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
       <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
+      <br>
       {{ environment?.name }}
-      <button class="btn btn-link title-settings" *ngIf="!editing" (click)="editing=!editing"><i class="fa fa-cog"></i></button>
+      <a class="btn btn-link title-settings" [routerLink]="['/environments', environment.uuid, 'configuration']"><i class="fa fa-cog"></i></a>
     </h2>
-  </div>
-
-  <div class="row">
-    <form [formGroup]="editForm" novalidate>
-      <div class="col-sm-6">
-        <div class="form-group-lg">
-          <h3>
-            <input type="text" class="form-control" *ngIf="editing" formControlName="name">
-          </h3>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="btn-group pull-right" role="group" aria-label="...">
-          <button class="btn btn-default" type="button" *ngIf="editing" (click)="cancelEditing()">
-            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </button>
-          <button class="btn btn-default" type="button" *ngIf="editing" (click)="saveEnvironment()">
-            Save <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
-    </form>
   </div>
 
   <div class="row">
