@@ -48,7 +48,7 @@ type ContainerVolumeMount struct {
 type Version struct {
 	database.Model
 	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null" json:"name"`
+	Name          string      `gorm:"not null;unique" json:"name"`
 	Slug          string      `gorm:"not null" json:"slug"`
 	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
 	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
