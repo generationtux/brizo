@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthService } from '../auth/auth.service';
+
 @Component({
     selector:       'login',
     templateUrl:    './login.html'
@@ -9,8 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LoginComponent {
   private loginError :string
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    localStorage.removeItem('id_token');
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) {
     route.queryParams.subscribe(
       (queryParam: any) => {
         let errorCode = queryParam['err'];
@@ -21,5 +22,9 @@ export class LoginComponent {
         }
       }
     );
+
+    if (this.auth.validateJwtToken()) {
+      this.router.navigate(['/']);
+    }
   }
 }

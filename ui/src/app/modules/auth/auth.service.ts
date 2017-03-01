@@ -18,6 +18,10 @@ export class AuthService {
     return localStorage.getItem('id_token');
   }
 
+  clearToken() :void {
+    localStorage.removeItem('id_token');
+  }
+
   jwtRequestOptions() :RequestOptions {
     let headers = new Headers({'Authorization': 'Bearer ' + this.getToken()})
     return new RequestOptions({headers})
