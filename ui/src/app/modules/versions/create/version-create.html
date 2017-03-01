@@ -7,6 +7,8 @@
       Deploy new version
     </h2>
   </div>
+  
+  <p class="text-danger" *ngIf="error != undefined">{{ error }}</p>
 
   <form (ngSubmit)="createVersion($event)">
     <div class="row">

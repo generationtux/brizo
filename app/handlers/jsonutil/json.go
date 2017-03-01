@@ -102,5 +102,6 @@ func (jre *JSONResponseError) Render() string {
 // written and any write error encountered.
 func RespondJSONError(w http.ResponseWriter, jre *JSONResponseError) (int, error) {
 	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(jre.Status())
 	return fmt.Fprint(w, jre.Render())
 }
