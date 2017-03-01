@@ -200,5 +200,5 @@ func ApplicationCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonResponse(w, app, 200)
+	jsonResponse(w, app, 201)
 }
