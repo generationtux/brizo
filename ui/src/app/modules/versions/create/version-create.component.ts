@@ -18,6 +18,7 @@ export class VersionCreateComponent implements OnInit {
   public version: Version;
   private application: any = {}
   private environment: any = {}
+  public error: string;
 
   private newVolumeType: string = "temp";
   private newVolumeName: string;
@@ -54,13 +55,17 @@ export class VersionCreateComponent implements OnInit {
     this.version.environment_uuid = this.environment.uuid;
 
     this.versionService.createVersion(this.version).subscribe(
-      () => (this.onCreateVersion()),
-      err => console.error('There was an error: ' + err)
+      () => this.onCreateVersion(),
+      err => this.displayError(err)
     );
   }
 
   private onCreateVersion() {
     this.router.navigate(['/environments', this.environment.uuid]);
+  }
+  
+  private displayError(e: string) {
+    this.error = 'There was an error: ' + e
   }
 
   private addContainer() {
