@@ -10,6 +10,7 @@ export class LoginComponent {
   private loginError :string
 
   constructor(private router: Router, private route: ActivatedRoute) {
+    localStorage.removeItem('id_token');
     route.queryParams.subscribe(
       (queryParam: any) => {
         let errorCode = queryParam['err'];
