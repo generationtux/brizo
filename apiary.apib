@@ -3,6 +3,58 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
 # Brizo
 
+# Group Access Tokens
+
+Authentication is verified in two ways within Brizo: JWT authentication and access tokens.
+You should always use an access token when interacting directly with the API.
+
+
+JWT authentication is reserved for authentication via the web interface.
+
+## Access Tokens [/access-tokens]
+
+### List of All Access Tokens [GET]
+
++ Request (application/json)
+
+    + Headers
+
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+              {
+                "id": "1",
+                "created_at": "2017-02-27T18:04:39Z",
+                "updated_at": "2017-02-27T18:04:39Z",
+                "token": "DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl"
+              }
+            ]
+
+### Create a New Access Token [POST]
+
++ Request (application/json)
+
+    + Headers
+
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
+
++ Response 201 (application/json)
+
+    + Body
+
+            [
+              {
+                "id": "2",
+                "created_at": "2017-02-27T18:04:39Z",
+                "updated_at": "2017-02-27T18:04:39Z",
+                "token": "HOR81CK8JA7MxHrKerdNMXKwFQuNNSJOPGVIl9cm0nBk9Oa0etPnPXdsSSDTfXHlwO9arN9vH4vfy8qqK8sxTVRajZC4q7eYCLMjMFtYLrsjouPEsgmxaWtAv1nCFtCe"
+              }
+            ]
+
 # Group Users & Invites
 
 ## User [/users]
@@ -13,12 +65,12 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
     + Body
 
               {
-                  "username": "octocat"
+                "username": "octocat"
               }
 
 + Response 201 (application/json)
@@ -31,7 +83,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -62,55 +114,9 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 204 (application/json)
-
-# Group Access Tokens
-
-## Access Tokens [/access-tokens]
-
-### List of All Access Tokens [GET]
-
-+ Request (application/json)
-
-    + Headers
-
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
-
-+ Response 200 (application/json)
-
-    + Body
-
-            [
-              {
-                "id": "1",
-                "created_at": "2017-02-27T18:04:39Z",
-                "updated_at": "2017-02-27T18:04:39Z",
-                "token": "DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl"
-              }
-            ]
-
-### Create a New Access Token [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
-
-+ Response 201 (application/json)
-
-    + Body
-
-            [
-              {
-                "id": "1",
-                "created_at": "2017-02-27T18:04:39Z",
-                "updated_at": "2017-02-27T18:04:39Z",
-                "token": "HOR81CK8JA7MxHrKerdNMXKwFQuNNSJOPGVIl9cm0nBk9Oa0etPnPXdsSSDTfXHlwO9arN9vH4vfy8qqK8sxTVRajZC4q7eYCLMjMFtYLrsjouPEsgmxaWtAv1nCFtCe"
-              }
-            ]
 
 # Group Applications
 
@@ -122,7 +128,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -137,7 +143,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
                 "name": "My Application",
                 "slug": "my-application",
                 "environments": [
-                    ...
+                  ...
                 ]
               }
             ]
@@ -148,12 +154,12 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
     + Body
 
               {
-                  "name": "My Application"
+                "name": "My Application"
               }
 
 + Response 201 (application/json)
@@ -168,7 +174,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
               "name": "My Application",
               "slug": "my-application",
               "environments": [
-                  ...
+                ...
               ]
             }
 
@@ -184,7 +190,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -198,7 +204,7 @@ HOST: https://ops-brizo.gentux.com/api/v1
               "name": "My Application",
               "slug": "my-application",
               "environments": [
-                  ...
+                ...
               ]
             }
 
@@ -216,11 +222,11 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
     + Body
 
             {
-                "name": "My Updated Application"
+              "name": "My Updated Application"
             }
 
 + Response 200 (application/json)
@@ -235,7 +241,7 @@ The `id` field of response body will be deprecated in future versions.
               "name": "My Updated Application",
               "slug": "my-updated-application",
               "environments": [
-                  ...
+                ...
               ]
             }
 
@@ -249,25 +255,25 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
     + Body
 
             [
-                {
-                    "id": "1",
-                    "created_at": "2017-02-24T19:02:29Z",
-                    "updated_at": "2017-02-24T19:02:29Z",
-                    "uuid": "ac7c1cfd-1146-4ef3-aa37-62830af86a43",
-                    "name": "My Environment",
-                    "slug": "my-environment",
-                    "application_id": "1",
-                    "application": {
-                        ...
-                    }
+              {
+                "id": "1",
+                "created_at": "2017-02-24T19:02:29Z",
+                "updated_at": "2017-02-24T19:02:29Z",
+                "uuid": "ac7c1cfd-1146-4ef3-aa37-62830af86a43",
+                "name": "My Environment",
+                "slug": "my-environment",
+                "application_id": "1",
+                "application": {
+                  ...
                 }
+              }
             ]
 
 ### Create a New Environment [POST]
@@ -276,12 +282,12 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
     + Body
 
               {
-                  "name": "My Environment"
+                "name": "My Environment"
               }
 
 + Response 201 (application/json)
@@ -297,7 +303,7 @@ The `id` field of response body will be deprecated in future versions.
               "slug": "my-environment",
               "application_id": "1",
               "application": {
-                  ...
+                ...
               }
             }
 
@@ -313,7 +319,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -328,7 +334,7 @@ The `id` field of response body will be deprecated in future versions.
               "slug": "my-environment",
               "application_id": "1",
               "application": {
-                  ...
+                ...
               }
             }
 
@@ -346,11 +352,11 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
     + Body
 
             {
-                "name": "My Updated Environment"
+              "name": "My Updated Environment"
             }
 
 + Response 200 (application/json)
@@ -366,7 +372,7 @@ The `id` field of response body will be deprecated in future versions.
               "slug": "my-updated-environment",
               "application_id": "1",
               "application": {
-                  ...
+                ...
               }
             }
 
@@ -384,7 +390,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -418,7 +424,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
     + Body
 
@@ -462,7 +468,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -498,7 +504,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
 + Response 200 (application/json)
 
@@ -528,7 +534,7 @@ The `id` field of response body will be deprecated in future versions.
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
     + Body
 
@@ -556,31 +562,17 @@ The `id` field of response body will be deprecated in future versions.
 
 ## Environment Configuration [/environments/{environment_id}/configuration/{configuration_id}]
 
-### Get a Single Environment Configuration [GET]
+### Delete an Environment Configuration [DELETE]
 
 + Parameters
 
     + environment_id: `ac7c1cfd-1146-4ef3-aa37-62830af86a43` (required, uuid) - ID of the Environment Configuration's Environment as a UUID
-    + configuration_id: `936e9ef6-4eeb-4eed-8869-4468b847d6ea` (required, uuid) - ID of the Environment Configuration as a UUID
+    + configuration_id: `1` (required, number) - ID of the Environment Configuration as an integer
 
 + Request (application/json)
 
     + Headers
 
-            Auth: Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.82wXTCDa4VHEAaDlq7PyqOqNbMGwDiXSt_n1nKGH43w
+            Auth: Bearer DkfPUfxjydduam8HIRq5Za1uD8PBOdYLhTrGsXbMIuox5JTwfLFe1N0dZecs2gbnoN3le3D7z7MQKVvhydCVQzNqZnLjtARd3g643cX1Mn7rtuFLw1mkOHI2d0GFf5Cl
 
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-              "id": "1",
-              "created_at": "2017-02-27T15:44:00Z",
-              "updated_at": "2017-02-27T15:44:00Z",
-              "name": "MY_ENVIRONMENT_KEY",
-              "value": "my_value",
-              "environment_uuid": "ac7c1cfd-1146-4ef3-aa37-62830af86a43",
-              "environment": {
-                ...
-              }
-            }
++ Response 204 (application/json)
