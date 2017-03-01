@@ -47,11 +47,11 @@ type ContainerVolumeMount struct {
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null;unique" json:"name"`
+	UUID          string      `gorm:"not null;unique_index:uix_versions_uuid" sql:"type:varchar(36)" json:"uuid"`
+	Name          string      `gorm:"not null;unique_index:uix_versions_name_environment_id" json:"name"`
 	Slug          string      `gorm:"not null" json:"slug"`
 	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	EnvironmentID uint        `gorm:"not null" json:"environment_id"`
+	EnvironmentID uint        `gorm:"not null;unique_index:uix_versions_name_environment_id" json:"environment_id"`
 	Environment   Environment `gorm:"not null" json:"environment"`
 	Volumes       []Volume    `gorm:"-" json:"volumes"`
 	Containers    []Container `gorm:"-" json:"containers"`

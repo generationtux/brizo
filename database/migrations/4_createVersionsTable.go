@@ -20,7 +20,7 @@ func createVersionsTable() *migrate.Migration {
         spec json DEFAULT NULL,
         PRIMARY KEY (id),
         UNIQUE KEY uix_versions_uuid (uuid),
-        UNIQUE INDEX uix_versions_name (name, environment_id)
+        UNIQUE INDEX uix_versions_name_environment_id (name, environment_id)
       );
     `},
 		Down: []string{`
