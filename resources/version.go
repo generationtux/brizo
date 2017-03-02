@@ -219,6 +219,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 				"brizoManaged": "true",
 				"appUUID":      version.Environment.Application.UUID,
 				"envUUID":      version.Environment.UUID,
+				"versionUUID":  version.UUID,
 			},
 		},
 		Spec: v1beta1.DeploymentSpec{
