@@ -11,6 +11,7 @@ import (
 	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
+	"github.com/pborman/uuid"
 )
 
 // VersionIndex provides a listing of all Versions
@@ -144,6 +145,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	version := resources.Version{
+		UUID:          uuid.New(),
 		Name:          createForm.Name,
 		Slug:          slugify.Slugify(createForm.Name),
 		Containers:    createForm.Containers,

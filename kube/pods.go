@@ -37,6 +37,7 @@ func (c *Client) CreateOrUpdateDeployment(deployment *v1beta1.Deployment) error 
 	}
 
 	existingDeployment.Spec = deployment.Spec
+	existingDeployment.ObjectMeta = deployment.ObjectMeta
 
 	_, err = c.k8sClient.Deployments(deployment.Namespace).Update(existingDeployment)
 

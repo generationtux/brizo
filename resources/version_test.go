@@ -87,7 +87,7 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 	assert.Equal(t, "app", deployment.Spec.Template.Spec.Containers[0].Name)
 	assert.Equal(t, "foo:latest", deployment.Spec.Template.Spec.Containers[0].Image)
 
-	expectDeploymentLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123"}
+	expectDeploymentLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123", "versionUUID": "version-uuid123"}
 	assert.Equal(t, expectDeploymentLabels, deployment.Labels)
 
 	expectSelector := map[string]string{"envUUID": "env-uuid123", "versionUUID": "version-uuid123"}
