@@ -247,8 +247,6 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		},
 	}
 
-	fmt.Println(deployment)
-
 	v1beta1.SetObjectDefaults_Deployment(deployment)
 	return deployment
 }
