@@ -3,8 +3,9 @@
 </header>
 <router-outlet></router-outlet>
 
-<footer class="footer">
+<footer *ngIf="this.isLoggedIn()" class="footer">
   <div class="container-fluid">
-    <p class="text-muted"><a href="https://github.com/generationtux/brizo/issues/new">Submit an issue</a></p>
+    <p class="text-muted pull-left"><a href="https://github.com/generationtux/brizo/issues/new">Submit an issue</a></p>
+    <p class="text-muted pull-right"><a [routerLink]="['help']"><i class="fa fa-life-ring" aria-hidden="true"></i> Help</a></p>
   </div>
 </footer>
