@@ -1,28 +1,56 @@
-<masthead></masthead>
-<div class="version-details">
-  <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <p><a href="/app">&laquo; Back to Dashboard</a></p>
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/']">Apps</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', environment.application.uuid]">{{ environment?.application.name }}</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
+      <br>
+      {{ version?.name }}
+    </h2>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <p><b>Replicas:</b> {{ version?.replicas }}</p>
+      <p><b>Created:</b> {{ version?.created_at | date:'medium'}}</p>
+      <p><b>Last Updated:</b> {{ version?.updated_at | date:'medium'}}</p>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">Containers</div>
+          <div class="panel-body">
+            <!-- <container-form-group></container-form-group> -->
+            <!--<p *ngFor="let container of versions.containers | async">{{ container.name }}</p>-->
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Image</th>
+                  <th>Always Pull?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let container of version?.containers">
+                  <td>{{ container.name }}</td>
+                  <td>{{ container.image }}</td>
+                  <td><i class="fa fa-check" *ngIf="container.alwaysPull"></i> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <form [formGroup]="editForm" novalidate>
-          <div class="col-sm-6">
-            <div class="form-group-lg">
-                <h3>
-                  <span *ngIf="!editing">{{ version?.name }}</span>
-                  <input type="text" class="form-control" *ngIf="editing" formControlName="name">
-                </h3>
-            </div>
-            <h4>{{ version?.uuid }}</h4>
-            <h5>{{ version?.slug}}</h5>
-            <p>Image: {{ version?.image }}</p>
-            <p>Replicas: {{ version?.replicas }}</p>
-            <p>Created at: {{ version?.created_at | date:'medium'}}</p>
-            <p>Last Updated: {{ version?.updated_at | date:'medium'}}</p>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">Volumes</div>
+          <div class="panel-body">
+            <p *ngFor="let volume of version?.volumes">{{ volume.name }}</p>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>

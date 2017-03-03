@@ -1,0 +1,25 @@
+<div class="login">
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+          <form [formGroup]="form" (ngSubmit)="submitAccessTokenForm()">
+            <button type="submit" class="btn btn-default">Create Token <i class="fa fa-key pull-right"></i></button>
+          </form>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+                <th data-field="token">Access Tokens</th>
+                <th data-field="created_at">Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let token of tokens | async; let i=index">
+              <td>{{ token.token }}</td>
+              <td>{{ token.created_at | date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

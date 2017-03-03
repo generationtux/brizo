@@ -1,0 +1,17 @@
+>>> .config-entry li {
+  width: 47%;
+}
+
+>>> .config-entry li.config-del {
+  float: right;
+  padding: 0;
+  width: 4%;
+}
+
+>>> .config-entry li.config-name {
+  float: left;
+}
+
+>>> .config-entry li.config-value {
+  float: left;
+}

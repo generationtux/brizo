@@ -3,6 +3,8 @@ package web
 import (
 	"log"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
@@ -19,12 +21,39 @@ var (
 		Scopes:       []string{"user", "user:email", "repo"},
 		Endpoint:     github.Endpoint,
 	}
+	csrfCookieName   = "brizo_csrf_token"
 	oauthStateString = auth.GetOAuthStateString()
 )
+
+func setCsrfCookie(w http.ResponseWriter, r *http.Request) {
+	isLocal := (strings.Contains(r.Host, "localhost") || strings.Contains(r.Host, "127.0.0.1"))
+	csrfCookie := http.Cookie{
+		Name:     csrfCookieName,
+		Value:    oauthStateString,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   !isLocal,
+	}
+	http.SetCookie(w, &csrfCookie)
+}
+
+func expireCsrfCookie(w http.ResponseWriter, r *http.Request) {
+	isLocal := (strings.Contains(r.Host, "localhost") || strings.Contains(r.Host, "127.0.0.1"))
+	csrfCookie := http.Cookie{
+		Name:     csrfCookieName,
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   !isLocal,
+		Expires:  time.Unix(0, 0),
+	}
+	http.SetCookie(w, &csrfCookie)
+}
 
 // AuthGithubHandler for requesting oauth access from Github
 func AuthGithubHandler(w http.ResponseWriter, r *http.Request) {
 	auth.HydrateOAuthConfig(oauthConf)
+	setCsrfCookie(w, r)
 	url := oauthConf.AuthCodeURL(oauthStateString, oauth2.AccessTypeOnline)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
@@ -33,6 +62,7 @@ func authErrorRedirect(w http.ResponseWriter, r *http.Request) {
 	endpoint := "/app/login?err=1"
 	http.Redirect(w, r, endpoint, http.StatusTemporaryRedirect)
 }
+
 func authDenyRedirect(w http.ResponseWriter, r *http.Request) {
 	endpoint := "/app/login?err=2"
 	http.Redirect(w, r, endpoint, http.StatusTemporaryRedirect)
@@ -49,8 +79,16 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if oAuthCallbackForm.State != oauthStateString {
-		log.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, oAuthCallbackForm.State)
+	csrfCookie, err := r.Cookie(csrfCookieName)
+	if err != nil {
+		log.Println(err)
+		authErrorRedirect(w, r)
+		return
+	}
+	expireCsrfCookie(w, r)
+
+	if oAuthCallbackForm.State != csrfCookie.Value {
+		log.Printf("invalid oauth state, expected '%s', got '%s'\n", csrfCookie.Value, oAuthCallbackForm.State)
 		authErrorRedirect(w, r)
 		return
 	}
@@ -114,6 +152,7 @@ func AuthGithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 			authErrorRedirect(w, r)
 			return
 		}
+		jwtToken, jwtError = auth.CreateJWTToken(brizoUser)
 	} else {
 		// user is not allowed
 		authDenyRedirect(w, r)

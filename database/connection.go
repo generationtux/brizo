@@ -31,13 +31,3 @@ func Health() error {
 
 	return err
 }
-
-// Migrate will modify the database to match the provied interfaces
-func Migrate(values ...interface{}) error {
-	db, err := Connect()
-	if err != nil {
-		return err
-	}
-
-	return db.AutoMigrate(values...).Error
-}

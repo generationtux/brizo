@@ -8,6 +8,7 @@ import (
 
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
 )
@@ -78,11 +79,24 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 
 // EnvironmentCreate creates a new Environment
 func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
+	client, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusServiceUnavailable,
+			"unable to reach Kubernetes")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
 		log.Printf("Database error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to connect to the database", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to connect to the database")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -95,7 +109,10 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 	// @todo
@@ -104,18 +121,29 @@ func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 		Name:          createForm.Name,
 		ApplicationID: appID,
 	}
-	_, err = resources.CreateEnvironment(db, &environment)
-	// @todo handle failed save w/out error?
+
+	app, err := resources.GetApplicationByID(db, createForm.ApplicationID)
 	if err != nil {
-		log.Printf("Error when retrieving environment: '%s'\n", err)
-		http.Error(w, "there was an error when retrieving environment", http.StatusInternalServerError)
+		log.Printf("Error when retrieving application: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving application")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
-	// @todo return some sort of content?
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	return
+	_, err = resources.CreateEnvironment(db, client, &environment, app)
+	// @todo handle failed save w/out error?
+	if err != nil {
+		log.Printf("Error when retrieving environment: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when retrieving environment")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
+
+	jsonResponse(w, environment, 200)
 }
 
 // EnvironmentEdit edits an Environment
@@ -139,7 +167,10 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("decoding error: '%s'\n", err)
-		http.Error(w, "there was an error when attempting to parse the form", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to parse the form")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
@@ -159,7 +190,10 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	_, err = resources.UpdateEnvironment(db, environment)
 	if err != nil {
 		log.Printf("Error when updating environment: '%s'\n", err)
-		http.Error(w, "there was an error when updating environment", http.StatusInternalServerError)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when updating environment")
+		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 

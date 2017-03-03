@@ -1,0 +1,87 @@
+<div class="container-fluid">
+  <div class="page-header">
+    <h2>
+      <small class="breadcrumb-previous"><a [routerLink]="['/applications', application.uuid]">{{ application?.name }}</a> &gt;</small>
+      <small class="breadcrumb-previous"><a [routerLink]="['/environments', environment.uuid]">{{ environment?.name }}</a> &gt;</small>
+      <br>
+      Deploy new version
+    </h2>
+  </div>
+  
+  <p class="text-danger" *ngIf="error != undefined">{{ error }}</p>
+
+  <form (ngSubmit)="createVersion($event)">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="name">Version</label>
+          <input type="text" name="name" class="form-control input-lg" [(ngModel)]="version.name" placeholder="v1.2" required>
+        </div>
+      </div>
+
+      <div class="col-sm-2">
+        <div class="form-group">
+          <label for="replicas">Deploy instances</label>
+          <input type="number" name="replicas" [(ngModel)]="version.replicas" class="form-control input-lg" placeholder="1" required>
+        </div>
+      </div>
+    </div><!-- row -->
+
+    <div class="row">
+
+      <div class="col-sm-6">
+        <h4>
+          Containers
+          <span class="text-info" role="button" (click)="addContainer()"><i class="fa fa-plus"></i></span>
+        </h4>
+        <br>
+        <div *ngFor="let container of version.containers; let i=index">
+          <container-form
+            [container]="container"
+            [containerIndex]="i"
+            [availableVolumes]="version.volumes"
+            (delete)="removeContainer(i)"
+          ></container-form>
+        </div>
+      </div>
+
+      <div class="col-sm-5">
+        <h4>Provision volumes</h4>
+        <p class="text-help">
+          Volumes allow for shared storage between containers.
+          <strong>Note: temporary volumes are deleted with the instance of a version</strong>
+        </p>
+        <form class="form-inline" (ngSubmit)="addVolume($event)">
+          <select class="form-control" name="volume-type" [(ngModel)]="newVolumeType">
+            <option value="temp">Temporary</option>
+          </select>
+          <input type="text" class="form-control" name="volume-name" placeholder="unique-name" [(ngModel)]="newVolumeName" required>
+          <button type="submit" class="btn btn-info">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </form>
+
+        <br>
+        <span class="text-muted" *ngIf="version.volumes.length == 0"><em>No volumes provisioned yet</em></span>
+
+        <table class="table table-condensed table-hover">
+          <tr *ngFor="let volume of version.volumes; let i=index">
+            <td>
+              <button type="button" class="btn btn-link" aria-label="Remove" (click)="removeVolume(i)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </td>
+            <td><strong>{{ volume.name }}</strong></td>
+            <td>Temporary</td>
+          </tr>
+        </table>
+      </div>
+    </div><!-- row -->
+
+    <br>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-lg btn-success">Deploy version</button>
+    </div>
+  </form>
+</div>

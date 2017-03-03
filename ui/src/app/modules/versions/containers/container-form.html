@@ -1,0 +1,94 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+      {{ container.name }}
+      <button type="button" class="pull-right btn-link panel-link" (click)="onDelete(containerIndex)">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
+  </div>
+
+  <div class="panel-body">
+
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="text" name="container-image-{{ containerIndex }}" [(ngModel)]="container.image" class="form-control" placeholder="image:latest" required>
+    </div>
+
+    <div class="row">
+
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label>Always pull?</label>
+          <input type="checkbox" name="container-pull-{{ containerIndex }}" [(ngModel)]="container.alwaysPull">
+          <div class="text-help">
+            If unchecked the image will only be pulled if it's not already present
+          </div>
+        </div>
+      </div><!-- col-sm-5 -->
+
+      <div class="col-sm-7">
+        <form (ngSubmit)="addPort($event)">
+          <div class="form-group">
+            <label for="ports">Expose ports</label>
+            <div class="form-inline">
+              <select name="port-protocol-{{ containerIndex }}" [(ngModel)]="newPortProtocol" class="form-control">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+              </select>
+              <input type="number" style="width:100px;" [(ngModel)]="newPortNumber" name="port-number-{{ containerIndex }}" class="form-control" placeholder="8080" required>
+              <button type="submit" class="btn btn-default btn-info">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <br>
+            <span class="text-muted" *ngIf="container.ports.length == 0"><em>No ports exposed yet</em></span>
+            <table class="table table-hover table-condensed">
+              <tr *ngFor="let port of container.ports; let i=index">
+                <td>
+                  <button type="button" class="btn btn-link" aria-label="Remove" (click)="removePort(i)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </td>
+                <td><strong>{{ port.protocol }}:{{ port.port }}</strong></td>
+              </tr>
+            </table>
+          </div>
+        </form>
+      </div><!-- col-sm-7 -->
+
+    </div><!-- row -->
+
+    <div class="form-group">
+      <label for="args">Container args</label>
+      <input type="text" class="form-control" name="container-args-{{ containerIndex }}" placeholder='"arg1", "arg2", ...' [(ngModel)]="container.argString">
+    </div>
+
+    <div class="form-group" *ngIf="availableVolumes.length > 0">
+      <label for="ports">Mount volumes</label>
+      <form class="form-inline" (ngSubmit)="addVolumeMount($event)">
+        <select name="available-volumes" class="form-control" [(ngModel)]="newVolumeMountName">
+          <option *ngFor="let volume of availableVolumes" (click)="this.addVolumeMount(volume.name)">{{ volume.name }}</option>
+        </select>
+        <input type="text" name="volume-mount-path-{{ containerIndex }}" [(ngModel)]="newVolumeMountPath" class="form-control" placeholder="/etc/mountPath">
+        <button type="submit" class="btn btn-info">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </form>
+
+      <br>
+      <span class="text-muted" *ngIf="container.volumeMounts.length == 0"><em>No volumes mounted yet</em></span>
+      <table class="table table-condensed table-hover">
+        <tr *ngFor="let mount of container.volumeMounts; let i=index">
+          <td>
+            <button type="button" class="btn btn-link" aria-label="Remove" (click)="removeVolumeMount(i)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </td>
+          <td><strong>{{ mount.name }}</strong> <small>(temporary)</small></td>
+          <td>{{ mount.path }}</td>
+        </tr>
+      </table>
+    </div><!-- form-group -->
+
+  </div><!-- panel-body -->
+</div><!-- panel -->

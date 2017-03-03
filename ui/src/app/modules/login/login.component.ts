@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthService } from '../auth/auth.service';
+
 @Component({
     selector:       'login',
-    styleUrls:      ['./login.css'],
     templateUrl:    './login.html'
 })
 
 export class LoginComponent {
   private loginError :string
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) {
     route.queryParams.subscribe(
       (queryParam: any) => {
         let errorCode = queryParam['err'];
@@ -21,5 +22,9 @@ export class LoginComponent {
         }
       }
     );
+
+    if (this.auth.validateJwtToken()) {
+      this.router.navigate(['/']);
+    }
   }
 }

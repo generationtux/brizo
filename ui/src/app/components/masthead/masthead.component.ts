@@ -1,40 +1,22 @@
-import { Observable } from 'rxjs/Rx';
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../modules/auth/auth.service';
-import { ApplicationService } from '../../modules/applications/application.service';
+import { AuthService, User } from '../../modules/auth/auth.service';
 
 @Component({
     selector:       'masthead',
-    styleUrls:      ['./masthead.css'],
     templateUrl:    './masthead.html',
-    providers:      [ApplicationService],
 })
 
-export class MastheadComponent implements OnInit {
-  public applications: any;
-  public createAppForm: FormGroup;
-  public submitted: boolean;
-  public modalActions: EventEmitter<string>;
+export class MastheadComponent {
+  public user: User | null;
 
-  constructor(private router: Router, private applicationService: ApplicationService, private _fb: FormBuilder, private auth: AuthService) {
-    this.modalActions = new EventEmitter<string>();
+  constructor(private router: Router, private auth: AuthService) {
+    this.loadUser();
   }
 
-  ngOnInit() {
-    this.createAppForm = new FormGroup({
-        name: new FormControl('', [<any>Validators.required])
-    });
-  }
-
-  save() {
-    return this.applicationService.createApplication(this.createAppForm.controls['name'].value).subscribe(
-      err => console.error('There was an error: ' + err),
-      () => (this._complete()),
-    )
+  loadUser(): void {
+    this.user = this.auth.user();
   }
 
   logout(event: any) {
@@ -42,9 +24,5 @@ export class MastheadComponent implements OnInit {
     // @todo move to auth service
     localStorage.removeItem('id_token');
     this.router.navigate(['login'])
-  }
-
-  _complete() {
-    (<any>$('#create-application-modal')).modal('hide');
   }
 }

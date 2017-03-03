@@ -27,6 +27,23 @@ func (c *Client) DeleteDeployment(deployment *v1beta1.Deployment) error {
 	return c.k8sClient.Deployments(deployment.Namespace).Delete(deployment.Name, &v1.DeleteOptions{})
 }
 
+// CreateOrUpdateDeployment will gracefully apply updates to an existing
+// deployment or create a fresh deployment
+func (c *Client) CreateOrUpdateDeployment(deployment *v1beta1.Deployment) error {
+	existingDeployment, err := c.FindDeploymentByName(deployment.Name, deployment.Namespace)
+
+	if err != nil {
+		return c.CreateDeployment(deployment)
+	}
+
+	existingDeployment.Spec = deployment.Spec
+	existingDeployment.ObjectMeta = deployment.ObjectMeta
+
+	_, err = c.k8sClient.Deployments(deployment.Namespace).Update(existingDeployment)
+
+	return err
+}
+
 // FindDeploymentByName will lookup a deployment in the k8s cluster using
 // the provided name
 func (c *Client) FindDeploymentByName(name, namespace string) (*v1beta1.Deployment, error) {

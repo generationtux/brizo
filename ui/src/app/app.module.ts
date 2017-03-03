@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 
 import { SharedModule } from './modules/shared.module';
 
+import { AccessTokenModule } from './modules/access-tokens/access-token.module';
 import { ApplicationModule } from './modules/applications/application.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
@@ -24,6 +25,7 @@ const routes: Routes = [];
 
 @NgModule({
     imports: [
+      AccessTokenModule,
       ApplicationModule,
       AuthModule,
       BrowserModule,
@@ -40,7 +42,7 @@ const routes: Routes = [];
       VersionModule,
     ],
     providers:    [ AuthGuard ],
-    declarations: [ AppComponent],
+    declarations: [ AppComponent ],
     bootstrap:    [ AppComponent ]
 })
 

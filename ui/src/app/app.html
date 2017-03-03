@@ -1,1 +1,10 @@
+<header *ngIf="this.isLoggedIn()">
+  <masthead></masthead>
+</header>
 <router-outlet></router-outlet>
+
+<footer class="footer">
+  <div class="container-fluid">
+    <p class="text-muted"><a href="https://github.com/generationtux/brizo/issues/new">Submit an issue</a></p>
+  </div>
+</footer>

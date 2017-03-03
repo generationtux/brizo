@@ -15,6 +15,12 @@ func mainRoutes() *bone.Mux {
 
 	// Home page
 	router.GetFunc("/", web.RootHandler)
+	router.GetFunc("/favicon-16x16.png", func(rw http.ResponseWriter, r *http.Request) {
+		http.ServeFile(rw, r, "ui/favicon-16x16.png")
+	})
+	router.GetFunc("/favicon-32x32.png", func(rw http.ResponseWriter, r *http.Request) {
+		http.ServeFile(rw, r, "ui/favicon-32x32.png")
+	})
 
 	// Javascript UI
 	router.GetFunc("/app", web.UIHandler)

@@ -12,8 +12,10 @@ func authAPIRoutes() *bone.Mux {
 	// users
 	router.PostFunc("/users", api.AuthCreateUser)
 	router.GetFunc("/users/invites", api.AuthGetInvitees)
+	router.DeleteFunc("/users/invites/:id", api.AuthDeleteInvitees)
 
 	// access tokens
+	router.GetFunc("/access-tokens", api.AccessTokenIndex)
 	router.PostFunc("/access-tokens", api.AccessTokenCreate)
 
 	// applications
@@ -32,7 +34,11 @@ func authAPIRoutes() *bone.Mux {
 	router.GetFunc("/environments/:environment-uuid/versions", api.VersionIndex)
 	router.GetFunc("/environments/:environment-uuid/versions/:version-uuid", api.VersionShow)
 	router.PostFunc("/environments/:environment-uuid/versions", api.VersionCreate)
-	router.PatchFunc("/environments/:environment-uuid/versions/:version-uuid", api.VersionUpdate)
+
+	// environment config
+	router.GetFunc("/environments/:environment-uuid/configuration", api.GetEnvironmentConfig)
+	router.PostFunc("/environments/:environment-uuid/configuration", api.CreateEnvironmentConfig)
+	router.DeleteFunc("/environments/:environment-uuid/configuration/:config-id", api.DeleteEnvironmentConfig)
 
 	return router
 }

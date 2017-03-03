@@ -1,0 +1,137 @@
+@import "variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~font-awesome/css/font-awesome.css";
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin: 0 0 60px; /* bottom = footer height */
+}
+
+// annoying blue outline on links
+a:focus, a.btn:focus, button:focus { outline: none; }
+
+// type
+.text-default { color: $text-color; }
+.text-help {
+  font-size: 11px;
+  color: $gray-light;
+}
+
+// forms
+.form-group {
+  margin-bottom: 35px;
+}
+
+label {
+  font-size: 12px;
+  color: lighten($gray-light, 5%);
+}
+
+// page headers
+.page-header {
+  border: none;
+  margin-bottom: 75px;
+  .title-settings {
+    color: $gray-light;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-left: -10px;
+  }
+  small {
+    font-size: 13px;
+    color: lighten($gray-light, 10%);
+    margin-bottom: 8px;
+  }
+  .breadcrumb-previous a {
+    color: $gray-light;
+    font-size: 12px;
+    &:hover {
+      text-decoration: none;
+      color: $gray-lighter;
+    }
+  }
+}
+
+// panels
+.panel-primary {
+  .panel-link {
+    color: $gray-lighter;
+  }
+  .panel-heading button {
+    padding:0;
+  }
+}
+
+app > .content:after {
+  content: "";
+  display: block;
+}
+
+app > .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f5f5f5;
+  p {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    margin-bottom: 0;
+  }
+}
+
+// masthead
+#masthead {
+  .navbar {
+    border: none;
+    font-size: 12px;
+    .navbar-brand {
+      width: 50px;
+    }
+    .active {
+      background: $brand-primary;
+      color: #fff;
+    }
+    .user-menu {
+      padding:10px 15px;
+    }
+  }
+}
+
+// login
+.login {
+  margin-top: 200px;
+  .logo {
+    margin-bottom: 20px;
+  }
+}
+
+// modals
+.modal {
+  .modal-footer {
+    border-top: none;
+  }
+}
+
+// application list
+.app-list {
+  .app {
+    a.panel {
+      text-align: center;
+      display: block;
+      color: $gray;
+      &:hover {
+        text-decoration: none;
+        & .panel-heading {
+          background: $brand-primary;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

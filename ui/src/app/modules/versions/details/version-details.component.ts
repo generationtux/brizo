@@ -12,15 +12,16 @@ import { VersionService } from '../version.service';
 @Component({
   selector:    'version',
   templateUrl: './version-details.html',
-  providers:   [ EnvironmentService, VersionService ],
 })
 
 export class VersionDetailsComponent implements OnInit {
   private editForm: FormGroup;
   private editing = false;
   private version: Version;
+  private environment: any = {application: {}};
 
   constructor(private versionService: VersionService,
+              private environmentService: EnvironmentService,
               private route: ActivatedRoute,
               private formBuilder: FormBuilder) {}
 
@@ -29,6 +30,7 @@ export class VersionDetailsComponent implements OnInit {
       name: ['', [<any>Validators.required, <any>Validators.minLength(1)]],
     });
 
+    // get version
     this.route.params
       .switchMap(
         (params: Params) => this.versionService.getVersion(params['environment-uuid'], params['version-uuid']),
@@ -36,6 +38,17 @@ export class VersionDetailsComponent implements OnInit {
         data => {
           this.version = data;
           this.resetVersionForm(this.version);
+        },
+        err => console.error('There was an error: ' + err)
+      );
+
+    // get environment
+    this.route.params
+      .switchMap(
+        (params: Params) => this.environmentService.getEnvironment(params['environment-uuid']),
+      ).subscribe(
+        data => {
+          this.environment = data;
         },
         err => console.error('There was an error: ' + err)
       );
@@ -55,26 +68,5 @@ export class VersionDetailsComponent implements OnInit {
   private cancelEditing() {
     this.resetVersionForm(this.version);
     this.editing = false;
-  }
-
-  private saveVersion() {
-    const form = (<FormGroup>this.editForm).value;
-    const version = new Version(
-      this.version.id,
-      this.version.uuid,
-      form.name,
-      form.name,
-      this.version.image,
-      this.version.replicas,
-      this.version.environment_id,
-    );
-    this.versionService.updateVersion(this.route.params['environment-uuid'], version.uuid, version.name)
-      .subscribe(
-        data => {
-          this.version = data;
-          this.cancelEditing()
-        },
-        err => console.error('There was an error: ' + err)
-      );
   }
 }

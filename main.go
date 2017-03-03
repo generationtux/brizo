@@ -7,6 +7,7 @@ import (
 	"github.com/generationtux/brizo/app"
 	"github.com/generationtux/brizo/auth"
 	"github.com/generationtux/brizo/database"
+	"github.com/generationtux/brizo/database/migrations"
 	"github.com/generationtux/brizo/kube"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
@@ -29,6 +30,19 @@ func main() {
 		kube.CLIFlags(),
 		database.CLIFlags(),
 	)
+
+	if os.Getenv("BRIZO_DEV") == "true" {
+		brizoCLI.Commands = []cli.Command{
+			cli.Command{
+				Name:      "migrate",
+				UsageText: "run database migrations",
+				Action:    dbMigrate,
+				Flags: []cli.Flag{
+					cli.BoolFlag{Name: "down"},
+				},
+			},
+		}
+	}
 
 	brizoCLI.Run(os.Args)
 }
@@ -56,4 +70,13 @@ func buildFlagList(flagGroups ...[]cli.Flag) []cli.Flag {
 	}
 
 	return flags
+}
+
+// dbMigrate dev helper for running database migrations
+func dbMigrate(c *cli.Context) error {
+	if c.Bool("down") {
+		return migrations.RunDown()
+	}
+
+	return migrations.Run()
 }

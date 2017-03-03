@@ -7,7 +7,7 @@
             <label class="control-label" for="username">Invite via Github username</label>
             <div class="input-group">
               <span class="input-group-addon">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                <span class="fa fa-user" aria-hidden="true"></span>
               </span>
               <input id="username" type="text" class="form-control" formControlName="username" aria-describedby="inputGroupSuccess1Status">
             </div>
@@ -23,8 +23,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let invitee of invitees | async">
-              <td>{{ invitee.github_username }}</td>
+            <tr *ngFor="let invitee of invitees | async; let i=index">
+              <td>{{ invitee.github_username }}
+                <button type="button" class="close pull-right" aria-label="Remove" (click)="deleteInvite(i)">
+                  <span aria-hidden="true">&times;</span>
+                </button></td>
             </tr>
           </tbody>
         </table>

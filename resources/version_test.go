@@ -2,6 +2,7 @@ package resources
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"testing"
 
@@ -17,7 +18,8 @@ import (
 func TestCreateVersionDoesNotStoreWhenKubeFails(t *testing.T) {
 	version := &Version{Name: "foo"}
 	mockClient := new(mockKubeClient)
-	mockClient.On("CreateDeployment", mock.Anything).Return(errors.New("foo error"))
+	expectedError := errors.New("foo error")
+	mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(expectedError)
 
 	db, _ := gorm.Open("testdb", "")
 	result, err := CreateVersion(db, mockClient, version)
@@ -31,11 +33,12 @@ func TestCanCreateAVersion(t *testing.T) {
 	id := uuid.New()
 	version := Version{
 		Name: "foobar",
+		Slug: "foobar",
 		UUID: id,
 	}
 
 	mockClient := new(mockKubeClient)
-	mockClient.On("CreateDeployment", mock.Anything).Return(nil)
+	mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(nil)
 
 	db, _ := gorm.Open("testdb", "")
 	var query string
@@ -48,10 +51,15 @@ func TestCanCreateAVersion(t *testing.T) {
 	})
 
 	CreateVersion(db, mockClient, &version)
-	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"image\",\"environment_id\") VALUES (?,?,?,?,?,?,?)"
+	expectQuery := "INSERT INTO \"versions\" (\"created_at\",\"updated_at\",\"uuid\",\"name\",\"slug\",\"environment_id\",\"spec\") VALUES (?,?,?,?,?,?,?)"
 	assert.Equal(t, expectQuery, query)
 	assert.Equal(t, id, args[2])
 	assert.Equal(t, "foobar", args[3])
+
+	deployment := versionDeploymentDefinition(&version)
+	expectSpec, err := json.Marshal(deployment)
+	assert.Nil(t, err)
+	assert.Equal(t, string(expectSpec), args[6])
 }
 
 func TestVersionDeploymentDefinition(t *testing.T) {
@@ -62,18 +70,24 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 		Environment: environment,
 		Name:        "version 1",
 		Slug:        "version-1",
-		Image:       "foo:latest",
 		UUID:        "version-uuid123",
 		Replicas:    3,
+		Containers: []Container{
+			Container{
+				Name:  "app",
+				Image: "foo:latest",
+			},
+		},
 	}
 
 	deployment := versionDeploymentDefinition(version)
-	assert.Equal(t, "my-app-dev-version-1", deployment.Name)
+	assert.Equal(t, "my-app-dev", deployment.Name)
 	assert.Equal(t, "brizo", deployment.Namespace)
 	assert.Equal(t, int32(version.Replicas), *deployment.Spec.Replicas)
+	assert.Equal(t, "app", deployment.Spec.Template.Spec.Containers[0].Name)
 	assert.Equal(t, "foo:latest", deployment.Spec.Template.Spec.Containers[0].Image)
 
-	expectDeploymentLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123"}
+	expectDeploymentLabels := map[string]string{"brizoManaged": "true", "appUUID": "app-uuid123", "envUUID": "env-uuid123", "versionUUID": "version-uuid123"}
 	assert.Equal(t, expectDeploymentLabels, deployment.Labels)
 
 	expectSelector := map[string]string{"envUUID": "env-uuid123", "versionUUID": "version-uuid123"}
@@ -106,6 +120,28 @@ func (m *mockKubeClient) DeleteDeployment(deployment *v1beta1.Deployment) error 
 	return nil
 }
 
+func (m *mockKubeClient) CreateOrUpdateDeployment(deployment *v1beta1.Deployment) error {
+	args := m.Called(deployment)
+	return args.Error(0)
+}
+
 func (m *mockKubeClient) FindDeploymentByName(namespace, name string) (*v1beta1.Deployment, error) {
 	return &v1beta1.Deployment{}, nil
+}
+
+func (m *mockKubeClient) GetServices(name string, options v1.ListOptions) ([]v1.Service, error) {
+	return []v1.Service{}, nil
+}
+
+func (m *mockKubeClient) GetService(namespace string, name string) (*v1.Service, error) {
+	return &v1.Service{}, nil
+}
+
+func (m *mockKubeClient) CreateService(service *v1.Service) error {
+	args := m.Called(service)
+	return args.Error(0)
+}
+
+func (m *mockKubeClient) UpdateService(service *v1.Service) error {
+	return nil
 }
