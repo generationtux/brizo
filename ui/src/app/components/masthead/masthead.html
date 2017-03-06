@@ -33,10 +33,10 @@
             </a>
             <ul class="dropdown-menu">
               <li class="dropdown-header">Users</li>
-              <li><a href="/app/users/invite">Invite User <i class="fa fa-user-plus pull-right"></i></a></li>
-              <li><a href="/app/">View Users <i class="fa fa-users pull-right"></i></a></li>
+              <li><a [routerLink]="['users/invite']">Invite User <i class="fa fa-user-plus pull-right"></i></a></li>
+              <li><a [routerLink]="['/']">View Users <i class="fa fa-users pull-right"></i></a></li>
               <li class="dropdown-header">Access Tokens</li>
-              <li><a href="/app/access-tokens/">Access Tokens <i class="fa fa-key pull-right"></i></a></li>
+              <li><a [routerLink]="['access-tokens']">Access Tokens <i class="fa fa-key pull-right"></i></a></li>
             </ul>
           </li>
           <li>

@@ -11,6 +11,7 @@ import { ApplicationModule } from './modules/applications/application.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { EnvironmentModule } from './modules/environments/environment.module';
+import { HelpModule } from './modules/help/help.module';
 import { InviteModule } from './modules/invite/invite.module';
 import { LoginModule } from './modules/login/login.module';
 import { VersionModule } from './modules/versions/version.module';
@@ -31,6 +32,7 @@ const routes: Routes = [];
       DashboardModule,
       EnvironmentModule,
       FormsModule,
+      HelpModule,
       HttpModule,
       InviteModule,
       LoginModule,
