@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
 	"github.com/generationtux/brizo/database"
@@ -103,24 +102,26 @@ func DeleteEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var deleteForm struct {
-		configID string
-	}
-	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&deleteForm)
-	defer r.Body.Close()
+	uuid := bone.GetValue(r, "config-uuid")
+	success, err := resources.DeleteEnvironmentConfig(db, uuid)
 	if err != nil {
-		log.Printf("decoding error: '%s'\n", err)
+		log.Printf("Error when deleting environment config: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
 			http.StatusInternalServerError,
-			"there was an error when attempting to parse the form")
+			"there was an error when attempting to connect to the database")
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
 
-	configID, _ := strconv.ParseUint(deleteForm.configID, 10, 0)
+	if !success {
+		log.Printf("Unsuccesful when attempting to delete environment config: '%s'\n", err)
+		jre := jsonutil.NewJSONResponseError(
+			http.StatusInternalServerError,
+			"there was an error when attempting to delete the environment config")
+		jsonutil.RespondJSONError(w, jre)
+		return
+	}
 
-	resources.DeleteEnvironmentConfig(db, configID)
-
-	jsonResponse(w, deleteForm, 204)
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusNoContent)
 }

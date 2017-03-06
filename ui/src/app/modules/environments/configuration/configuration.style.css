@@ -1,17 +1,15 @@
->>> .config-entry li {
-  width: 47%;
+.flex-container {
+  display: flex;
 }
 
->>> .config-entry li.config-del {
-  float: right;
-  padding: 0;
-  width: 4%;
+.flex-input {
+  flex-grow: 1;
 }
 
->>> .config-entry li.config-name {
-  float: left;
+.flex-input-first {
+  margin-right: 6px !important;
 }
 
->>> .config-entry li.config-value {
-  float: left;
+.flex-input-delete {
+  margin-left: 6px;
 }

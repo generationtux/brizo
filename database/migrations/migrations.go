@@ -16,6 +16,7 @@ func All() []*migrate.Migration {
 		createVersionsTable(),
 		createEnvironmentConfigsTable(),
 		createAccessTokensTable(),
+		addUuidColumnToEnvironmentConfigsTable(),
 	}
 }
 
