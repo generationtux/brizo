@@ -10,25 +10,23 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <form class="config-form" [formGroup]="createConfigForm" novalidate (ngSubmit)="createNewConfig(createConfigForm.name, createConfigForm.value)">
-        <div class="form-group">
-          <div class="configs" *ngIf="configuration.length == 0">
-            <ul class="list-inline config-entry clearfix addr1">
-              <li class="config-name"><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" /></li>
-              <li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" /></li>
-              <li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>
-            </ul>
+      <form class="form-inline config-form" [formGroup]="createConfigForm" novalidate (ngSubmit)="saveConfigurations()">
+        <div formArrayName="configurations" class="row">
+          <div *ngFor="let config of createConfigForm.controls.configurations.controls;let i=index">
+            <div class="flex-container col-sm-12" [formGroupName]="i">
+              <input name="uuid" formControlName="uuid" type="hidden" />
+              <input class="form-control flex-input flex-input-first" name="key" formControlName="name" placeholder="KEY" type="text" />
+              <input class="form-control flex-input" name="value" formControlName="value" placeholder="value" type="text" />
+              <button type="button" class="btn btn-danger flex-input-delete" aria-label="Remove" (click)="removeConfiguration(i)">
+                <span aria-hidden="true"><i class="fa fa-times"></i></span>
+              </button>
+            </div>
+            <br>
+            <br>
           </div>
-          <div class="configs" *ngIf="configuration.length > 0">
-            <ul *ngFor="let config of configuration; let i = index;" class="list-inline config-entry clearfix addr{{i + 1}}" [attr.data-config-id]="config.id">
-              <li class="config-name"><input class="form-control" name="key" formControlName="name" placeholder="KEY" type="text" value="{{ config.name }}" /></li>
-              <li class="config-value"><input class="form-control" name="value" formControlName="value" placeholder="VALUE" type="text" value="{{ config.value }}" /></li>
-              <li class="config-del"><button class="btn btn-block btn-danger del-btn" type="button" value="addr0"><i class="fa fa-times"></i></button></li>
-            </ul>
-          </div>
-          <button class="btn btn-default add-btn" type="button"><i class="fa fa-plus"></i> Add Row</button>
-          <button class="btn btn-primary pull-right" type="submit">Save</button>
         </div>
+        <button class="btn btn-default add-btn" type="button" (click)="addConfiguration()"><i class="fa fa-plus"></i> Add Row</button>
+        <button class="btn btn-primary pull-right" type="submit">Save</button>
       </form>
     </div>
   </div>

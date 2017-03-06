@@ -3,15 +3,27 @@ package resources
 import (
 	"github.com/generationtux/brizo/database"
 	"github.com/jinzhu/gorm"
+	"github.com/pborman/uuid"
 )
 
 // EnvironmentConfig as defined by Brizo.
 type EnvironmentConfig struct {
 	database.Model
+	UUID            string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name            string      `gorm:"not null" json:"name"`
 	Value           string      `gorm:"not null" json:"value"`
 	EnvironmentUUID string      `gorm:"not null" json:"environment_uuid"`
 	Environment     Environment `gorm:"not null" json:"environment"`
+}
+
+// BeforeCreate is a hook that runs before inserting a new record into the
+// database
+func (config *EnvironmentConfig) BeforeCreate() (err error) {
+	if config.UUID == "" {
+		config.UUID = uuid.New()
+	}
+
+	return
 }
 
 // CreateEnvironmentConfig will persist a new configuration into database
@@ -35,13 +47,13 @@ func GetEnvironmentConfig(db *gorm.DB, uuid string) (*[]EnvironmentConfig, error
 }
 
 // DeleteEnvironmentConfig will delete specified configuration
-func DeleteEnvironmentConfig(db *gorm.DB, id uint64) error {
-	// @TODO add delete for specific configuration entry
-	var config struct {
-		ID uint64
+func DeleteEnvironmentConfig(db *gorm.DB, uuid string) (bool, error) {
+	var config EnvironmentConfig
+	result := db.Model(config).Where("uuid = ?", uuid).First(&config)
+
+	if result.RowsAffected == 1 {
+		result = db.Delete(&config)
 	}
 
-	config.ID = id
-
-	return db.Delete(&config).Error
+	return result.RowsAffected == 1, result.Error
 }
