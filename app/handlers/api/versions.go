@@ -85,7 +85,7 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if version.EnvironmentID != environment.ID {
+	if version.EnvironmentUUID != environment.UUID {
 		jre := jsonutil.NewJSONResponseError(
 			http.StatusNotFound,
 			"no versions with id of "+version.UUID+" for this environment")
@@ -145,14 +145,14 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	version := resources.Version{
-		UUID:          uuid.New(),
-		Name:          createForm.Name,
-		Slug:          slugify.Slugify(createForm.Name),
-		Containers:    createForm.Containers,
-		Replicas:      createForm.Replicas,
-		Volumes:       createForm.Volumes,
-		EnvironmentID: environment.ID,
-		Environment:   *environment,
+		UUID:            uuid.New(),
+		Name:            createForm.Name,
+		Slug:            slugify.Slugify(createForm.Name),
+		Containers:      createForm.Containers,
+		Replicas:        createForm.Replicas,
+		Volumes:         createForm.Volumes,
+		EnvironmentUUID: environment.UUID,
+		Environment:     environment,
 	}
 
 	_, err = resources.CreateVersion(db, client, &version)

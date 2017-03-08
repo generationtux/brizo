@@ -19,8 +19,10 @@ type Environment struct {
 	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
 	Name          string      `gorm:"not null" json:"name"`
 	Slug          string      `gorm:"not null" json:"slug"`
+	VersionUUID   string      `gorm:"not null" json:"version_uuid"`
+	Version       Version     `json:"version"`
 	ApplicationID uint64      `json:"application_id,string"`
-	Application   Application `json:"application,array,omitempty"`
+	Application   Application `gorm:"-" json:"application"`
 	Versions      []Version   `json:"versions,array,omitempty"`
 }
 
@@ -122,7 +124,7 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 
 	name := fmt.Sprintf(
 		"%v-%v",
-		environment.Application.Slug,
+		environment.Version.Application.Slug,
 		environment.Slug,
 	)
 

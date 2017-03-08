@@ -47,17 +47,20 @@ type ContainerVolumeMount struct {
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID          string      `gorm:"not null;unique_index:uix_versions_uuid" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null;unique_index:uix_versions_name_environment_id" json:"name"`
-	Slug          string      `gorm:"not null" json:"slug"`
-	Replicas      int         `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	EnvironmentID uint        `gorm:"not null;unique_index:uix_versions_name_environment_id" json:"environment_id"`
-	Environment   Environment `gorm:"not null" json:"environment"`
-	Volumes       []Volume    `gorm:"-" json:"volumes"`
-	Containers    []Container `gorm:"-" json:"containers"`
-	Spec          string      `gorm:"type:json" json:"-"`
+	UUID            string       `gorm:"not null;unique_index:uix_versions_uuid" sql:"type:varchar(36)" json:"uuid"`
+	Name            string       `gorm:"not null" json:"name"`
+	Slug            string       `gorm:"not null" json:"slug"`
+	Replicas        int          `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
+	ApplicationUUID string       `gorm:"not null;unique_index:uix_versions_name_application_uuid" json:"application_id"`
+	Application     Application  `gorm:"-" json:"application"`
+	EnvironmentUUID string       `gorm:"not null" json:"environment_id"`
+	Environment     *Environment `gorm:"-" json:"environment"`
+	Volumes         []Volume     `gorm:"-" json:"volumes"`
+	Containers      []Container  `gorm:"-" json:"containers"`
+	Spec            string       `gorm:"type:json" json:"-"`
 }
 
+// Spec k8s spec information
 type Spec struct {
 	Name              string
 	Labels            []string
@@ -103,7 +106,7 @@ func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (boo
 
 	// update environment service
 	ports := gatherContainerPorts(version.Containers)
-	UpdateEnvironmentService(db, client, &version.Environment, ports)
+	UpdateEnvironmentService(db, client, version.Environment, ports)
 
 	return persist.RowsAffected == 1, persist.Error
 }
@@ -197,7 +200,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v",
-		version.Environment.Application.Slug,
+		version.Application.Slug,
 		version.Environment.Slug,
 	)
 
@@ -217,7 +220,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 			Namespace: "brizo",
 			Labels: map[string]string{
 				"brizoManaged": "true",
-				"appUUID":      version.Environment.Application.UUID,
+				"appUUID":      version.Application.UUID,
 				"envUUID":      version.Environment.UUID,
 				"versionUUID":  version.UUID,
 			},
@@ -225,6 +228,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		Spec: v1beta1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
+					"appUUID":     version.Application.UUID,
 					"envUUID":     version.Environment.UUID,
 					"versionUUID": version.UUID,
 				},
@@ -234,7 +238,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 				ObjectMeta: v1.ObjectMeta{
 					Labels: map[string]string{
 						"brizoManaged": "true",
-						"appUUID":      version.Environment.Application.UUID,
+						"appUUID":      version.Application.UUID,
 						"envUUID":      version.Environment.UUID,
 						"versionUUID":  version.UUID,
 					},
