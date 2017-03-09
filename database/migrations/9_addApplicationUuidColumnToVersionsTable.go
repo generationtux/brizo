@@ -4,7 +4,7 @@ import (
 	"github.com/rubenv/sql-migrate"
 )
 
-func addApplicationUuidColumnToVersionsTable() *migrate.Migration {
+func addApplicationUUIDColumnToVersionsTable() *migrate.Migration {
 	return &migrate.Migration{
 		Id: "9",
 		Up: []string{`

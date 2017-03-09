@@ -16,14 +16,16 @@ import (
 // Environment as defined by Brizo.
 type Environment struct {
 	database.Model
-	UUID          string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
-	Name          string      `gorm:"not null" json:"name"`
-	Slug          string      `gorm:"not null" json:"slug"`
-	VersionUUID   string      `gorm:"not null" json:"version_uuid"`
-	Version       Version     `json:"version"`
-	ApplicationID uint64      `json:"application_id,string"`
-	Application   Application `gorm:"-" json:"application"`
-	Versions      []Version   `json:"versions,array,omitempty"`
+	UUID            string      `gorm:"not null;unique_index" sql:"type:varchar(36)" json:"uuid"`
+	Name            string      `gorm:"not null" json:"name"`
+	Slug            string      `gorm:"not null" json:"slug"`
+	VersionID       uint64      `gorm:"not null" json:"version_id,string"`
+	VersionUUID     string      `gorm:"not null" json:"version_uuid"`
+	Version         Version     `json:"version"`
+	ApplicationID   uint64      `gorm:"not null" json:"application_id,string"`
+	ApplicationUUID string      `gorm:"not null" json:"application_uuid"`
+	Application     Application `json:"application"`
+	//Versions        []Version   `json:"versions,array,omitempty"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -148,7 +150,7 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 // GetEnvironment will get an existing Environment by id
 func GetEnvironment(db *gorm.DB, id string) (*Environment, error) {
 	environment := new(Environment)
-	if err := db.Preload("Application").Preload("Versions").Where("uuid = ?", id).First(&environment).Error; err != nil {
+	if err := db.Preload("Application").Preload("Version").Where("uuid = ?", id).First(&environment).Error; err != nil {
 		return environment, err
 	}
 

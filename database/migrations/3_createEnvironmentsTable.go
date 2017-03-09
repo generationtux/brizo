@@ -16,6 +16,9 @@ func createEnvironmentsTable() *migrate.Migration {
         name varchar(255) NOT NULL,
         slug varchar(255) NOT NULL,
         application_id bigint(20) unsigned DEFAULT NULL,
+        application_uuid varchar(36) NOT NULL,
+		version_id int(10) unsigned DEFAULT NULL,
+		version_uuid varchar(36) NOT NULL,
         PRIMARY KEY (id),
         UNIQUE KEY uix_environments_uuid (uuid)
       );

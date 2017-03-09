@@ -151,6 +151,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		Containers:      createForm.Containers,
 		Replicas:        createForm.Replicas,
 		Volumes:         createForm.Volumes,
+		EnvironmentID:   environment.ID,
 		EnvironmentUUID: environment.UUID,
 		Environment:     environment,
 	}

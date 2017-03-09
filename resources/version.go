@@ -47,14 +47,16 @@ type ContainerVolumeMount struct {
 // Version as defined by Brizo.
 type Version struct {
 	database.Model
-	UUID            string       `gorm:"not null;unique_index:uix_versions_uuid" sql:"type:varchar(36)" json:"uuid"`
+	UUID            string       `gorm:"not null;unique_index:uix_versions_name_application_uuid" sql:"type:varchar(36)" json:"uuid"`
 	Name            string       `gorm:"not null" json:"name"`
 	Slug            string       `gorm:"not null" json:"slug"`
 	Replicas        int          `gorm:"not null" sql:"DEFAULT:'0'" json:"replicas"`
-	ApplicationUUID string       `gorm:"not null;unique_index:uix_versions_name_application_uuid" json:"application_id"`
-	Application     Application  `gorm:"-" json:"application"`
-	EnvironmentUUID string       `gorm:"not null" json:"environment_id"`
-	Environment     *Environment `gorm:"-" json:"environment"`
+	ApplicationID   uint64       `gorm:"not null" json:"appliction_id,string"`
+	ApplicationUUID string       `gorm:"not null;unique_index:uix_versions_name_application_uuid" json:"application_uuid"`
+	Application     Application  `json:"application"`
+	EnvironmentID   uint         `gorm:"not null" json:"environment_id,string"`
+	EnvironmentUUID string       `gorm:"not null" json:"environment_uuid"`
+	Environment     *Environment `json:"environment"`
 	Volumes         []Volume     `gorm:"-" json:"volumes"`
 	Containers      []Container  `gorm:"-" json:"containers"`
 	Spec            string       `gorm:"type:json" json:"-"`
@@ -200,7 +202,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v",
-		version.Application.Slug,
+		version.Environment.Application.Slug,
 		version.Environment.Slug,
 	)
 
@@ -267,7 +269,7 @@ func UpdateVersion(db *gorm.DB, version *Version) (bool, error) {
 // GetVersion will get an existing Version by id
 func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 	version := new(Version)
-	if err := db.Preload("Environment.Application").Where("uuid = ?", id).First(version).Error; err != nil {
+	if err := db.Preload("Application.Environments").Where("uuid = ?", id).First(version).Error; err != nil {
 		return version, err
 	}
 
@@ -326,7 +328,7 @@ func GetVersionsByEnvironmentUUID(db *gorm.DB, uuid string) (*[]Version, error) 
 		return &versions, err
 	}
 
-	if err := db.Preload("Environment.Application").Where("environment_id = ?", environment.ID).Find(&versions).Error; err != nil {
+	if err := db.Preload("Application.Environments").Where("environment_id = ?", environment.ID).Find(&versions).Error; err != nil {
 		return &versions, err
 	}
 
