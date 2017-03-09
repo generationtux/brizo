@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Rx';
-import { ActivatedRoute, Params } from '@angular/router'
+import { Router, ActivatedRoute, Params } from '@angular/router'
 import { Component, EventEmitter, OnInit } from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
@@ -19,10 +19,13 @@ export class VersionDetailsComponent implements OnInit {
   private editing = false;
   private version: Version;
   private environment: any = {application: {}};
+  private availableEnvironments: any = [];
+  private deployToEnvUUID: string = "";
 
   constructor(private versionService: VersionService,
               private environmentService: EnvironmentService,
               private route: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -49,6 +52,7 @@ export class VersionDetailsComponent implements OnInit {
       ).subscribe(
         data => {
           this.environment = data;
+          this.availableEnvironments = data.application.environments;
         },
         err => console.error('There was an error: ' + err)
       );
@@ -59,6 +63,21 @@ export class VersionDetailsComponent implements OnInit {
       .setValue({
         name: version.name
       }, { onlySelf: true });
+  }
+
+  private deployVersion() {
+    if (this.deployToEnvUUID == "") {
+      return
+    }
+
+    this.versionService.deployVersion(this.deployToEnvUUID, this.version).subscribe(
+      data => {
+        this.router.navigate(['/environments', this.deployToEnvUUID]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   private toggleEditing() {
