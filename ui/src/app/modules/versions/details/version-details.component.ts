@@ -19,6 +19,8 @@ export class VersionDetailsComponent implements OnInit {
   private editing = false;
   private version: Version;
   private environment: any = {application: {}};
+  private availableEnvironments: any = [];
+  private deployToEnvUUID: string = "";
 
   constructor(private versionService: VersionService,
               private environmentService: EnvironmentService,
@@ -49,6 +51,7 @@ export class VersionDetailsComponent implements OnInit {
       ).subscribe(
         data => {
           this.environment = data;
+          this.availableEnvironments = data.application.environments;
         },
         err => console.error('There was an error: ' + err)
       );
@@ -59,6 +62,23 @@ export class VersionDetailsComponent implements OnInit {
       .setValue({
         name: version.name
       }, { onlySelf: true });
+  }
+
+  private deployVersion() {
+    if (this.deployToEnvUUID == "") {
+      return
+    }
+
+    let copyVersion = this.version;
+    copyVersion.environment_uuid = this.deployToEnvUUID;
+    this.versionService.deployVersion(copyVersion).subscribe(
+      data => {
+        console.log("Version deployed");
+      },
+      err => {
+        console.log("Unable to deploy version");
+      }
+    );
   }
 
   private toggleEditing() {
