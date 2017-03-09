@@ -236,7 +236,7 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	version, err := resources.GetVersion(db, deployForm.VersionUUID, client, false)
+	version, err := resources.GetVersion(db, deployForm.VersionUUID, client, true)
 	if err != nil {
 		log.Println(err)
 		jsonErrorResponse(w, "Unable to get version", http.StatusNotFound)
@@ -251,6 +251,13 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error deploying version: '%s'\n", err)
 		jsonErrorResponse(w, "Unable to deploy version", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = resources.UpdateVersion(db, version)
+	if err != nil {
+		log.Printf("Error updating version after deployment: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to update version after deployment", http.StatusInternalServerError)
 		return
 	}
 
