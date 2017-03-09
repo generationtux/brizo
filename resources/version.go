@@ -202,7 +202,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 	replicas := int32(version.Replicas)
 	name := fmt.Sprintf(
 		"%v-%v",
-		version.Environment.Application.Slug,
+		version.Application.Slug,
 		version.Environment.Slug,
 	)
 
