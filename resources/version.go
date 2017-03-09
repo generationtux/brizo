@@ -83,7 +83,18 @@ func AllVersions(db *gorm.DB) ([]Version, error) {
 	return versions, result.Error
 }
 
-// CreateVersion will deploy a new version Brizo
+// DeployVersion will deploy an existing version
+func DeployVersion(client kube.APIInterface, version *Version) (bool, error) {
+	deployment := versionDeploymentDefinition(version)
+	err := client.CreateOrUpdateDeployment(deployment)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// CreateVersion will create and deploy a new version
 func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
 	deployment := versionDeploymentDefinition(version)
 
@@ -261,7 +272,7 @@ func UpdateVersion(db *gorm.DB, version *Version) (bool, error) {
 }
 
 // GetVersion will get an existing Version by id
-func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
+func GetVersion(db *gorm.DB, id string, client *kube.Client, includeContainers bool) (*Version, error) {
 	version := new(Version)
 	if err := db.Preload("Environment.Application").Where("uuid = ?", id).First(version).Error; err != nil {
 		return version, err
@@ -271,10 +282,21 @@ func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 		return new(Version), errors.New("not-found")
 	}
 
+	if includeContainers {
+		err := getVersionContainers(version, client)
+		if err != nil {
+			return new(Version), err
+		}
+	}
+
+	return version, nil
+}
+
+func getVersionContainers(version *Version, client *kube.Client) error {
 	var spec map[string]map[string]interface{}
 	err := json.Unmarshal([]byte(version.Spec), &spec)
 	if err != nil {
-		return new(Version), err
+		return err
 	}
 
 	specName := spec["metadata"]["name"].(string)
@@ -282,10 +304,9 @@ func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 
 	deployment, err := client.FindDeploymentByName(specName, specNS)
 	if err != nil {
-		return new(Version), err
+		return err
 	}
 
-	// gather container information
 	for i := 0; i < len(deployment.Spec.Template.Spec.Containers); i++ {
 		// determine pull policy
 		pullPolicy := true
@@ -310,7 +331,7 @@ func GetVersion(db *gorm.DB, id string, client *kube.Client) (*Version, error) {
 		version.Volumes = append(version.Volumes, volume)
 	}
 
-	return version, nil
+	return nil
 }
 
 // GetVersionsByEnvironmentUUID will get an existing version using an

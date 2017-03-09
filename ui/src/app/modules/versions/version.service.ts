@@ -41,6 +41,19 @@ export class VersionService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
+  deployVersion(envUUID: string, version: Version): Observable<Version> {
+    let options = new RequestOptions({ headers: this.getHeaders() });
+    let url = this.url + envUUID + '/deploy';
+
+    let data = {
+      version_uuid: version.uuid,
+    }
+
+    return this.http.post(url, data, options)
+      .map((res: Response) => res.json() || {})
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
   getVersions(environmentUuid: string): Observable<Version[]> {
     const url = this.url + environmentUuid + '/versions';
 

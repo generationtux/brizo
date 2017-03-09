@@ -201,3 +201,65 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(environment)
 	w.WriteHeader(http.StatusOK)
 }
+
+// EnvironmentDeploy deploys a Version to the environment
+func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
+	var deployForm struct {
+		// id of the Version we want to deploy
+		VersionUUID string `json:"version_uuid"`
+	}
+	err := jsonRequest(r, &deployForm)
+	if err != nil {
+		jsonErrorResponse(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		log.Printf("Database error: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to connect to database", http.StatusInternalServerError)
+		return
+	}
+
+	deployToEnvironment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
+	if err != nil {
+		log.Println(err)
+		jsonErrorResponse(w, "Unable to get environment", http.StatusNotFound)
+		return
+	}
+
+	client, err := kube.New()
+	if err != nil {
+		log.Printf("Kube client error: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to connect to Kubernetes", http.StatusInternalServerError)
+		return
+	}
+
+	version, err := resources.GetVersion(db, deployForm.VersionUUID, client, true)
+	if err != nil {
+		log.Println(err)
+		jsonErrorResponse(w, "Unable to get version", http.StatusNotFound)
+		return
+	}
+
+	// modify the version for the new environment
+	version.Environment = *deployToEnvironment
+	version.EnvironmentID = deployToEnvironment.ID
+
+	_, err = resources.DeployVersion(client, version)
+	if err != nil {
+		log.Printf("Error deploying version: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to deploy version", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = resources.UpdateVersion(db, version)
+	if err != nil {
+		log.Printf("Error updating version after deployment: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to update version after deployment", http.StatusInternalServerError)
+		return
+	}
+
+	jsonResponse(w, map[string]string{"message": "Version deployed."}, 200)
+}
