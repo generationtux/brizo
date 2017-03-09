@@ -248,7 +248,7 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// modify the version for the new environment
-	version.Environment = *deployToEnvironment
+	version.Environment = deployToEnvironment
 	version.EnvironmentID = deployToEnvironment.ID
 
 	_, err = resources.DeployVersion(client, version)
