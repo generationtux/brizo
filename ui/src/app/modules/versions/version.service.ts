@@ -41,12 +41,12 @@ export class VersionService {
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  deployVersion(version: Version): Observable<Version> {
+  deployVersion(envUUID: string, version: Version): Observable<Version> {
     let options = new RequestOptions({ headers: this.getHeaders() });
-    let url = this.url + version.environment_uuid + '/deploy';
+    let url = this.url + envUUID + '/deploy';
 
     let data = {
-      vesrion: version.uuid,
+      version_uuid: version.uuid,
     }
 
     return this.http.post(url, data, options)

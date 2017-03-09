@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 import { Observable } from 'rxjs/Rx';
-import { ActivatedRoute, Params } from '@angular/router'
+import { Router, ActivatedRoute, Params } from '@angular/router'
 import { Component, EventEmitter, OnInit } from '@angular/core'
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
@@ -25,6 +25,7 @@ export class VersionDetailsComponent implements OnInit {
   constructor(private versionService: VersionService,
               private environmentService: EnvironmentService,
               private route: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder) {}
 
   ngOnInit() {
@@ -69,14 +70,12 @@ export class VersionDetailsComponent implements OnInit {
       return
     }
 
-    let copyVersion = this.version;
-    copyVersion.environment_uuid = this.deployToEnvUUID;
-    this.versionService.deployVersion(copyVersion).subscribe(
+    this.versionService.deployVersion(this.deployToEnvUUID, this.version).subscribe(
       data => {
-        console.log("Version deployed");
+        this.router.navigate(['/environments', this.deployToEnvUUID]);
       },
       err => {
-        console.log("Unable to deploy version");
+        console.log(err);
       }
     );
   }

@@ -64,7 +64,7 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"), client)
+	version, err := resources.GetVersion(db, bone.GetValue(r, "version-uuid"), client, true)
 	// @todo this could be a 404, so we need to update this error to handle this
 	if err != nil {
 		log.Printf("Error when retrieving version: '%s'\n", err)
