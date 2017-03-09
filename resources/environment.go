@@ -25,7 +25,6 @@ type Environment struct {
 	ApplicationID   uint64      `gorm:"not null" json:"application_id,string"`
 	ApplicationUUID string      `gorm:"not null" json:"application_uuid"`
 	Application     Application `json:"application"`
-	//Versions        []Version   `json:"versions,array,omitempty"`
 }
 
 // BeforeCreate is a hook that runs before inserting a new record into the
@@ -150,7 +149,7 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 // GetEnvironment will get an existing Environment by id
 func GetEnvironment(db *gorm.DB, id string) (*Environment, error) {
 	environment := new(Environment)
-	if err := db.Preload("Application.Environments").Preload("Versions").Where("uuid = ?", id).First(&environment).Error; err != nil {
+	if err := db.Preload("Application.Environments").Where("uuid = ?", id).First(&environment).Error; err != nil {
 		return environment, err
 	}
 

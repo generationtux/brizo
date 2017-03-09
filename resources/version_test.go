@@ -3,7 +3,7 @@ package resources
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"testing"
 
 	testdb "github.com/erikstmartin/go-testdb"
@@ -16,20 +16,27 @@ import (
 )
 
 func TestCreateVersionDoesNotStoreWhenKubeFails(t *testing.T) {
-	version := &Version{Name: "foo"}
-	fmt.Println(version)
-	/*
-		mockClient := new(mockKubeClient)
-		expectedError := errors.New("foo error")
-		mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(expectedError)
+	id := uuid.New()
+	app := Application{Slug: "my-app", UUID: "app-uuid123"}
+	environment := Environment{Slug: "dev", UUID: "env-uuid123"}
+	version := Version{
+		Name:        "foobar",
+		Slug:        "foobar",
+		UUID:        id,
+		Application: app,
+		Environment: &environment,
+	}
 
-		db, _ := gorm.Open("testdb", "")
-		result, err := CreateVersion(db, mockClient, version)
-		assert.False(t, result)
-		assert.Equal(t, "foo error", err.Error())
+	mockClient := new(mockKubeClient)
+	expectedError := errors.New("foo error")
+	mockClient.On("CreateOrUpdateDeployment", mock.Anything).Return(expectedError)
 
-		mockClient.AssertExpectations(t)
-	*/
+	db, _ := gorm.Open("testdb", "")
+	result, err := CreateVersion(db, mockClient, &version)
+	assert.False(t, result)
+	assert.Equal(t, "foo error", err.Error())
+
+	mockClient.AssertExpectations(t)
 }
 
 func TestCanCreateAVersion(t *testing.T) {
@@ -89,8 +96,6 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 	}
 
 	deployment := versionDeploymentDefinition(version)
-	// fmt.Println("+++HERE+++")
-	// fmt.Println(deployment)
 	assert.Equal(t, "my-app-dev", deployment.Name)
 	assert.Equal(t, "brizo", deployment.Namespace)
 	assert.Equal(t, int32(version.Replicas), *deployment.Spec.Replicas)
