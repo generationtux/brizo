@@ -11,7 +11,7 @@ func removeVersionsToEnvironmentsConstraint() *migrate.Migration {
 	      ALTER TABLE versions
 	        DROP INDEX uix_versions_name_environment_id
 	      ;
-    `},
+		  `},
 		Down: []string{``},
 	}
 }

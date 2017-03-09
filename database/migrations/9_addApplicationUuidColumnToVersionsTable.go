@@ -13,13 +13,13 @@ func addApplicationUUIDColumnToVersionsTable() *migrate.Migration {
     		ADD CONSTRAINT uix_application_uuid UNIQUE (uuid),
     		ADD UNIQUE INDEX uix_versions_name_application_uuid (name, application_uuid)
           ;
-    `},
+          `},
 		Down: []string{`
     	  ALTER TABLE versions
     	    DROP CONSTRAINT uix_application_uuid,
     		DROP INDEX uix_versions_name_application_uuid,
     	    DROP COLUMN application_uuid
     	  ;
-	`},
+          `},
 	}
 }
