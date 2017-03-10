@@ -35,14 +35,6 @@ func EnvironmentIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		for i := range environments {
-			if len(environments[i].Versions) == 0 {
-				environments[i].Versions = make([]resources.Version, 0)
-			}
-		}
-	*/
-
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(environments)
 }
@@ -70,12 +62,6 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 		jsonutil.RespondJSONError(w, jre)
 		return
 	}
-
-	/*
-		if len(environment.Versions) == 0 {
-			environment.Versions = make([]resources.Version, 0)
-		}
-	*/
 
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(environment)
