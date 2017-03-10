@@ -17,6 +17,10 @@ func All() []*migrate.Migration {
 		createEnvironmentConfigsTable(),
 		createAccessTokensTable(),
 		addUuidColumnToEnvironmentConfigsTable(),
+		removeVersionsToEnvironmentsConstraint(),
+		addApplicationUUIDColumnToVersionsTable(),
+		addApplicationAndVersionColumnsToEnvironmentsTable(),
+		addApplicationAndEnvironmentColumnsToVersionsTable(),
 	}
 }
 
