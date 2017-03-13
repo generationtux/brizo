@@ -9,7 +9,7 @@ func addUuidColumnToEnvironmentConfigsTable() *migrate.Migration {
 		Id: "7",
 		Up: []string{`
       ALTER TABLE environment_configs
-        ADD COLUMN uuid varchar(36) NOT NULL AFTER id,
+	ADD COLUMN uuid varchar(36) NOT NULL AFTER id DEFAULT uuid(),
         ADD CONSTRAINT uix_environment_configs_uuid UNIQUE (uuid)
       ;
     `},
