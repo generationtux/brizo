@@ -233,7 +233,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 			Namespace: "brizo",
 			Labels: map[string]string{
 				"brizoManaged": "true",
-				"appUUID":      version.Application.UUID,
+				"appUUID":      version.Environment.Application.UUID,
 				"envUUID":      version.Environment.UUID,
 				"versionUUID":  version.UUID,
 			},
@@ -241,7 +241,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 		Spec: v1beta1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"appUUID":     version.Application.UUID,
+					"appUUID":     version.Environment.Application.UUID,
 					"envUUID":     version.Environment.UUID,
 					"versionUUID": version.UUID,
 				},
@@ -251,7 +251,7 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 				ObjectMeta: v1.ObjectMeta{
 					Labels: map[string]string{
 						"brizoManaged": "true",
-						"appUUID":      version.Application.UUID,
+						"appUUID":      version.Environment.Application.UUID,
 						"envUUID":      version.Environment.UUID,
 						"versionUUID":  version.UUID,
 					},
