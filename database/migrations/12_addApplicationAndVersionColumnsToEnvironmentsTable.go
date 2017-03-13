@@ -6,7 +6,7 @@ import (
 
 func addApplicationAndVersionColumnsToEnvironmentsTable() *migrate.Migration {
 	return &migrate.Migration{
-		Id: "10",
+		Id: "12",
 		Up: []string{`
       ALTER TABLE environments
         ADD COLUMN application_uuid varchar(36) NOT NULL AFTER application_id,

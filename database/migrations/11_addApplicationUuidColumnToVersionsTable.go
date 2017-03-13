@@ -6,7 +6,7 @@ import (
 
 func addApplicationUUIDColumnToVersionsTable() *migrate.Migration {
 	return &migrate.Migration{
-		Id: "9",
+		Id: "11",
 		Up: []string{`
       ALTER TABLE versions
         ADD COLUMN application_uuid varchar(36) NOT NULL AFTER replicas,

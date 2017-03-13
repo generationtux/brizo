@@ -6,7 +6,7 @@ import (
 
 func addApplicationAndEnvironmentColumnsToVersionsTable() *migrate.Migration {
 	return &migrate.Migration{
-		Id: "11",
+		Id: "13",
 		Up: []string{`
       ALTER TABLE versions
 	  	  ADD COLUMN application_id int(10) unsigned NOT NULL AFTER replicas,
