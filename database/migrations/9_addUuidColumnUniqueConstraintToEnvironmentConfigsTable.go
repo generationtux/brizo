@@ -4,17 +4,17 @@ import (
 	"github.com/rubenv/sql-migrate"
 )
 
-func addUUIDColumnToEnvironmentConfigsTable() *migrate.Migration {
+func addUUIDColumnUniqueConstraintToEnvironmentConfigsTable() *migrate.Migration {
 	return &migrate.Migration{
-		Id: "7",
+		Id: "9",
 		Up: []string{`
       ALTER TABLE environment_configs
-        ADD COLUMN uuid varchar(36) NOT NULL AFTER id
+        ADD CONSTRAINT uix_environment_configs_uuid UNIQUE (uuid)
       ;
     `},
 		Down: []string{`
       ALTER TABLE environment_configs
-        DROP COLUMN uuid
+        DROP CONSTRAINT uix_environment_configs_uuid
       ;
     `},
 	}
