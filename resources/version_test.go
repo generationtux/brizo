@@ -78,7 +78,7 @@ func TestCanCreateAVersion(t *testing.T) {
 
 func TestVersionDeploymentDefinition(t *testing.T) {
 	app := Application{Slug: "my-app", UUID: "app-uuid123"}
-	environment := Environment{Slug: "dev", UUID: "env-uuid123"}
+	environment := Environment{Slug: "dev", UUID: "env-uuid123", Application: app}
 	environment.Version.Application = app
 	version := &Version{
 		Application: app,
