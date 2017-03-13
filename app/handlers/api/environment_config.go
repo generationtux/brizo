@@ -16,11 +16,7 @@ func GetEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"unable to connect to database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -44,11 +40,7 @@ func CreateEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -94,11 +86,7 @@ func DeleteEnvironmentConfig(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 

@@ -18,13 +18,10 @@ func EnvironmentIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
+
 	environments, err := resources.AllEnvironments(db)
 	if err != nil {
 		log.Printf("Error when retrieving environments: '%s'\n", err)
@@ -44,11 +41,7 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -71,22 +64,14 @@ func EnvironmentShow(w http.ResponseWriter, r *http.Request) {
 func EnvironmentCreate(w http.ResponseWriter, r *http.Request) {
 	client, err := kube.New()
 	if err != nil {
-		log.Printf("Kube client error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusServiceUnavailable,
-			"unable to reach Kubernetes")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.KubeClientConnectionError().Render(w)
 		return
 	}
 
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -141,11 +126,7 @@ func EnvironmentEdit(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -207,8 +188,7 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jsonErrorResponse(w, "Unable to connect to database", http.StatusInternalServerError)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -221,8 +201,7 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 
 	client, err := kube.New()
 	if err != nil {
-		log.Printf("Kube client error: '%s'\n", err)
-		jsonErrorResponse(w, "Unable to connect to Kubernetes", http.StatusInternalServerError)
+		jsonutil.KubeClientConnectionError().Render(w)
 		return
 	}
 
