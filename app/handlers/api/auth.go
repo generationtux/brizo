@@ -14,19 +14,16 @@ import (
 
 // AuthCreateUser will invite a new user by Github username
 func AuthCreateUser(w http.ResponseWriter, r *http.Request) {
-	createUserForm := new(auth.CreateUserForm)
-	errs := binding.Bind(r, createUserForm)
-	if errs.Handle(w) {
-		return
-	}
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
+		return
+	}
+
+	createUserForm := new(auth.CreateUserForm)
+	errs := binding.Bind(r, createUserForm)
+	if errs.Handle(w) {
 		return
 	}
 	user := auth.User{
@@ -79,13 +76,10 @@ func AuthGetInvitees(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
+
 	invitees, err := auth.GetInvitedUsers(db)
 	if err != nil {
 		log.Printf("Error when retrieving invitees: '%s'\n", err)
@@ -105,13 +99,10 @@ func AuthDeleteInvitees(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
+
 	id := bone.GetValue(r, "id")
 	success, err := auth.DeleteInvitedUser(db, id)
 	if err != nil {

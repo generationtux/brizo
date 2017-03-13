@@ -8,9 +8,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql" // dialect to use for Gorm
 )
 
-// Connect will open a new connection to the database
+// Connect will open a new connection to the database. If there is an error when
+// attempting to connect to the database, we will close the database connection
+// here prior to returning.
 func Connect() (*gorm.DB, error) {
-	return gorm.Open("mysql", getDBAddress())
+	var (
+		db  *gorm.DB
+		err error
+	)
+
+	if db, err = gorm.Open("mysql", getDBAddress()); err != nil {
+		db.Close()
+	}
+
+	return db, err
 }
 
 // getDBAddress will put together the mysql connection string

@@ -18,3 +18,13 @@ func TestGetDBAddress(t *testing.T) {
 	actual := getDBAddress()
 	assert.Equal(t, expected, actual)
 }
+func TestGetDBConnectionError(t *testing.T) {
+	config.App.MysqlUser = "foo"
+	config.App.MysqlPassword = "bar"
+	config.App.MysqlHost = "db.example.com"
+	config.App.MysqlPort = "3307"
+	config.App.MysqlDatabase = "somedb"
+
+	_, err := Connect()
+	assert.Contains(t, err.Error(), "no such host")
+}

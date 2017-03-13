@@ -19,11 +19,7 @@ func VersionIndex(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when attempting to connect to the database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -46,21 +42,13 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"unable to connect to database")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
 	client, err := kube.New()
 	if err != nil {
-		log.Printf("Kube client error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusServiceUnavailable,
-			"unable to reach Kubernetes")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.KubeClientConnectionError().Render(w)
 		return
 	}
 
@@ -117,11 +105,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	defer db.Close()
 	if err != nil {
-		log.Printf("Database error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"Database connection error")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.DatabaseConnectError().Render(w)
 		return
 	}
 
@@ -136,11 +120,7 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 
 	client, err := kube.New()
 	if err != nil {
-		log.Printf("Kube client error: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusServiceUnavailable,
-			"Kube connection error")
-		jsonutil.RespondJSONError(w, jre)
+		jsonutil.KubeClientConnectionError().Render(w)
 		return
 	}
 
