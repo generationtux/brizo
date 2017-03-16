@@ -6,7 +6,7 @@ import (
 
 func updateApplicationUUIDInVersionsTable() *migrate.Migration {
 	return &migrate.Migration{
-		Id: "17",
+		Id: "18",
 		Up: []string{`
       UPDATE versions v, applications a SET v.application_uuid = a.uuid WHERE v.application_id = a.id;
     `},
