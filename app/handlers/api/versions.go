@@ -63,24 +63,6 @@ func VersionShow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	environment, err := resources.GetEnvironment(db, bone.GetValue(r, "environment-uuid"))
-	if err != nil {
-		log.Printf("Error when retrieving version's environment: '%s'\n", err)
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusInternalServerError,
-			"there was an error when retrieving version's environment")
-		jsonutil.RespondJSONError(w, jre)
-		return
-	}
-
-	if version.EnvironmentUUID != environment.UUID {
-		jre := jsonutil.NewJSONResponseError(
-			http.StatusNotFound,
-			"no versions with id of "+version.UUID+" for this environment")
-		jsonutil.RespondJSONError(w, jre)
-		return
-	}
-
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(version)
 }
@@ -146,5 +128,5 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jsonResponse(w, version, 200)
+	jsonResponse(w, version, 201)
 }

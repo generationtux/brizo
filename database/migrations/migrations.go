@@ -29,6 +29,7 @@ func All() []*migrate.Migration {
 		updateApplicationIDInVersionsTable(),
 		updateApplicationUUIDInVersionsTable(),
 		updateEnvironmentUUIDInVersionsTable(),
+		addRawArgumentsColumnToVersionsTable(),
 	}
 }
 

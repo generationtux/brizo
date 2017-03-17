@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/database"
@@ -60,6 +61,7 @@ type Version struct {
 	Volumes         []Volume     `gorm:"-" json:"volumes"`
 	Containers      []Container  `gorm:"-" json:"containers"`
 	Spec            string       `gorm:"type:json" json:"-"`
+	RawArguments    string       `gorm:"type:json" json:"-"`
 }
 
 // Spec k8s spec information
@@ -101,10 +103,10 @@ func DeployVersion(client kube.APIInterface, version *Version) (bool, error) {
 
 // CreateVersion will create and deploy a new version
 func CreateVersion(db *gorm.DB, client kube.APIInterface, version *Version) (bool, error) {
+	hydrateRawArgumentsToJSON(version)
 	deployment := versionDeploymentDefinition(version)
 
-	err := client.CreateOrUpdateDeployment(deployment)
-	if err != nil {
+	if err := client.CreateOrUpdateDeployment(deployment); err != nil {
 		return false, err
 	}
 
@@ -153,7 +155,7 @@ func convertVolume(volume Volume) v1.Volume {
 	return k8sVol
 }
 
-func createContainerSpec(container Container, environmentUUID string) v1.Container {
+func createContainerSpec(container Container, environmentUUID string, version *Version) v1.Container {
 	policy := v1.PullAlways
 	if !container.AlwaysPull {
 		policy = v1.PullIfNotPresent
@@ -188,6 +190,10 @@ func createContainerSpec(container Container, environmentUUID string) v1.Contain
 	if err != nil {
 		log.Printf("Error retrieving environment configs: '%s'\n", err)
 	}
+	var environment *Environment
+	if environment, err = GetEnvironment(db, environmentUUID); err != nil {
+		log.Printf("Error retrieving environment: '%s'\n", err)
+	}
 
 	var k8sEnvVars []v1.EnvVar
 	for _, environmentVar := range *environmentVars {
@@ -197,11 +203,20 @@ func createContainerSpec(container Container, environmentUUID string) v1.Contain
 		})
 	}
 
+	replacements := map[string]string{
+		"${BRIZO_ENVIRONMENT}": environment.Name,
+	}
+	// use the raw arguments stored for this container if present
+	tempArgs := rawArgumentJSONToContainerArgs(container.Name, version)
+	if len(tempArgs) > 0 {
+		container.Args = tempArgs
+	}
+
 	return v1.Container{
 		Name:            container.Name,
 		Image:           container.Image,
 		ImagePullPolicy: policy,
-		Args:            container.Args,
+		Args:            parseRawArguments(container.Args, replacements),
 		Ports:           k8sPorts,
 		VolumeMounts:    k8sVolumeMounts,
 		Env:             k8sEnvVars,
@@ -224,7 +239,8 @@ func versionDeploymentDefinition(version *Version) *v1beta1.Deployment {
 
 	var k8sContainers []v1.Container
 	for index := 0; index < len(version.Containers); index++ {
-		k8sContainers = append(k8sContainers, createContainerSpec(version.Containers[index], version.Environment.UUID))
+		// @todo refactor
+		k8sContainers = append(k8sContainers, createContainerSpec(version.Containers[index], version.Environment.UUID, version))
 	}
 
 	deployment := &v1beta1.Deployment{
@@ -361,4 +377,65 @@ func DeleteVersion(db *gorm.DB, name string) (bool, error) {
 	result := db.Delete(Version{}, "name = ?", name)
 
 	return result.RowsAffected == 1, result.Error
+}
+
+// parseRawArguments is essentially a find and replace for a slice of rawArgs to
+// be filled with a map of replacements where the key is the string to replace
+// and the value is the replacement. parseRawArguments has no expectations of
+// what to replace, so you should expect to instantiate a replacements map prior
+// to calling.
+// @TODO rename to be more descriptive
+func parseRawArguments(rawArgs []string, replacements map[string]string) []string {
+	for i, arg := range rawArgs {
+		for key, replacement := range replacements {
+			replacement = slugify.Slugify(strings.ToLower(replacement))
+			rawArgs[i] = strings.Replace(arg, key, replacement, -1)
+		}
+	}
+
+	return rawArgs
+}
+
+// hydrateRawArgumentsToJSON takes a Version with its Containers and hydrates
+// the RawArguments field for the Version
+func hydrateRawArgumentsToJSON(version *Version) *Version {
+	type jsonContainer struct {
+		Arguments []string `json:"arguments"`
+		Name      string   `json:"name"`
+	}
+	rawArguments := struct {
+		Containers []jsonContainer `json:"containers"`
+	}{}
+	for _, container := range version.Containers {
+		containerJSONStruct := jsonContainer{
+			Arguments: container.Args,
+			Name:      container.Name,
+		}
+		rawArguments.Containers = append(rawArguments.Containers, containerJSONStruct)
+	}
+	containerJSON, _ := json.Marshal(rawArguments)
+	version.RawArguments = string(containerJSON)
+
+	return version
+}
+
+// rawArgumentJSONToContainerArgs looks up the raw arguments within the provided
+// version based on the containerName
+func rawArgumentJSONToContainerArgs(containerName string, version *Version) []string {
+	v := struct {
+		Containers []struct {
+			Name      string   `json:"name"`
+			Arguments []string `json:"arguments"`
+		} `json:"containers"`
+	}{}
+	if err := json.Unmarshal([]byte(version.RawArguments), &v); err != nil {
+		fmt.Printf("Error when unmarshalling version: %s\n%s\n", version.UUID, err.Error())
+	}
+
+	for i := 0; i < len(v.Containers); i++ {
+		if v.Containers[i].Name == containerName {
+			return v.Containers[i].Arguments
+		}
+	}
+	return []string{}
 }
