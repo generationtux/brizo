@@ -24,9 +24,11 @@ func All() []*migrate.Migration {
 		addApplicationAndVersionColumnsToEnvironmentsTable(),
 		addApplicationAndEnvironmentColumnsToVersionsTable(),
 		updateApplicationsUUIDInEnvironmentsTable(),
+		updateVersionsIDInEnvironmentsTable(),
 		updateVersionsUUIDInEnvironmentsTable(),
 		updateApplicationIDInVersionsTable(),
 		updateApplicationUUIDInVersionsTable(),
+		updateEnvironmentUUIDInVersionsTable(),
 	}
 }
 
