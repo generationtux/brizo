@@ -31,7 +31,7 @@ export class VersionCreateComponent implements OnInit {
   ) {
     this.version = new Version({
       replicas: 1,
-      containers: [new Container({name: 'container-1'})],
+      containers: [new Container()],
       volumes: [],
     });
   }
@@ -69,9 +69,7 @@ export class VersionCreateComponent implements OnInit {
   }
 
   private addContainer() {
-    this.version.containers.push(new Container({
-      name: 'container-' + (this.version.containers.length + 1)
-    }));
+    this.version.containers.push(new Container());
   }
 
   private removeContainer(i: number) {

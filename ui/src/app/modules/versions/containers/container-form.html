@@ -1,12 +1,17 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
-      {{ container.name }}
+      New Container
       <button type="button" class="pull-right btn-link panel-link" (click)="onDelete(containerIndex)">
         <i class="fa fa-trash" aria-hidden="true"></i>
       </button>
   </div>
 
   <div class="panel-body">
+    
+    <div class="form-group">
+      <label for="image">Container Name</label>
+      <input type="text" name="container-name-{{ containerIndex }}" [(ngModel)]="container.name" class="form-control" placeholder="web" required>
+    </div>
 
     <div class="form-group">
       <label for="image">Image</label>
