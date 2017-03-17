@@ -31,7 +31,7 @@ export class VersionCreateComponent implements OnInit {
   ) {
     this.version = new Version({
       replicas: 1,
-      containers: [new Container({name: 'container-1'})],
+      containers: [new Container()],
       volumes: [],
     });
   }
@@ -63,15 +63,13 @@ export class VersionCreateComponent implements OnInit {
   private onCreateVersion() {
     this.router.navigate(['/environments', this.environment.uuid]);
   }
-  
+
   private displayError(e: string) {
     this.error = 'There was an error: ' + e
   }
 
   private addContainer() {
-    this.version.containers.push(new Container({
-      name: 'container-' + (this.version.containers.length + 1)
-    }));
+    this.version.containers.push(new Container());
   }
 
   private removeContainer(i: number) {
