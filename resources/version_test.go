@@ -112,6 +112,52 @@ func TestVersionDeploymentDefinition(t *testing.T) {
 	assert.Equal(t, expectTemplateLabels, deployment.Spec.Template.Labels)
 }
 
+func TestRawArgsToParsedArgs(t *testing.T) {
+	replacements := map[string]string{
+		"${BRIZO_ENVIRONMENT}": "Current-environment",
+	}
+	expectedEnv := []string{"--hostname=current-environment.payments", "--example=BRIZO_ENVIRONMENT"}
+	validEnv := []string{"--hostname=${BRIZO_ENVIRONMENT}.payments", "--example=BRIZO_ENVIRONMENT"}
+	missingBracesEnv := []string{"--hostname=$BRIZO_ENVIRONMENT.payments", "--example=BRIZO_ENVIRONMENT"}
+	curvedBracesEnv := []string{"--hostname=$(BRIZO_ENVIRONMENT).payments", "--example=BRIZO_ENVIRONMENT"}
+	brizoEnvArgs := [][]string{
+		validEnv,
+		missingBracesEnv,
+		curvedBracesEnv,
+	}
+
+	assert.Equal(t, expectedEnv, parseRawArguments(brizoEnvArgs[0], replacements))
+	assert.Equal(t, brizoEnvArgs[1], parseRawArguments(brizoEnvArgs[1], replacements))
+	assert.Equal(t, brizoEnvArgs[2], parseRawArguments(brizoEnvArgs[2], replacements))
+}
+
+func TestRawArgumentsToJSON(t *testing.T) {
+	version := &Version{
+		Containers: []Container{
+			Container{Name: "container-1", Args: []string{"echo", "${BRIZO_ENVIRONMENT}"}},
+			Container{Name: "container-2", Args: []string{"echo", "Hello,", "World!"}},
+		},
+	}
+	expected := "{\"containers\":[{\"arguments\":[\"echo\",\"${BRIZO_ENVIRONMENT}\"],\"name\":\"container-1\"},{\"arguments\":[\"echo\",\"Hello,\",\"World!\"],\"name\":\"container-2\"}]}"
+	hydrateRawArgumentsToJSON(version)
+
+	assert.JSONEq(t, expected, version.RawArguments)
+}
+
+func TestRawArgumentJSONToSingleContainerArgs(t *testing.T) {
+	version := &Version{
+		RawArguments: "{\"containers\":[{\"arguments\":[\"echo\",\"${BRIZO_ENVIRONMENT}\"],\"name\":\"container-1\"},{\"arguments\":[\"echo\",\"Hello,\",\"World!\"],\"name\":\"container-2\"}]}",
+	}
+
+	expected := []string{"echo", "${BRIZO_ENVIRONMENT}"}
+	actual := rawArgumentJSONToContainerArgs("container-1", version)
+	assert.Equal(t, expected, actual)
+
+	expected = []string{}
+	actual = rawArgumentJSONToContainerArgs("container-0", version)
+	assert.Equal(t, expected, actual)
+}
+
 // Mock kube client
 
 type mockKubeClient struct {
