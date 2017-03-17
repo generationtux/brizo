@@ -63,7 +63,7 @@ export class VersionCreateComponent implements OnInit {
   private onCreateVersion() {
     this.router.navigate(['/environments', this.environment.uuid]);
   }
-  
+
   private displayError(e: string) {
     this.error = 'There was an error: ' + e
   }
