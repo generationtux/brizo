@@ -11,6 +11,7 @@ import (
 	"github.com/generationtux/brizo/kube"
 	"github.com/generationtux/brizo/resources"
 	"github.com/go-zoo/bone"
+	"github.com/pborman/uuid"
 )
 
 // ApplicationIndex provides a listing of all Applications
@@ -58,7 +59,13 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := bone.GetValue(r, "uuid")
-	app, err := resources.GetApplication(db, kubeClient, id)
+	var app *resources.Application
+	if appUUID := uuid.Parse(id); appUUID == nil {
+		// uuid.Parse() returns nil for a bad uuid, so we'll assume it's a name
+		app, err = resources.GetApplicationByName(db, id)
+	} else {
+		app, err = resources.GetApplication(db, kubeClient, appUUID.String())
+	}
 	if err != nil {
 		log.Printf("Error when retrieving application: '%s'\n", err)
 		jre := jsonutil.NewJSONResponseError(
