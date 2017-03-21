@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
@@ -59,10 +61,12 @@ func ApplicationShow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := bone.GetValue(r, "uuid")
+	fmt.Println(id)
 	var app *resources.Application
 	if appUUID := uuid.Parse(id); appUUID == nil {
 		// uuid.Parse() returns nil for a bad uuid, so we'll assume it's a name
-		app, err = resources.GetApplicationByName(db, id)
+		name, _ := url.QueryUnescape(id)
+		app, err = resources.GetApplicationByName(db, name)
 	} else {
 		app, err = resources.GetApplication(db, kubeClient, appUUID.String())
 	}
