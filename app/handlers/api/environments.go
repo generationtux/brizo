@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -262,8 +261,6 @@ func EnvironmentPromote(w http.ResponseWriter, r *http.Request) {
 		jsonutil.KubeClientConnectionError().Render(w)
 		return
 	}
-
-	fmt.Println(srcEnvironment.Version)
 
 	version, err := resources.GetVersion(db, srcEnvironment.Version.UUID, client, true)
 	if err != nil {
