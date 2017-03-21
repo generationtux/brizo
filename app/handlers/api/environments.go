@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -231,4 +232,63 @@ func EnvironmentDeploy(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonResponse(w, map[string]string{"message": "Version deployed."}, 200)
+}
+
+// EnvironmentPromote promotes a Version from one environment to another
+func EnvironmentPromote(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	defer db.Close()
+	if err != nil {
+		jsonutil.DatabaseConnectError().Render(w)
+		return
+	}
+
+	srcEnvironment, err := resources.GetEnvironment(db, bone.GetValue(r, "src-environment-uuid"))
+	if err != nil {
+		log.Println(err)
+		jsonErrorResponse(w, "Unable to get environment", http.StatusNotFound)
+		return
+	}
+
+	dstEnvironment, err := resources.GetEnvironment(db, bone.GetValue(r, "dst-environment-uuid"))
+	if err != nil {
+		log.Println(err)
+		jsonErrorResponse(w, "Unable to get environment", http.StatusNotFound)
+		return
+	}
+
+	client, err := kube.New()
+	if err != nil {
+		jsonutil.KubeClientConnectionError().Render(w)
+		return
+	}
+
+	fmt.Println(srcEnvironment.Version)
+
+	version, err := resources.GetVersion(db, srcEnvironment.Version.UUID, client, true)
+	if err != nil {
+		log.Println(err)
+		jsonErrorResponse(w, "Unable to get version", http.StatusNotFound)
+		return
+	}
+
+	// modify the version for the new environment
+	version.Environment = dstEnvironment
+	version.EnvironmentID = dstEnvironment.ID
+
+	_, err = resources.DeployVersion(client, version)
+	if err != nil {
+		log.Printf("Error deploying version: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to deploy version", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = resources.UpdateVersion(db, version)
+	if err != nil {
+		log.Printf("Error updating version after deployment: '%s'\n", err)
+		jsonErrorResponse(w, "Unable to update version after deployment", http.StatusInternalServerError)
+		return
+	}
+
+	jsonResponse(w, map[string]string{"message": "Version promoted."}, 200)
 }

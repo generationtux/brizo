@@ -149,7 +149,7 @@ func UpdateEnvironmentService(db *gorm.DB, client kube.APIInterface, environment
 // GetEnvironment will get an existing Environment by id
 func GetEnvironment(db *gorm.DB, id string) (*Environment, error) {
 	environment := new(Environment)
-	if err := db.Preload("Application.Environments").Where("uuid = ?", id).First(&environment).Error; err != nil {
+	if err := db.Preload("Application.Environments").Preload("Version").Where("uuid = ?", id).First(&environment).Error; err != nil {
 		return environment, err
 	}
 
