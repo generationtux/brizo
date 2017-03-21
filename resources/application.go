@@ -76,6 +76,20 @@ func GetApplicationByID(db *gorm.DB, id string) (*Application, error) {
 	return app, nil
 }
 
+// GetApplicationByName will get an existing Application by name
+func GetApplicationByName(db *gorm.DB, name string) (*Application, error) {
+	app := new(Application)
+	if err := db.Where("name = ?", name).Preload("Environments").First(&app).Error; err != nil {
+		return app, err
+	}
+
+	if app.ID == 0 {
+		return new(Application), errors.New("not-found")
+	}
+
+	return app, nil
+}
+
 // DeleteApplication will delete an existing Application by name
 func DeleteApplication(db *gorm.DB, name string) (bool, error) {
 	result := db.Delete(Application{}, "name = ?", name)
