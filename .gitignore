@@ -1,6 +1,7 @@
 /brizo
 /tmp
 .env
+.github_token
 coverage.txt
 node_modules
 dist
