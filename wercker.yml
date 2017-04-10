@@ -66,3 +66,8 @@ build-release:
         disable-sync: true
         tag: latest
         working-dir: /go/src/github.com/generationtux/brizo
+
+github-release:
+  box:
+      id: gentux/git
+      cmd: generationtux brizo $GITHUB_RELEASE
