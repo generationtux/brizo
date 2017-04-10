@@ -70,4 +70,4 @@ build-release:
 github-release:
   box:
       id: gentux/git
-      cmd: generationtux brizo $GITHUB_RELEASE
+      cmd: sh -c ./release.sh generationtux brizo $GITHUB_RELEASE
