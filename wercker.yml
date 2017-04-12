@@ -68,7 +68,7 @@ build-release:
         working-dir: /go/src/github.com/generationtux/brizo
 
 github-release:
-  box: gentux/git
+  box: golang
   steps:
     - script:
         name: create release
