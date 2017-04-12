@@ -68,6 +68,9 @@ build-release:
         working-dir: /go/src/github.com/generationtux/brizo
 
 github-release:
-  box:
-      id: gentux/git
-      cmd: sh -c ./release.sh generationtux brizo $GITHUB_RELEASE
+  box: gentux/git
+  steps:
+    - script:
+        name: create release
+        code: |
+          ./release.sh generationtux brizo $GITHUB_RELEASE
