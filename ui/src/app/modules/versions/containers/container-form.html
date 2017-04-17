@@ -7,10 +7,10 @@
   </div>
 
   <div class="panel-body">
-    
+
     <div class="form-group">
-      <label for="image">Container Name</label>
-      <input type="text" name="container-name-{{ containerIndex }}" [(ngModel)]="container.name" class="form-control" placeholder="web" required>
+      <label for="image">Container Name <span class="text-muted">within the pattern of <code>[a-zA-Z0-9_-]</code></span></label>
+      <input type="text" name="container-name-{{ containerIndex }}" [(ngModel)]="container.name" class="form-control" placeholder="web" required pattern="[a-zA-Z0-9_-]">
     </div>
 
     <div class="form-group">
