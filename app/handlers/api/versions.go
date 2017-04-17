@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
 
 	"github.com/Machiel/slugify"
 	"github.com/generationtux/brizo/app/handlers/jsonutil"
@@ -82,6 +83,29 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 			err.Error())
 		jsonutil.RespondJSONError(w, jre)
 		return
+	}
+
+	validContainerName := regexp.MustCompile(`^([a-z0-9_])$`)
+	var existingContainerNames map[string]bool
+	for index := 0; index < len(createForm.Containers); index++ {
+		name := createForm.Containers[index].Name
+		if !validContainerName.MatchString(name) {
+			jre := jsonutil.NewJSONResponseError(
+				// 422 because Docker will not parse container names outside of this pattern
+				http.StatusUnprocessableEntity,
+				"Invalid container name (%s), only [a-z0-9_] are allowed", name)
+			jsonutil.RespondJSONError(w, jre)
+			return
+		}
+		if existingContainerNames[name] {
+			jre := jsonutil.NewJSONResponseError(
+				// 422 because Docker will not parse container names outside of this pattern
+				http.StatusBadRequest,
+				"Duplicate container name (%s) used, names must be unique per container", name)
+			jsonutil.RespondJSONError(w, jre)
+			return
+		}
+		existingContainerNames[name] = true
 	}
 
 	db, err := database.Connect()
