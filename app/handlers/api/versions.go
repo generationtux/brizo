@@ -85,15 +85,15 @@ func VersionCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	validContainerName := regexp.MustCompile(`^([a-z0-9_])$`)
-	var existingContainerNames map[string]bool
+	validContainerName := regexp.MustCompile(`^([a-z0-9_-]+)$`)
+	existingContainerNames := make(map[string]bool)
 	for index := 0; index < len(createForm.Containers); index++ {
 		name := createForm.Containers[index].Name
 		if !validContainerName.MatchString(name) {
 			jre := jsonutil.NewJSONResponseError(
 				// 422 because Docker will not parse container names outside of this pattern
 				http.StatusUnprocessableEntity,
-				"Invalid container name (%s), only [a-z0-9_] are allowed", name)
+				"Invalid container name (%s), only [a-zA-Z0-9_-] characters are allowed", name)
 			jsonutil.RespondJSONError(w, jre)
 			return
 		}
